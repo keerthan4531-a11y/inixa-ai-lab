@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { Link, useRoute } from '../../router'
+import { Link, useRoute, navigate } from '../../router'
+import GooeyNav from '../GooeyNav'
 import { MAIN_NAV_ITEMS } from '../../types/route'
 import { GlassButton } from '../common/GlassButton'
 import ElectricLogo from '../ElectricLogo'
@@ -13,6 +14,11 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
   const currentPath = useRoute()
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
+
+  const activeNavIndex = MAIN_NAV_ITEMS.findIndex((item) => {
+    if (item.href === '/') return currentPath === '/'
+    return currentPath.startsWith(item.href)
+  })
 
   useEffect(() => {
     let frame = 0
@@ -74,30 +80,21 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
           </span>
         </Link>
 
-        {/* Desktop Nav Links */}
-        <div className="hidden items-center gap-1 md:flex">
-          {MAIN_NAV_ITEMS.map((item) => {
-            const isActive = currentPath === item.href
-            return (
-              <Link
-                key={item.href}
-                to={item.href}
-                aria-current={isActive ? 'page' : undefined}
-                className={`relative rounded-full px-3.5 py-1.5 text-xs font-semibold no-underline transition-colors duration-200 ${
-                  isActive
-                    ? 'bg-white/10 text-cyan-300 shadow-inner'
-                    : 'text-white/70 hover:bg-white/5 hover:text-white'
-                }`}
-              >
-                <span>{item.label}</span>
-                {item.badge && (
-                  <span className="ml-1.5 rounded-full border border-cyan-400/30 bg-cyan-400/20 px-1.5 py-0.5 text-[9px] font-bold text-cyan-300">
-                    {item.badge}
-                  </span>
-                )}
-              </Link>
-            )
-          })}
+        {/* Desktop Nav Links with Gooey Physics */}
+        <div className="hidden items-center md:flex">
+          <GooeyNav
+            items={MAIN_NAV_ITEMS}
+            activeIndex={activeNavIndex >= 0 ? activeNavIndex : 0}
+            onChange={(_, item) => {
+              if (item.href) navigate(item.href)
+            }}
+            size="sm"
+            frame={false}
+            theme="dark"
+            color="#00f2fe"
+            activeTextColor="#020408"
+            colors={['#00f2fe', '#38bdf8', '#818cf8', '#c084fc']}
+          />
         </div>
 
         {/* Right Action Tools */}

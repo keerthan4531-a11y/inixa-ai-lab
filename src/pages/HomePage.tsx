@@ -7,6 +7,7 @@ import { GallerySection } from '../sections/home/GallerySection'
 import { GlassCard } from '../components/common/GlassCard'
 import { GlassButton } from '../components/common/GlassButton'
 import DriftWall from '../components/DriftWall'
+import LogoLoop, { LogoItem } from '../components/LogoLoop'
 import { ALL_PRODUCTS } from '../data/products'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
@@ -33,6 +34,120 @@ const DRIFT_ITEMS = [
 interface HomePageProps {
   onOpenSearch?: () => void
 }
+
+
+const TECH_LOGOS: LogoItem[] = [
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#3DDC84]" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9996.4482.9996.9993.0001.5511-.4486.9997-.9996.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9997.4482.9997.9993 0 .5511-.4486.9997-.9997.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4128 13.8533 8.0818 12 8.0818c-1.8533 0-3.5902.331-5.1368.868L4.8409 5.4468a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
+        <span className="text-xs font-semibold text-white/90">Android 15+ Native</span>
+      </span>
+    ),
+    title: 'Android Native SDK',
+    hoverColor: '#3DDC84',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#7F52FF]" viewBox="0 0 24 24"><path d="M24 24H0V0h24L12 12Z"/></svg>
+        <span className="text-xs font-semibold text-white/90">Kotlin Coroutines</span>
+      </span>
+    ),
+    title: 'Kotlin Native',
+    hoverColor: '#7F52FF',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#00F2FE]" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#00F2FE" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <span className="text-xs font-semibold text-white/90">WebGL2 Shaders</span>
+      </span>
+    ),
+    title: 'WebGL2 Engine',
+    hoverColor: '#00F2FE',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 stroke-white fill-none" viewBox="0 0 24 24"><polygon points="12 2 22 20 2 20" strokeWidth="1.8" strokeLinejoin="round"/></svg>
+        <span className="text-xs font-semibold text-white/90">Three.js 3D</span>
+      </span>
+    ),
+    title: 'Three.js Spatial Pipeline',
+    hoverColor: '#FFFFFF',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#61DAFB]" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="4.5" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><circle cx="12" cy="12" r="2" fill="#61DAFB"/></svg>
+        <span className="text-xs font-semibold text-white/90">React 19 Core</span>
+      </span>
+    ),
+    title: 'React Concurrent UI',
+    hoverColor: '#61DAFB',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#F74C00]" viewBox="0 0 24 24"><path d="M12 1a2 2 0 0 1 2 2v.2a8.03 8.03 0 0 1 3.5 1.5l.14-.14a2 2 0 1 1 2.83 2.83l-.14.14a8.03 8.03 0 0 1 1.5 3.5H22a2 2 0 1 1 0 4h-.17a8.03 8.03 0 0 1-1.5 3.5l.14.14a2 2 0 1 1-2.83 2.83l-.14-.14a8.03 8.03 0 0 1-3.5 1.5V23a2 2 0 1 1-4 0v-.2a8.03 8.03 0 0 1-3.5-1.5l-.14.14a2 2 0 1 1-2.83-2.83l.14-.14a8.03 8.03 0 0 1-1.5-3.5H2a2 2 0 1 1 0-4h.17a8.03 8.03 0 0 1 1.5-3.5l-.14-.14a2 2 0 1 1 2.83-2.83l.14.14a8.03 8.03 0 0 1 3.5-1.5V3a2 2 0 0 1 2-2zm0 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
+        <span className="text-xs font-semibold text-white/90">Rust Native Engine</span>
+      </span>
+    ),
+    title: 'Rust Core Architecture',
+    hoverColor: '#F74C00',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#38BDF8]" viewBox="0 0 24 24"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.336 6.182 14.975 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.336 13.382 8.975 12 6.001 12z"/></svg>
+        <span className="text-xs font-semibold text-white/90">Tailwind CSS 4</span>
+      </span>
+    ),
+    title: 'Tailwind Styling',
+    hoverColor: '#38BDF8',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#E60012]" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#E60012" strokeWidth="1.8" fill="none"/><rect x="8" y="8" width="8" height="8" rx="1.5" fill="#E60012"/><line x1="9" y1="1" x2="9" y2="4" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="15" y1="1" x2="15" y2="4" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="20" x2="9" y2="23" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="15" y1="20" x2="15" y2="23" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="1" y1="9" x2="4" y2="9" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="1" y1="15" x2="4" y2="15" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="9" x2="23" y2="9" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="15" x2="23" y2="15" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/></svg>
+        <span className="text-xs font-semibold text-white/90">Snapdragon NPU</span>
+      </span>
+    ),
+    title: 'Snapdragon Hardware Acceleration',
+    hoverColor: '#E60012',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 stroke-[#C084FC] fill-none" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6" strokeWidth="2" strokeLinecap="round"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" strokeWidth="2"/></svg>
+        <span className="text-xs font-semibold text-white/90">Bit-Perfect 32-bit DSP</span>
+      </span>
+    ),
+    title: 'ExoPlayer Lossless Audio',
+    hoverColor: '#C084FC',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 fill-[#0AE448]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span className="text-xs font-semibold text-white/90">GSAP Physics</span>
+      </span>
+    ),
+    title: 'GreenSock Motion Architecture',
+    hoverColor: '#0AE448',
+  },
+  {
+    node: (
+      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+        <svg className="w-5 h-5 stroke-[#10B981] fill-none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeWidth="2"/><path d="m9 12 2 2 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <span className="text-xs font-semibold text-white/90">0 Telemetry Verified</span>
+      </span>
+    ),
+    title: 'Air-Gapped Privacy Engine',
+    hoverColor: '#10B981',
+  },
+];
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
@@ -151,6 +266,30 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
             fade={0.35}
             dim={0.88}
             overlayColor="#060010"
+          />
+        </div>
+      </section>
+
+      {/* 8. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
+      <section className="relative py-14 border-t border-white/10 bg-black/90 backdrop-blur-md overflow-hidden" aria-label="Technology Stack">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-7 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-[11px] font-mono uppercase tracking-widest text-cyan-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+            <span>High-Performance Native Engineering Stack</span>
+          </div>
+        </div>
+
+        <div className="w-full relative overflow-hidden py-2">
+          <LogoLoop
+            logos={TECH_LOGOS}
+            speed={60}
+            direction="left"
+            logoHeight={34}
+            gap={24}
+            hoverSpeed={0}
+            scaleOnHover
+            fadeOut
+            ariaLabel="INIXA Labs Technology Foundation"
           />
         </div>
       </section>

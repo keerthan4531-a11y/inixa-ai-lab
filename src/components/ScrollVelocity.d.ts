@@ -28,3 +28,4 @@ export interface ScrollVelocityProps {
 
 declare const ScrollVelocity: React.FC<ScrollVelocityProps>;
 export default ScrollVelocity;
+
