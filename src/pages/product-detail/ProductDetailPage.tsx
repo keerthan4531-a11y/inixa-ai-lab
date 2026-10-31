@@ -4,19 +4,15 @@ import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { GlassCard } from '../../components/common/GlassCard'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
-import { SafeImage } from '../../components/common/SafeImage'
 import { copyToClipboard } from '../../utils/clipboard'
+import { cn } from '../../utils/cn'
 import {
   Download,
   ArrowLeft,
   Check,
   Copy,
   ExternalLink,
-  Sparkles,
-  ShieldCheck,
-  Layers,
   Cpu,
-  Smartphone,
 } from 'lucide-react'
 import { navigate } from '../../router'
 
@@ -58,7 +54,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
         <div className="flex items-center justify-between mb-8">
           <button
             onClick={() => navigate('/products')}
-            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
           >
             <ArrowLeft className="h-3.5 w-3.5" /> Back to Products
           </button>
@@ -74,9 +70,17 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
           </span>
         </div>
 
-        {/* HERO STAGE: Title + Details + 3D Device Mockup */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center mb-24">
+        {/* HERO HEADER: Product Title, Badges, and Device Preview */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-24">
           <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-white/10 bg-white/5 text-xs text-white/70 mb-4">
+              <span
+                className="h-2 w-2 rounded-full shadow-[0_0_8px]"
+                style={{ backgroundColor: product.accentColor, boxShadow: `0 0 8px ${product.accentColor}` }}
+              />
+              <span>{product.version} • Verified Flagship Architecture</span>
+            </div>
+
             <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 leading-tight">
               {product.name}
             </h1>
@@ -155,9 +159,10 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
               <GlassCard
                 key={feat.id}
                 glowColor={product.accentColor}
-                className={`p-8 md:p-10 flex flex-col ${
+                className={cn(
+                  'p-8 md:p-10 flex flex-col gap-8 items-center',
                   isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'
-                } gap-8 items-center`}
+                )}
               >
                 {/* Text Side */}
                 <div className="flex-1 space-y-4">
@@ -170,18 +175,15 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                   <p className="text-sm text-white/70 leading-relaxed">{feat.description}</p>
                 </div>
 
-                {/* Screenshot Side */}
+                {/* Screenshot Side: Real Titanium Device Mockup */}
                 {shot && (
-                  <div className="w-full sm:w-[240px] md:w-[260px] shrink-0">
-                    <div className="relative aspect-[9/18] overflow-hidden rounded-2xl border border-white/15 bg-black/80 shadow-2xl">
-                      <SafeImage
-                        src={shot.assetPath}
-                        alt={shot.altText}
-                        fallbackLabel={shot.whatItShows}
-                        className="h-full w-full object-cover object-top"
-                      />
-                    </div>
-                    <div className="text-[11px] text-white/40 text-center mt-2 truncate">
+                  <div className="w-full sm:w-[280px] md:w-[320px] shrink-0 flex flex-col items-center">
+                    <DeviceMockup
+                      src={shot.assetPath}
+                      alt={shot.altText}
+                      glowColor={product.accentColor}
+                    />
+                    <div className="text-xs font-medium text-white/50 text-center mt-3 truncate max-w-[260px]">
                       {shot.whatItShows}
                     </div>
                   </div>
@@ -258,7 +260,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                   <div className="flex items-center gap-3 shrink-0">
                     <button
                       onClick={() => handleCopyLink(apk.downloadPath, index)}
-                      className="rounded-full border border-white/10 bg-white/5 p-2.5 text-white/60 hover:text-white transition-colors"
+                      className="rounded-full border border-white/10 bg-white/5 p-2.5 text-white/60 hover:text-white transition-colors cursor-pointer"
                       title="Copy Direct Link"
                     >
                       {copiedApkIndex === index ? (

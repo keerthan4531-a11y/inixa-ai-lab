@@ -14,17 +14,11 @@ interface SafeImageProps extends Omit<React.ImgHTMLAttributes<HTMLImageElement>,
 
 /**
  * An <img> that can never look broken.
- *
- * Why this exists: a raw <img> whose request 404s renders the browser's
- * broken-image icon with the full alt text spilled across the layout —
- * exactly the "worst UI" wall in the reported screenshot (every card was
- * alt text on black). SafeImage:
  *  - keeps the <img> invisible until it has actually decoded a frame,
  *  - shows a neutral skeleton while loading,
- *  - swaps to a branded gradient placeholder on error (no broken icon,
- *    no alt-text spill), and
- *  - encodeURI()s the path, so asset names with spaces
- *    ("/shots/inixa-ai/image copy.png") don't 404 on stricter hosts.
+ *  - swaps to a branded gradient placeholder on error (no broken icon, no alt-text spill),
+ *  - encodeURI()s the path so asset names with spaces don't 404,
+ *  - ensures edge-to-edge fill with `block h-full w-full object-cover object-top`.
  */
 export const SafeImage: React.FC<SafeImageProps> = ({
   src,
@@ -64,7 +58,7 @@ export const SafeImage: React.FC<SafeImageProps> = ({
           onLoad={() => setStatus('loaded')}
           onError={() => setStatus('error')}
           className={cn(
-            'transition-opacity duration-500',
+            'block h-full w-full object-cover object-top transition-opacity duration-500',
             status === 'loaded' ? 'opacity-100' : 'opacity-0',
             className,
           )}

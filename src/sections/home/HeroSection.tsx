@@ -1,22 +1,20 @@
 import React from 'react'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
-import { SCREENSHOT_MAP, ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
-import { Sparkles, Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
+import { ShinyText } from '../../components/react-bits/ShinyText'
+import { Magnet } from '../../components/react-bits/Magnet'
+import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
+import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
 interface HeroSectionProps {
   onOpenSearch?: () => void
 }
 
 /**
- * Clean, high-end hero showcasing physical flagship Android hardware
+ * Clean, ultra-high-end hero showcasing physical flagship Android hardware
  * with pure dark optics and zero distracting looping animations.
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
-  const heroShot =
-    SCREENSHOT_MAP['bearbox-ultra']?.['shot-2'] ||
-    SCREENSHOT_MAP['beatbox-pro']?.['shot-2']
-
   const stats = [
     { value: '9', label: 'Flagship apps' },
     { value: '15', label: 'Verified APKs' },
@@ -44,41 +42,49 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
 
             <h1 className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl">
               Frontiers of AI &amp;{' '}
-              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-                Liquid Glass Flagships
-              </span>
+              <ShinyText text="Liquid Glass Flagships" className="font-black" />
             </h1>
 
-            <p className="mx-auto mb-9 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg lg:mx-0">
-              Nine native applications — audiophile bit-perfect players, an autonomous AI sandbox, a hardened
-              privacy browser, and zero-ad stream extractors. Real software captured on real hardware,
-              with zero telemetry.
+            <p className="mb-8 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
+              Nine native applications — audiophile bit-perfect players, an autonomous AI
+              sandbox, a hardened privacy browser, and zero-ad stream extractors. Real software,
+              captured on real hardware, with zero telemetry.
             </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-              <GlassButton
-                href="/products"
-                variant="primary"
-                className="!px-6 !py-3 !text-sm shadow-lg shadow-cyan-500/20"
-                icon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-              >
-                Explore 9 Products
-              </GlassButton>
-              <GlassButton
-                href="/downloads"
-                className="!px-6 !py-3 !text-sm"
-                icon={<Download className="h-4 w-4 text-cyan-400" aria-hidden="true" />}
-              >
-                Download APKs
-              </GlassButton>
-              <GlassButton
-                onClick={onOpenSearch}
-                variant="ghost"
-                className="!px-5 !py-3 !text-sm text-white/70 hover:text-white"
-                icon={<Search className="h-4 w-4 text-white/50" aria-hidden="true" />}
-              >
-                Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
-              </GlassButton>
+            {/* Premium Interactive CTA Buttons with Magnet Effect */}
+            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
+              <Magnet magnetStrength={0.18}>
+                <GlassButton
+                  href="/products"
+                  variant="primary"
+                  className="!px-6 !py-3 shadow-lg shadow-cyan-500/20 cursor-pointer"
+                  icon={<ArrowRight className="h-4 w-4" />}
+                >
+                  Explore 9 Products
+                </GlassButton>
+              </Magnet>
+
+              <Magnet magnetStrength={0.18}>
+                <GlassButton
+                  href="/downloads"
+                  variant="secondary"
+                  className="!px-6 !py-3 cursor-pointer"
+                  icon={<Download className="h-4 w-4" />}
+                >
+                  Download APKs
+                </GlassButton>
+              </Magnet>
+
+              <Magnet magnetStrength={0.18}>
+                <GlassButton
+                  onClick={onOpenSearch}
+                  variant="ghost"
+                  className="!px-5 !py-3 text-white/70 hover:text-white cursor-pointer"
+                  icon={<Search className="h-4 w-4 text-cyan-400" />}
+                >
+                  Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
+                </GlassButton>
+              </Magnet>
             </div>
 
             {/* Verified Metrics Strip */}
@@ -92,18 +98,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          {/* Right Column: Physical Device Showcase with Glass Reflection */}
+          {/* Right Column: Physical Device Showcase with Tactile 3D Tilt */}
           <div className="flex justify-center lg:col-span-5">
             <div className="relative w-full max-w-[340px] sm:max-w-[380px]">
               {/* Soft ambient back-glow */}
               <div className="pointer-events-none absolute -inset-4 rounded-[48px] bg-gradient-to-tr from-cyan-500/20 via-blue-500/10 to-transparent blur-2xl" />
 
               <DeviceMockup
-                assetPath={heroShot?.assetPath || '/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg'}
-                altText={heroShot?.altText || 'BeatBox Pro live player capture'}
-                frame="titanium"
-                notch="island"
-                shadow
+                src="/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg"
+                alt="BeatBox Ultra 405 Ambient Player"
+                glowColor="#00f2fe"
                 className="relative z-10 w-full"
               />
 
