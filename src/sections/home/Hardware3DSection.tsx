@@ -13,19 +13,20 @@ import { cn } from '../../utils/cn'
  * for each product to guarantee no dark/blank screens are shown by default.
  */
 const BEST_SHOWCASE_SHOT: Record<string, string> = {
-  'bearbox-ultra': 'shot-2', // Ambient Glass Now Playing (warm album tones + waveform)
+  'bearbox-ultra': 'shot-1', // Ambient Glass Now Playing (warm album tones + waveform)
   'beatbox-pro': 'shot-2',   // Hi-Res Now Playing (full playback UI, bitrate, album art)
-  'beatbox-lite': 'shot-2',  // Streamlined Player Card (vibrant contrast)
+  'beatbox-lite': 'shot-1',  // Compact Playlist & Track Hub (100% active screen coverage)
   'inixa-ai': 'shot-1',      // AI Chat Interface
-  'liquid-stream': 'shot-1', // Gesture 4K Video Engine
-  'mytube': 'shot-1',        // Decentralized Player
+  'liquid-stream': 'shot-1', // Live Stream Hub (edge-to-edge high-def channels)
+  'mytube': 'shot-1',        // Trending Feed & Home (clean zero-ad algorithmic feed)
   'lumina': 'shot-1',        // Fire Wipe Engine & Sandbox
-  'clipster': 'shot-1',      // Multi-thread Transcoder
+  'clipster': 'shot-5',      // Format Transcoder (multi-format video converter)
   'wikipedia-infopedia': 'shot-1',
+  'wikipedia-app': 'sc_cite',
 }
 
 export const Hardware3DSection: React.FC = () => {
-  const [selectedProductId, setSelectedProductId] = useState<string>('beatbox-pro')
+  const [selectedProductId, setSelectedProductId] = useState<string>('bearbox-ultra')
   const [selectedShotKey, setSelectedShotKey] = useState<string | null>(null)
 
   const selectedProduct = ALL_PRODUCTS.find((p) => p.id === selectedProductId) || ALL_PRODUCTS[0]

@@ -115,18 +115,18 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-1": {
       "product": "bearbox-ultra",
       "featureId": "shot-1",
-      "originalFile": "07f9d788-7d1b-412d-a222-877738707aec.jpg",
-      "assetPath": "/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg",
-      "whatItShows": "Artist Page & Top Tracks",
-      "altText": "Full bleed portrait photography with discography, albums, and curated top hits."
-    },
-    "shot-2": {
-      "product": "bearbox-ultra",
-      "featureId": "shot-2",
       "originalFile": "2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg",
       "assetPath": "/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg",
       "whatItShows": "Ambient Glass Now Playing",
       "altText": "Player interface dynamically saturated with the album's warm tones and waveform seekbar."
+    },
+    "shot-2": {
+      "product": "bearbox-ultra",
+      "featureId": "shot-2",
+      "originalFile": "07f9d788-7d1b-412d-a222-877738707aec.jpg",
+      "assetPath": "/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg",
+      "whatItShows": "Artist Page & Top Tracks",
+      "altText": "Full bleed portrait photography with discography, albums, and curated top hits."
     },
     "shot-3": {
       "product": "bearbox-ultra",
@@ -197,10 +197,10 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-1": {
       "product": "beatbox-pro",
       "featureId": "shot-1",
-      "originalFile": "01ee4605-24f3-4202-9a6d-65439547f437.jpg",
-      "assetPath": "/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg",
-      "whatItShows": "Pro Library Explorer",
-      "altText": "Hierarchical folder and artist tree browsing with instant index sorting."
+      "originalFile": "31031e0e-1853-409b-ae3b-e8017f365d7b.jpg",
+      "assetPath": "/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg",
+      "whatItShows": "Queue & Playlist Manager",
+      "altText": "Drag-and-drop queue reordering with non-destructive playlist editing."
     },
     "shot-2": {
       "product": "beatbox-pro",
@@ -221,10 +221,10 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-4": {
       "product": "beatbox-pro",
       "featureId": "shot-4",
-      "originalFile": "31031e0e-1853-409b-ae3b-e8017f365d7b.jpg",
-      "assetPath": "/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg",
-      "whatItShows": "Queue & Playlist Manager",
-      "altText": "Drag-and-drop queue reordering with non-destructive playlist editing."
+      "originalFile": "01ee4605-24f3-4202-9a6d-65439547f437.jpg",
+      "assetPath": "/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg",
+      "whatItShows": "Pro Library Explorer",
+      "altText": "Hierarchical folder and artist tree browsing with instant index sorting."
     },
     "shot-5": {
       "product": "beatbox-pro",
@@ -311,10 +311,10 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-1": {
       "product": "beatbox-lite",
       "featureId": "shot-1",
-      "originalFile": "2968f3b4-4781-4414-9dba-ebe488859c3d.jpg",
-      "assetPath": "/shots/beat-box-lite/2968f3b4-4781-4414-9dba-ebe488859c3d.jpg",
-      "whatItShows": "Minimalist Main Dashboard",
-      "altText": "Clean overview with quick access to all local songs, albums, and recent tracks."
+      "originalFile": "68b49f8c-9460-4dd6-a897-9b104d396ce4.jpg",
+      "assetPath": "/shots/beat-box-lite/68b49f8c-9460-4dd6-a897-9b104d396ce4.jpg",
+      "whatItShows": "Compact Playlist Editor",
+      "altText": "Create quick playlists without complex menus or database bloat."
     },
     "shot-2": {
       "product": "beatbox-lite",
@@ -335,10 +335,10 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-4": {
       "product": "beatbox-lite",
       "featureId": "shot-4",
-      "originalFile": "68b49f8c-9460-4dd6-a897-9b104d396ce4.jpg",
-      "assetPath": "/shots/beat-box-lite/68b49f8c-9460-4dd6-a897-9b104d396ce4.jpg",
-      "whatItShows": "Compact Playlist Editor",
-      "altText": "Create quick playlists without complex menus or database bloat."
+      "originalFile": "2968f3b4-4781-4414-9dba-ebe488859c3d.jpg",
+      "assetPath": "/shots/beat-box-lite/2968f3b4-4781-4414-9dba-ebe488859c3d.jpg",
+      "whatItShows": "Minimalist Main Dashboard",
+      "altText": "Clean overview with quick access to all local songs, albums, and recent tracks."
     },
     "shot-5": {
       "product": "beatbox-lite",
@@ -377,18 +377,18 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
     "shot-1": {
       "product": "liquid-stream",
       "featureId": "shot-1",
-      "originalFile": "104338c6-3296-46a9-b63f-241c8ddbbda9.jpg",
-      "assetPath": "/shots/liquid-streaming/104338c6-3296-46a9-b63f-241c8ddbbda9.jpg",
-      "whatItShows": "Cinema Video Player",
-      "altText": "Edge-to-edge playback with intuitive on-screen gesture controllers."
-    },
-    "shot-2": {
-      "product": "liquid-stream",
-      "featureId": "shot-2",
       "originalFile": "42ef5c25-7aac-48ce-80d0-606989fba156.jpg",
       "assetPath": "/shots/liquid-streaming/42ef5c25-7aac-48ce-80d0-606989fba156.jpg",
       "whatItShows": "Live Stream Hub",
       "altText": "Interactive catalog of high-definition streaming channels and live broadcasts."
+    },
+    "shot-2": {
+      "product": "liquid-stream",
+      "featureId": "shot-2",
+      "originalFile": "104338c6-3296-46a9-b63f-241c8ddbbda9.jpg",
+      "assetPath": "/shots/liquid-streaming/104338c6-3296-46a9-b63f-241c8ddbbda9.jpg",
+      "whatItShows": "Cinema Video Player",
+      "altText": "Edge-to-edge playback with intuitive on-screen gesture controllers."
     },
     "shot-3": {
       "product": "liquid-stream",
