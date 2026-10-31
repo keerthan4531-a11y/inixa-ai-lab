@@ -1,11 +1,11 @@
 import React from 'react'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
-import { ShinyText } from '../../components/react-bits/ShinyText'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import TechText from '../../components/TechText'
 import Shuffle from '../../components/Shuffle'
+import ElectricLogo from '../../components/ElectricLogo'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -34,8 +34,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
-        {/* Brand band: interactive TechText wordmark */}
+        {/* Brand band: ElectricLogo + interactive TechText wordmark */}
         <div className="mb-2 sm:mb-4 text-center">
+          <div className="mx-auto mb-3 flex items-center justify-center">
+            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#060a12]/90 border border-cyan-400/40 p-1 shadow-[0_0_30px_rgba(34,211,238,0.25)] overflow-hidden">
+              <ElectricLogo
+                src="/inixa-brand-electric.svg"
+                color="#38bdf8"
+                glowColor="#0284c7"
+                scale={0.82}
+                strands={4}
+                bend={0.6}
+                crackle={1.4}
+                arcs={1}
+                speed={2.2}
+                interactive
+              />
+            </div>
+          </div>
+
           <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-3">
             <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
             <DecryptedText

@@ -1006,3 +1006,4 @@ const ElectricLogo = ({
 };
 
 export default ElectricLogo;
+
