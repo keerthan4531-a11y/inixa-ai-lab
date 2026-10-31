@@ -112,18 +112,18 @@ export const APK_CATALOG: Record<string, ProductApk[]> = {
       ],
     },
   ],
-  'bearbox-ultra': [
+  'beatbox-ultra': [
     {
       version: 'v1.0.405',
       versionCode: 405,
       releaseDate: '2026-10-19',
-      fileName: 'bearbox-ultra-v1.0.405-arm64.apk',
+      fileName: 'beatbox-ultra-v1.0.405-arm64.apk',
       sizeBytes: 139746862,
       sizeFormatted: '133.2 MB',
       abi: 'arm64-v8a',
       minSdk: 33,
       targetSdk: 35,
-      downloadPath: '/downloads/bearbox-ultra/bearbox-ultra-v1.0.405-arm64.apk',
+      downloadPath: '/downloads/beatbox-ultra/beatbox-ultra-v1.0.405-arm64.apk',
       isLatest: true,
       changelog: [
         "Brina Glass UI: dynamic backdrop refraction shaders using Haze",
@@ -335,8 +335,8 @@ export const ALL_APKS = ALL_VERIFIED_APKS.map((apk) => ({
       ? 'BeatBox Pro'
       : apk.productId === 'beatbox-lite'
       ? 'BeatBox Lite'
-      : apk.productId === 'bearbox-ultra'
-      ? 'BearBox Ultra'
+      : apk.productId === 'beatbox-ultra'
+      ? 'BeatBox Ultra'
       : apk.productId === 'mytube'
       ? 'MyTube Music'
       : apk.productId === 'lumina'

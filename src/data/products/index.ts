@@ -2,7 +2,7 @@ import { Product } from '../../types/product'
 import { APK_CATALOG } from '../apks'
 import { beatboxPro } from './beatbox-pro'
 import { beatboxLite } from './beatbox-lite'
-import { bearboxUltra } from './bearbox-ultra'
+import { beatboxUltra } from './beatbox-ultra'
 import { mytube } from './mytube'
 import { lumina } from './lumina'
 import { liquidStream } from './liquid-stream'
@@ -16,7 +16,7 @@ export type { Product }
 const rawProducts: Product[] = [
   beatboxPro,
   beatboxLite,
-  bearboxUltra,
+  beatboxUltra,
   mytube,
   lumina,
   liquidStream,
@@ -51,7 +51,7 @@ export const PRODUCTS_BY_ID: Record<string, Product> = ALL_PRODUCTS.reduce(
 export {
   beatboxPro,
   beatboxLite,
-  bearboxUltra,
+  beatboxUltra,
   mytube,
   lumina,
   liquidStream,

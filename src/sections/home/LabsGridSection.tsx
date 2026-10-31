@@ -1,10 +1,36 @@
 import React, { useState, useMemo } from 'react'
 import { ALL_PRODUCTS } from '../../data/products'
 import { SCREENSHOT_MAP } from '../../data/screenshotMap'
-import { GlassCard } from '../../components/common/GlassCard'
+import { SpotlightCard } from '../../components/react-bits/SpotlightCard'
 import { SafeImage } from '../../components/common/SafeImage'
 import { navigate, Link } from '../../router'
-import { Download, ArrowRight, Sparkles, Layers } from 'lucide-react'
+import {
+  Download,
+  ArrowRight,
+  Sparkles,
+  Layers,
+  ShieldCheck,
+  Cpu,
+  Volume2,
+  Play,
+  ExternalLink,
+  Zap,
+  Activity,
+  CheckCircle2
+} from 'lucide-react'
+
+// Curated verified cover images for each product ensuring stunning visuals
+const PRODUCT_COVERS: Record<string, string> = {
+  'beatbox-pro': '/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg',
+  'beatbox-lite': '/shots/beat-box-lite/68b49f8c-9460-4dd6-a897-9b104d396ce4.jpg',
+  'beatbox-ultra': '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg',
+  'mytube': '/shots/my-tube/0dc8c448-f622-445e-9d91-3d369983fe0b.jpg',
+  'lumina': '/shots/lumina/1dbdeee2-29bd-428c-9a98-2ef080a1a015.jpg',
+  'liquid-stream': '/shots/liquid-streaming/42ef5c25-7aac-48ce-80d0-606989fba156.jpg',
+  'clipster': '/shots/clipster/089378e2-9f36-4469-9b1f-bb71b23e803d.jpg',
+  'wikipedia-app': '/shots/wikipedia-app/1_en-US.png',
+  'inixa-ai': '/shots/inixa-ai/image.png'
+}
 
 export const LabsGridSection: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState<string>('all')
@@ -28,137 +54,196 @@ export const LabsGridSection: React.FC = () => {
   }, [activeCategory])
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6" id="experiments">
-      <div className="mb-12 text-center">
-        <div className="mb-3 inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-widest text-cyan-400">
-          <Layers className="h-3.5 w-3.5" aria-hidden="true" />
-          <span>INIXA Labs Directory</span>
+    <section className="relative mx-auto max-w-7xl px-4 py-24 sm:px-6" id="experiments">
+      {/* Background atmospheric ambient aura */}
+      <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-5xl h-64 bg-cyan-500/10 blur-[120px] rounded-full" aria-hidden="true" />
+
+      {/* Header section with ultra-modern typography and animated pill badge */}
+      <div className="mb-14 text-center relative z-10">
+        <div className="mb-3.5 inline-flex items-center gap-2 rounded-full border border-cyan-400/35 bg-cyan-950/70 px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-cyan-300 shadow-[0_0_20px_rgba(0,242,254,0.18)] backdrop-blur-xl">
+          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+          <Layers className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
+          <span>INIXA LABS REPOSITORY • 9 FLAGSHIPS</span>
         </div>
-        <h2 className="mb-4 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-          Experiments &amp; Production Flagships
+
+        <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+          Experiments &amp;{' '}
+          <span className="bg-gradient-to-r from-cyan-400 via-sky-300 to-indigo-400 bg-clip-text text-transparent">
+            Production Flagships
+          </span>
         </h2>
-        <p className="mx-auto max-w-2xl text-sm text-white/60 sm:text-base">
-          All 9 mobile and desktop systems, fully unbundled and verified for independent sideloading.
+
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
+          All 9 physical mobile and desktop software architectures — bit-perfect audio, autonomous air-gapped AI, hardened web privacy, and zero-ad stream pipelines.
         </p>
 
-        {/* Category filters — one scrollable row on phones */}
-        <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:items-center sm:justify-center sm:px-0">
-          {categories.map((cat) => (
-            <button
-              type="button"
-              key={cat.id}
-              onClick={() => setActiveCategory(cat.id)}
-              aria-pressed={activeCategory === cat.id}
-              className={`flex min-h-11 shrink-0 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
-                activeCategory === cat.id
-                  ? 'bg-cyan-400 font-bold text-black shadow-lg shadow-cyan-400/25'
-                  : 'border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
-              }`}
-            >
-              <span>{cat.label}</span>
-              <span
-                className={`rounded-full px-1.5 py-0.5 text-[10px] ${
-                  activeCategory === cat.id ? 'bg-black/20 text-black' : 'bg-white/10 text-white/55'
+        {/* Floating Liquid Category Filter Chips */}
+        <div className="no-scrollbar -mx-4 mt-8 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:items-center sm:justify-center sm:px-0">
+          {categories.map((cat) => {
+            const isActive = activeCategory === cat.id
+            return (
+              <button
+                type="button"
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                aria-pressed={isActive}
+                className={`group relative flex min-h-11 shrink-0 items-center gap-2.5 rounded-full px-5 py-2 text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  isActive
+                    ? 'bg-gradient-to-r from-cyan-400 via-cyan-300 to-blue-500 text-black shadow-[0_0_24px_rgba(0,242,254,0.4)] scale-[1.03]'
+                    : 'border border-white/12 bg-white/[0.04] text-white/75 hover:border-cyan-400/40 hover:bg-white/[0.08] hover:text-white backdrop-blur-md'
                 }`}
               >
-                {cat.count}
-              </span>
-            </button>
-          ))}
+                <span>{cat.label}</span>
+                <span
+                  className={`rounded-full px-2 py-0.5 text-[10px] font-mono ${
+                    isActive
+                      ? 'bg-black/25 text-black font-extrabold'
+                      : 'bg-white/10 text-white/60 group-hover:bg-white/20'
+                  }`}
+                >
+                  {cat.count}
+                </span>
+              </button>
+            )
+          })}
         </div>
       </div>
 
       {filteredProducts.length === 0 ? (
-        <p className="py-16 text-center text-sm text-white/55">No products in this category yet.</p>
+        <p className="py-20 text-center text-sm text-white/55">No products in this category yet.</p>
       ) : (
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+        /* 9 Products Grid powered by React Bits SpotlightCard with interactive cursor follow */
+        <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3 relative z-10">
           {filteredProducts.map((prod) => {
             const latestApk = prod.apks?.[prod.apks.length - 1]
             const firstFeature = prod.features[0]
-            // Cards were 9 identical text boxes. A real capture up top makes
-            // each product recognisable in one glance (SafeImage degrades to
-            // a branded placeholder for products without registry shots).
-            const cover = Object.values(SCREENSHOT_MAP[prod.id] || {})[0]
+            const coverPath = PRODUCT_COVERS[prod.id] || Object.values(SCREENSHOT_MAP[prod.id] || {})[0]?.assetPath
 
             return (
-              <GlassCard
+              <SpotlightCard
                 key={prod.id}
-                glowColor={prod.accentColor}
-                className="group flex cursor-pointer flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+                spotlightColor={`${prod.accentColor || '#00f2fe'}38`}
+                className="group flex flex-col overflow-hidden rounded-[28px] border border-white/12 bg-[#060a14]/95 backdrop-blur-2xl transition-all duration-300 hover:border-cyan-400/50 hover:shadow-[0_24px_65px_rgba(0,242,254,0.18)] hover:-translate-y-2 cursor-pointer"
                 onClick={() => navigate(`/product/${prod.id}`)}
               >
-                <div className="relative aspect-[16/9] w-full overflow-hidden bg-black/50">
-                  <SafeImage
-                    src={cover?.assetPath}
-                    alt={cover?.altText || `${prod.name} in action`}
-                    fallbackLabel={prod.name}
-                    accentColor={prod.accentColor}
-                    className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+                {/* 1. Real Physical Device Mockup Showcase Header */}
+                <div className="relative h-64 sm:h-72 w-full flex items-center justify-center p-4 bg-gradient-to-b from-[#02040a] via-[#050b18] to-[#060a14] border-b border-white/10 overflow-hidden">
+                  {/* Subtle radial aura behind phone */}
+                  <div
+                    className="pointer-events-none absolute inset-0 opacity-25 blur-2xl transition-opacity duration-500 group-hover:opacity-40"
+                    style={{ background: `radial-gradient(circle at center, ${prod.accentColor || '#00f2fe'}, transparent 65%)` }}
                   />
-                  <span
-                    className="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-[#0a101c] to-transparent"
-                    aria-hidden="true"
-                  />
-                </div>
 
-                <div className="flex flex-1 flex-col p-6 pt-4">
-                  <div className="mb-4 flex items-center justify-between gap-2">
-                    <span
-                      className="inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white"
-                      style={{
-                        backgroundColor: `${prod.accentColor}25`,
-                        borderColor: `${prod.accentColor}40`,
-                      }}
-                    >
-                      <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: prod.accentColor }} aria-hidden="true" />
-                      {prod.badge}
-                    </span>
-                    <span className="text-[11px] font-mono text-white/45">{prod.platform.split('(')[0]}</span>
+                  {/* Physical Smartphone Shell with notch and real app screen */}
+                  <div className="relative h-full aspect-[9/19] rounded-[24px] border-[2.5px] border-white/25 bg-black shadow-[0_16px_36px_rgba(0,0,0,0.85)] overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-cyan-400/60 group-hover:-translate-y-1">
+                    {/* Dynamic Notch / Island */}
+                    <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-14 h-3 bg-black rounded-full border border-white/15 z-30 flex items-center justify-center">
+                      <div className="w-1.5 h-1.5 rounded-full bg-neutral-800 border border-neutral-600 mr-2" />
+                      <div className="w-1 h-1 rounded-full bg-blue-900" />
+                    </div>
+
+                    {/* Screenshot displaying verified real hardware app capture */}
+                    <img
+                      src={coverPath}
+                      alt={`${prod.name} verified physical capture`}
+                      loading="eager"
+                      className="h-full w-full object-cover object-top"
+                    />
+
+                    {/* Glass Reflection Sheen */}
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent" />
                   </div>
 
-                  <h3 className="mb-2 text-xl font-bold text-white transition-colors group-hover:text-cyan-300">
-                    {prod.name}
-                  </h3>
-                  <p className="mb-5 text-sm leading-relaxed text-white/60 line-clamp-2">{prod.tagline}</p>
+                  {/* Top Floating Badge Bar with Live Status Indicator */}
+                  <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-20 pointer-events-none">
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xl backdrop-blur-xl"
+                      style={{
+                        backgroundColor: `${prod.accentColor || '#00f2fe'}38`,
+                        borderColor: `${prod.accentColor || '#00f2fe'}77`,
+                      }}
+                    >
+                      {prod.category === 'audio' ? (
+                        <span className="flex items-end gap-0.5 h-2.5 mr-0.5">
+                          <span className="w-0.5 h-2 bg-amber-400 animate-pulse" />
+                          <span className="w-0.5 h-3 bg-amber-300 animate-bounce" />
+                          <span className="w-0.5 h-1.5 bg-amber-400 animate-pulse" />
+                        </span>
+                      ) : prod.category === 'browser' ? (
+                        <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                      ) : prod.category === 'ai' ? (
+                        <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-ping" />
+                      ) : (
+                        <Zap className="h-3 w-3 text-cyan-300" />
+                      )}
+                      {prod.badge || 'FLAGSHIP'}
+                    </span>
 
+                    <span className="rounded-full border border-white/15 bg-black/80 px-2.5 py-0.5 text-[10px] font-mono font-medium text-white/80 backdrop-blur-md">
+                      {prod.platform.split('(')[0].trim()}
+                    </span>
+                  </div>
+                </div>
+
+                {/* 2. Card Content Body */}
+                <div className="flex flex-1 flex-col p-6 pt-5">
+                  <div className="mb-2 flex items-center justify-between gap-2">
+                    <h3 className="text-xl font-black tracking-tight text-white transition-colors duration-200 group-hover:text-cyan-300">
+                      {prod.name}
+                    </h3>
+                    <span className="text-[11px] font-mono font-semibold text-cyan-400/90 bg-cyan-950/60 border border-cyan-800/40 px-2 py-0.5 rounded-md">
+                      {latestApk ? latestApk.version : prod.specs['Engine Version'] || 'v1.0'}
+                    </span>
+                  </div>
+
+                  <p className="mb-5 text-xs sm:text-sm leading-relaxed text-white/65 line-clamp-2">
+                    {prod.tagline}
+                  </p>
+
+                  {/* Feature Spotlight Box */}
                   {firstFeature && (
-                    <div className="mb-6 rounded-xl border border-white/10 bg-white/[0.02] p-3">
-                      <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-white/85">
+                    <div className="mb-6 rounded-2xl border border-white/10 bg-white/[0.03] p-3.5 transition-colors group-hover:border-cyan-500/25 group-hover:bg-cyan-950/15">
+                      <div className="mb-1 flex items-center gap-1.5 text-xs font-bold text-white/90">
                         <Sparkles className="h-3 w-3 text-cyan-400" aria-hidden="true" />
-                        {firstFeature.title}
+                        <span className="truncate">{firstFeature.title}</span>
                       </div>
-                      <div className="text-xs leading-relaxed text-white/55 line-clamp-2">{firstFeature.description}</div>
+                      <div className="text-xs leading-relaxed text-white/55 line-clamp-2">
+                        {firstFeature.description}
+                      </div>
                     </div>
                   )}
 
-                  <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4">
+                  {/* 3. Card Footer Action Bar */}
+                  <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4.5">
                     {latestApk ? (
                       <a
                         href={encodeURI(latestApk.downloadPath)}
                         download
                         onClick={(e) => e.stopPropagation()}
-                        className="inline-flex min-h-11 items-center gap-1.5 py-1 text-xs font-semibold text-emerald-400 transition-colors hover:text-emerald-300"
+                        className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-bold text-emerald-300 transition-all hover:bg-emerald-500/20 hover:border-emerald-400"
                         aria-label={`Download ${prod.name} ${latestApk.version} APK (${latestApk.sizeFormatted})`}
                       >
                         <Download className="h-3.5 w-3.5" aria-hidden="true" />
-                        <span>{latestApk.version}</span>
-                        <span className="text-[11px] text-white/45">({latestApk.sizeFormatted})</span>
+                        <span>Get APK</span>
+                        <span className="text-[10px] font-mono text-emerald-400/70">({latestApk.sizeFormatted})</span>
                       </a>
                     ) : (
-                      <span className="text-xs text-white/45">Desktop Engine</span>
+                      <span className="inline-flex items-center gap-1.5 text-xs text-white/45 font-mono">
+                        <Cpu className="h-3.5 w-3.5" /> Desktop Native
+                      </span>
                     )}
 
-                    {/* A real, keyboard-focusable link — the card-wide onClick alone was unreachable by keyboard */}
                     <Link
                       to={`/product/${prod.id}`}
-                      className="inline-flex min-h-11 items-center gap-1 py-1 text-xs font-bold text-cyan-400 transition-transform group-hover:translate-x-0.5"
+                      className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-bold text-white/90 transition-all group-hover:border-cyan-400/50 group-hover:text-cyan-300 group-hover:bg-cyan-500/10"
                       aria-label={`View ${prod.name} details`}
                     >
-                      Details <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
+                      <span>Explore</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
                     </Link>
                   </div>
                 </div>
-              </GlassCard>
+              </SpotlightCard>
             )
           })}
         </div>

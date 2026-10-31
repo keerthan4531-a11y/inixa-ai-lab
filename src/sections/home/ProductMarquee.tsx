@@ -13,7 +13,7 @@ interface ProductItem {
 
 const ROW_1_PRODUCTS: ProductItem[] = [
   { name: 'BeatBox Pro', version: 'v2.4.2', category: 'audio', accentColor: '#a855f7' },
-  { name: 'BearBox Ultra', version: 'v1.0.405', category: 'audio', accentColor: '#f59e0b' },
+  { name: 'BeatBox Ultra', version: 'v1.0.405', category: 'audio', accentColor: '#f59e0b' },
   { name: 'Lumina Browser', version: 'v5.295.3', category: 'browser', accentColor: '#00f2fe' },
   { name: 'Clipster', version: 'v2.0.0-stable', category: 'utility', accentColor: '#f43f5e' },
   { name: 'INIXA AI', version: 'v1.0.0', category: 'ai', accentColor: '#38bdf8' },

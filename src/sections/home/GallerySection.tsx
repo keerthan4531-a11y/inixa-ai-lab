@@ -7,7 +7,7 @@ import { Search, X, Maximize2, ExternalLink, ChevronLeft, ChevronRight, ImageOff
 import { navigate } from '../../router'
 
 /**
- * Round-robin across products (BearBox 1, BeatBox Pro 1, …) so the
+ * Round-robin across products (BeatBox 1, BeatBox Pro 1, …) so the
  * carousel shows a rich mixture of the whole ecosystem.
  */
 function interleavedScreenshots(): ScreenshotMeta[] {

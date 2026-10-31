@@ -26,9 +26,9 @@ import { PRODUCTS_BY_ID } from './data/products'
  * Normalizes app ID aliases to ensure every URL lands on the correct product
  */
 function normalizeProductId(rawId) {
-  if (!rawId) return 'bearbox-ultra'
+  if (!rawId) return 'beatbox-ultra'
   const id = rawId.toLowerCase().trim()
-  if (id === 'beat-box-ultra' || id === 'bear-box-ultra') return 'bearbox-ultra'
+  if (id === 'beat-box-ultra' || id === 'bear-box-ultra') return 'beatbox-ultra'
   if (id === 'beat-box-pro' || id === 'echo-music') return 'beatbox-pro'
   if (id === 'beat-box-lite' || id === 'ux-player') return 'beatbox-lite'
   if (id === 'my-tube' || id === 'mytube-music') return 'mytube'

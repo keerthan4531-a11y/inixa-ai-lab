@@ -14,7 +14,7 @@ import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'luci
 
 const DRIFT_ITEMS = [
   { image: '/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg', title: 'BeatBox Pro — Equalizer DSP', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg', title: 'BearBox Ultra — Liquid Glass Player', href: '/product/bearbox-ultra' },
+  { image: '/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg', title: 'BeatBox Ultra — Liquid Glass Player', href: '/product/beatbox-ultra' },
   { image: '/shots/liquid-streaming/104338c6-3296-46a9-b63f-241c8ddbbda9.jpg', title: 'Liquid Stream — 4K Stream Engine', href: '/product/liquid-stream' },
   { image: '/shots/my-tube/0dc8c448-f622-445e-9d91-3d369983fe0b.jpg', title: 'MyTube — Decentralized Player', href: '/product/mytube' },
   { image: '/shots/clipster/089378e2-9f36-4469-9b1f-bb71b23e803d.jpg', title: 'Clipster — Format Transcoder', href: '/product/clipster' },
@@ -22,7 +22,7 @@ const DRIFT_ITEMS = [
   { image: '/shots/beat-box-lite/2968f3b4-4781-4414-9dba-ebe488859c3d.jpg', title: 'BeatBox Lite — Offline Vault', href: '/product/beatbox-lite' },
   { image: '/shots/lumina/1dbdeee2-29bd-428c-9a98-2ef080a1a015.jpg', title: 'Lumina Browser — Fire Wipe Engine', href: '/product/lumina' },
   { image: '/shots/beat-pro/19db6341-8988-4fb8-ba73-41f97dc665ed.jpg', title: 'BeatBox Pro — Dynamic Lyrics', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg', title: 'BearBox Ultra — Ambient Canvas', href: '/product/bearbox-ultra' },
+  { image: '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg', title: 'BeatBox Ultra — Ambient Canvas', href: '/product/beatbox-ultra' },
   { image: '/shots/liquid-streaming/42ef5c25-7aac-48ce-80d0-606989fba156.jpg', title: 'Liquid Stream — Gesture ExoPlayer', href: '/product/liquid-stream' },
   { image: '/shots/my-tube/7a5397cb-7e56-4576-8b3f-94743ad77412.jpg', title: 'MyTube — SponsorBlock UI', href: '/product/mytube' },
   { image: '/shots/clipster/19b0165f-2102-4044-b938-cca4d546c829.jpg', title: 'Clipster — Multi-thread Downloader', href: '/product/clipster' },

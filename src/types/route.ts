@@ -3,7 +3,7 @@ export type AppRoute =
   | '/products'
   | '/products/beatbox-pro'
   | '/products/beatbox-lite'
-  | '/products/bearbox-ultra'
+  | '/products/beatbox-ultra'
   | '/products/mytube'
   | '/products/lumina'
   | '/products/liquid-stream'

@@ -13,7 +13,7 @@ import { cn } from '../../utils/cn'
  * for each product to guarantee no dark/blank screens are shown by default.
  */
 const BEST_SHOWCASE_SHOT: Record<string, string> = {
-  'bearbox-ultra': 'shot-1', // Ambient Glass Now Playing (warm album tones + waveform)
+  'beatbox-ultra': 'shot-1', // Ambient Glass Now Playing (warm album tones + waveform)
   'beatbox-pro': 'shot-2',   // Hi-Res Now Playing (full playback UI, bitrate, album art)
   'beatbox-lite': 'shot-1',  // Compact Playlist & Track Hub (100% active screen coverage)
   'inixa-ai': 'shot-1',      // AI Chat Interface
@@ -26,7 +26,7 @@ const BEST_SHOWCASE_SHOT: Record<string, string> = {
 }
 
 export const Hardware3DSection: React.FC = () => {
-  const [selectedProductId, setSelectedProductId] = useState<string>('bearbox-ultra')
+  const [selectedProductId, setSelectedProductId] = useState<string>('beatbox-ultra')
   const [selectedShotKey, setSelectedShotKey] = useState<string | null>(null)
 
   const selectedProduct = ALL_PRODUCTS.find((p) => p.id === selectedProductId) || ALL_PRODUCTS[0]

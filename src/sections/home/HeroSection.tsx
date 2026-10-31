@@ -194,7 +194,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           src="/media/hero-showcase.mp4"
           autoPlay
           muted={isMuted}
-          defaultMuted
           playsInline
           preload="auto"
           className="h-full w-full object-cover object-[center_25%] opacity-90 transition-opacity duration-700 pointer-events-none"

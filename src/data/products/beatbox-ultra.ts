@@ -1,9 +1,9 @@
 import { Product } from '../../types/product'
 
-export const bearboxUltra: Product = {
-  id: 'bearbox-ultra',
-  slug: 'bearbox-ultra',
-  name: 'BearBox Ultra',
+export const beatboxUltra: Product = {
+  id: 'beatbox-ultra',
+  slug: 'beatbox-ultra',
+  name: 'BeatBox Ultra',
   brand: 'INIXA',
   tagline: 'Brina Glass Elegance & Audiophile Android Experience',
   category: 'audio',
@@ -13,12 +13,12 @@ export const bearboxUltra: Product = {
   accentColor: '#FFBA4A',
   gradient: 'linear-gradient(135deg, #FFBA4A 0%, #D66E00 100%)',
   sourceDirectory: 'E:\\bear-box-ultra',
-  packageId: 'com.inixa.bearbox.ultra',
+  packageId: 'com.inixa.beatbox.ultra',
   githubUrl: 'https://github.com/ozyern/Exhale',
   longDescription:
-    'BearBox Ultra combines the fluid, glassy elegance of Apple Music with the simplicity of Spotify, powered by an advanced Brina Glass dynamic backdrop shader engine and 120fps motion design.',
+    'BeatBox Ultra combines the fluid, glassy elegance of Apple Music with the simplicity of Spotify, powered by an advanced Brina Glass dynamic backdrop shader engine and 120fps motion design.',
   detailedSummary:
-    'Written 100% in Kotlin with pure Jetpack Compose, BearBox Ultra features live dynamic backdrop blurs powered by Chris Banes’ Haze library. The interface breathes with organic liquid caustics, adaptive album tinting, tactile analog volume dials, synchronized lyrics, Android Auto integration, Discord Rich Presence, and a built-in self-updating engine that downloads verified builds without app store intermediaries.',
+    'Written 100% in Kotlin with pure Jetpack Compose, BeatBox Ultra features live dynamic backdrop blurs powered by Chris Banes’ Haze library. The interface breathes with organic liquid caustics, adaptive album tinting, tactile analog volume dials, synchronized lyrics, Android Auto integration, Discord Rich Presence, and a built-in self-updating engine that downloads verified builds without app store intermediaries.',
   techHighlights: [
     'Brina Glass UI: Real-time dynamic frosted glass shader pipeline using Haze',
     'Adaptive Chromatic Theming: UI surfaces continually adapt to album art palettes',

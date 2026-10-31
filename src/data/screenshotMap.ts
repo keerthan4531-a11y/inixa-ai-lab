@@ -111,9 +111,9 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Build info, runtime environment, and open protocol details."
     }
   },
-  "bearbox-ultra": {
+  "beatbox-ultra": {
     "shot-1": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-1",
       "originalFile": "2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg",
       "assetPath": "/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg",
@@ -121,7 +121,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Player interface dynamically saturated with the album's warm tones and waveform seekbar."
     },
     "shot-2": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-2",
       "originalFile": "07f9d788-7d1b-412d-a222-877738707aec.jpg",
       "assetPath": "/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg",
@@ -129,7 +129,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Full bleed portrait photography with discography, albums, and curated top hits."
     },
     "shot-3": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-3",
       "originalFile": "2fad8277-eb9b-4086-8987-8fc10994c123.jpg",
       "assetPath": "/shots/beat-box-ultra/2fad8277-eb9b-4086-8987-8fc10994c123.jpg",
@@ -137,7 +137,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Interactive lyric canvas where words light up to the tempo of the performance."
     },
     "shot-4": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-4",
       "originalFile": "40df8515-0ee9-4b7b-882a-e52e01e4ffed.jpg",
       "assetPath": "/shots/beat-box-ultra/40df8515-0ee9-4b7b-882a-e52e01e4ffed.jpg",
@@ -145,7 +145,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Grouped frosted glass tables organizing artists, saved songs, and personal playlists."
     },
     "shot-5": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-5",
       "originalFile": "771e40e7-49f2-45f4-9e66-44dd9be635b8.jpg",
       "assetPath": "/shots/beat-box-ultra/771e40e7-49f2-45f4-9e66-44dd9be635b8.jpg",
@@ -153,7 +153,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Offline downloaded high-res tracks available anytime without cellular connectivity."
     },
     "shot-6": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-6",
       "originalFile": "8eb12ee5-c42f-41e5-8c91-d06b78bb0975.jpg",
       "assetPath": "/shots/beat-box-ultra/8eb12ee5-c42f-41e5-8c91-d06b78bb0975.jpg",
@@ -161,7 +161,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Daily curated global playlists, viral regional tracks, and newly mastered singles."
     },
     "shot-7": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-7",
       "originalFile": "9cb3fc7d-d586-48d0-b92e-f5ae3d663807.jpg",
       "assetPath": "/shots/beat-box-ultra/9cb3fc7d-d586-48d0-b92e-f5ae3d663807.jpg",
@@ -169,7 +169,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "10-band studio frequency calibration with spatial audio virtualization."
     },
     "shot-8": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-8",
       "originalFile": "b323766a-edea-4d3d-8399-571297e49f3b.jpg",
       "assetPath": "/shots/beat-box-ultra/b323766a-edea-4d3d-8399-571297e49f3b.jpg",
@@ -177,7 +177,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Custom bass booster, treble shaper, and headphone impedance compensator."
     },
     "shot-9": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-9",
       "originalFile": "ddbc0ed1-2cf6-4fb7-b90e-42adf490e85e.jpg",
       "assetPath": "/shots/beat-box-ultra/ddbc0ed1-2cf6-4fb7-b90e-42adf490e85e.jpg",
@@ -185,7 +185,7 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "altText": "Search across millions of songs, regional Indian albums, and international artists."
     },
     "shot-10": {
-      "product": "bearbox-ultra",
+      "product": "beatbox-ultra",
       "featureId": "shot-10",
       "originalFile": "f2261d8f-11de-4007-bea3-c214bffd989a.jpg",
       "assetPath": "/shots/beat-box-ultra/f2261d8f-11de-4007-bea3-c214bffd989a.jpg",
