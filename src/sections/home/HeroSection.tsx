@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { GlassButton } from '../../components/common/GlassButton'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
@@ -8,7 +8,7 @@ import ElectricLogo from '../../components/ElectricLogo'
 import DepthCarousel, { DepthCarouselItem } from '../../components/DepthCarousel'
 import TextType from '../../components/TextType'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
-import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
+import { Download, ArrowRight, Search, ShieldCheck, Music2, Volume2, VolumeX, Sparkles } from 'lucide-react'
 
 interface HeroSectionProps {
   onOpenSearch?: () => void
@@ -118,6 +118,71 @@ const HERO_TYPED_PARAGRAPHS = [
  * with pure dark optics, React Bits 3D DepthCarousel, and interactive typography.
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [isMuted, setIsMuted] = useState(true)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    const startTime = 11
+    video.muted = true
+    video.defaultMuted = true
+
+    const playFrom11 = () => {
+      try {
+        if (Math.abs(video.currentTime - startTime) > 1 && video.currentTime < startTime) {
+          video.currentTime = startTime
+        }
+        const promise = video.play()
+        if (promise !== undefined) {
+          promise.catch(() => {
+            // Autoplay fallback
+            video.muted = true
+            video.play().catch(() => {})
+          })
+        }
+      } catch (e) {}
+    }
+
+    const handleLoadedMetadata = () => {
+      playFrom11()
+    }
+
+    const handleCanPlay = () => {
+      playFrom11()
+    }
+
+    const handleTimeUpdate = () => {
+      // Loop smoothly from 11s to 20s
+      if (video.currentTime >= 19.8 || video.ended) {
+        video.currentTime = startTime
+        video.play().catch(() => {})
+      }
+    }
+
+    const handleEnded = () => {
+      video.currentTime = startTime
+      video.play().catch(() => {})
+    }
+
+    video.addEventListener('loadedmetadata', handleLoadedMetadata)
+    video.addEventListener('canplay', handleCanPlay)
+    video.addEventListener('timeupdate', handleTimeUpdate)
+    video.addEventListener('ended', handleEnded)
+
+    if (video.readyState >= 2) {
+      playFrom11()
+    }
+
+    return () => {
+      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      video.removeEventListener('canplay', handleCanPlay)
+      video.removeEventListener('timeupdate', handleTimeUpdate)
+      video.removeEventListener('ended', handleEnded)
+    }
+  }, [])
+
   const [activeSlide, setActiveSlide] = useState(0)
   const currentItem = HERO_SHOWCASE_ITEMS[activeSlide] || HERO_SHOWCASE_ITEMS[0]
 
@@ -130,11 +195,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
 
   return (
     <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[88vh] lg:flex lg:items-center">
-      {/* Calm, static ambient gradient caustics — subtle, dark, no white wash */}
-      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-10" aria-hidden="true">
-        <div className="h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-cyan-600/30 to-blue-700/20 blur-[80px]" />
+      {/* High-Definition 11s-Loop Cinematic Video Backdrop */}
+      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none" aria-hidden="true">
+        <video
+          ref={videoRef}
+          autoPlay
+          muted={isMuted}
+          defaultMuted
+          playsInline
+          loop={false}
+          preload="auto"
+          className="h-full w-full object-cover object-[center_25%] opacity-90 transition-opacity duration-700"
+        >
+          <source src="/media/hero-showcase.mp4" type="video/mp4" />
+        </video>
+        {/* Cinematic gradient overlays — protect text contrast while keeping moon and wolf in High HD */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/45" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-black/65" />
       </div>
-      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
         {/* Brand band: ElectricLogo + interactive TechText wordmark */}
@@ -276,6 +354,27 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                   Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
                 </GlassButton>
               </Magnet>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const v = videoRef.current
+                  if (v) {
+                    v.muted = !v.muted
+                    setIsMuted(v.muted)
+                  }
+                }}
+                className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-black/70 px-4 py-2.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl transition hover:border-cyan-300 hover:text-white cursor-pointer"
+                title={isMuted ? 'Unmute HD Cinematic Audio' : 'Mute Audio'}
+                aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
+              >
+                {isMuted ? (
+                  <VolumeX className="h-3.5 w-3.5 text-white/60" />
+                ) : (
+                  <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                )}
+                <span>{isMuted ? 'Unmute Audio (11s Loop)' : 'HD Audio Active'}</span>
+              </button>
             </div>
 
             {/* Verified Metrics Strip */}
