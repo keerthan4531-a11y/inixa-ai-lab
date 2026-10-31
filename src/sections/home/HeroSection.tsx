@@ -6,6 +6,7 @@ import TechText from '../../components/TechText'
 import Shuffle from '../../components/Shuffle'
 import ElectricLogo from '../../components/ElectricLogo'
 import DepthCarousel, { DepthCarouselItem } from '../../components/DepthCarousel'
+import TextType from '../../components/TextType'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -102,6 +103,14 @@ const HERO_SHOWCASE_ITEMS: DepthCarouselItem[] = [
     subtitle: 'True Background PIP Playback',
     badge: 'STREAMING'
   }
+]
+
+const HERO_TYPED_PARAGRAPHS = [
+  'Nine native applications — audiophile bit-perfect players, an autonomous AI sandbox, a hardened privacy browser, and zero-ad stream extractors. Real software, captured on real hardware, with zero telemetry.',
+  'Hardware-calibrated audiophile architecture — direct bit-perfect ALSA and USB DAC streams, 31-band parametric equalizers, dynamic lyrics, and pristine local lossless reproduction.',
+  'Autonomous on-device neural sandbox — private air-gapped LLM inference, multi-agent workspaces, and grounded local knowledge with absolute hardware containment.',
+  'Hardened privacy browsers and bufferless stream extractors — zero third-party telemetry, ad-free streaming with background PIP playback, SponsorBlock automation, and clean media downloads.',
+  'Fifteen production APK releases compiled with verified SHA-256 signatures — engineered exclusively for physical Snapdragon and modern Android flagships with zero telemetry.'
 ]
 
 /**
@@ -214,11 +223,24 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               accentColor="#22d3ee"
             />
 
-            <p className="mb-8 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
-              Nine native applications — audiophile bit-perfect players, an autonomous AI
-              sandbox, a hardened privacy browser, and zero-ad stream extractors. Real software,
-              captured on real hardware, with zero telemetry.
-            </p>
+            {/* React Bits TextType — 5 Cyclical Flagship Paragraphs */}
+            <div className="mb-8 max-w-2xl min-h-[5.5rem] sm:min-h-[5rem]">
+              <TextType
+                text={HERO_TYPED_PARAGRAPHS}
+                typingSpeed={32}
+                pauseDuration={3000}
+                deletingSpeed={16}
+                deleteMode="backspace"
+                typeEffect="fade"
+                mistakes={0.01}
+                cursorStyle="bar"
+                cursorGlide
+                showCursor
+                loop
+                cursorColor="#22d3ee"
+                className="text-base leading-relaxed text-white/80 sm:text-lg"
+              />
+            </div>
 
             {/* Premium Interactive CTA Buttons with Magnet Effect */}
             <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
@@ -267,22 +289,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          {/* Right Column: Physical Device 3D DepthCarousel */}
+          {/* Right Column: Physical Device 3D DepthCarousel — Zoomed and prominent */}
           <div className="flex flex-col items-center justify-center lg:col-span-5">
-            <div className="relative w-full max-w-[340px] sm:max-w-[400px] h-[570px] sm:h-[620px] flex items-center justify-center">
+            <div className="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[480px] h-[640px] sm:h-[700px] flex items-center justify-center">
               {/* Soft ambient back-glow aura */}
-              <div className="pointer-events-none absolute -inset-4 rounded-[48px] bg-cyan-500/15 blur-2xl opacity-40" />
+              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-cyan-500/15 blur-3xl opacity-50" />
 
               <DepthCarousel
                 items={HERO_SHOWCASE_ITEMS}
-                cardWidth={260}
-                cardHeight={520}
-                radius={34}
-                depth={160}
-                spread={55}
+                cardWidth={310}
+                cardHeight={620}
+                radius={40}
+                depth={170}
+                spread={60}
                 tilt={16}
                 tiltDirection="right"
-                perspective={1300}
+                perspective={1400}
                 visibleCards={4}
                 falloff={0.22}
                 blur={4}

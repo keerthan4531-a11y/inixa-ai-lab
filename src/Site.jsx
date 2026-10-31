@@ -157,7 +157,7 @@ export default function Site() {
           fillOpacity={0.03}
           gridOpacity={0.06}
           spotlight={0.3}
-          clickPulse
+          clickPulse={false}
           edgeFade={0.25}
           intro={false}
           className="w-full h-full"

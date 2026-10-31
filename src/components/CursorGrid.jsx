@@ -14,7 +14,7 @@ export const CursorGrid = ({
   gridOpacity = 0.08,
   gridStyle = 'lines',
   spotlight = 0.35,
-  clickPulse = true,
+  clickPulse = false,
   pulseSpeed = 600,
   className = '',
   style,
@@ -42,7 +42,6 @@ export const CursorGrid = ({
     let cellTouched = new Float32Array(0);
 
     const mouse = { x: -1000, y: -1000, active: false };
-    const pulses = [];
 
     const resize = () => {
       width = container.clientWidth;
@@ -112,21 +111,7 @@ export const CursorGrid = ({
       mouse.active = false;
     };
 
-    const handlePointerDown = (e) => {
-      if (!clickPulse) return;
-      const rect = container.getBoundingClientRect();
-      const px = e.clientX - rect.left;
-      const py = e.clientY - rect.top;
-      pulses.push({
-        x: px,
-        y: py,
-        startTime: performance.now(),
-        strength: 1.0,
-      });
-    };
-
     window.addEventListener('pointermove', handlePointerMove, { passive: true });
-    window.addEventListener('pointerdown', handlePointerDown, { passive: true });
     document.documentElement.addEventListener('pointerleave', handlePointerLeave);
 
     const render = () => {
@@ -188,28 +173,7 @@ export const CursorGrid = ({
         }
       }
 
-      // 3. Draw click pulses
-      const maxPulseDist = Math.hypot(width, height);
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const p = pulses[i];
-        const dt = (now - p.startTime) / 1000;
-        const currentRadius = dt * pulseSpeed;
-
-        if (currentRadius > maxPulseDist) {
-          pulses.splice(i, 1);
-          continue;
-        }
-
-        const alpha = Math.max(0, 1 - currentRadius / (maxPulseDist * 0.7)) * 0.4;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, currentRadius, 0, Math.PI * 2);
-        ctx.strokeStyle = color;
-        ctx.lineWidth = 2;
-        ctx.globalAlpha = alpha;
-        ctx.stroke();
-      }
-
-      // 4. Subtle mouse cursor spotlight
+      // 3. Subtle mouse cursor spotlight
       if (mouse.active && spotlight > 0) {
         const grad = ctx.createRadialGradient(mouse.x, mouse.y, 0, mouse.x, mouse.y, radius);
         grad.addColorStop(0, color);
@@ -231,7 +195,6 @@ export const CursorGrid = ({
       cancelAnimationFrame(rafId);
       ro.disconnect();
       window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerdown', handlePointerDown);
       document.documentElement.removeEventListener('pointerleave', handlePointerLeave);
     };
   }, [
