@@ -154,11 +154,12 @@ export default function Site() {
           radius={140}
           holdTime={400}
           fadeDuration={800}
-          fillOpacity={0.06}
-          gridOpacity={0.08}
-          spotlight={0.6}
+          fillOpacity={0.03}
+          gridOpacity={0.06}
+          spotlight={0.3}
           clickPulse
-          edgeFade={0.2}
+          edgeFade={0.25}
+          intro={false}
           className="w-full h-full"
         />
       </div>

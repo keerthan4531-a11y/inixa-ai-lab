@@ -36,3 +36,4 @@ export interface DepthCarouselProps {
 
 declare const DepthCarousel: React.FC<DepthCarouselProps>;
 export default DepthCarousel;
+

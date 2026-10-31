@@ -6,11 +6,6 @@
   line-height: inherit;
   font-size: inherit;
   font-family: inherit;
-  visibility: hidden;
-}
-
-.shuffle-parent.is-ready {
-  visibility: visible;
 }
 
 .shuffle-char-wrapper {
@@ -30,4 +25,3 @@
   display: inline-block;
   text-align: center;
 }
-

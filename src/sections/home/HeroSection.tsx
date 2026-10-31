@@ -121,9 +121,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
 
   return (
     <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[88vh] lg:flex lg:items-center">
-      {/* Calm, static ambient gradient caustics — no moving orbs */}
-      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-30" aria-hidden="true">
-        <div className="h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-cyan-500/20 via-blue-600/15 to-purple-600/15 blur-[140px]" />
+      {/* Calm, static ambient gradient caustics — subtle, dark, no white wash */}
+      <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-10" aria-hidden="true">
+        <div className="h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-cyan-600/30 to-blue-700/20 blur-[80px]" />
       </div>
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black" aria-hidden="true" />
 
@@ -271,7 +271,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           <div className="flex flex-col items-center justify-center lg:col-span-5">
             <div className="relative w-full max-w-[340px] sm:max-w-[400px] h-[570px] sm:h-[620px] flex items-center justify-center">
               {/* Soft ambient back-glow aura */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-gradient-to-tr from-cyan-500/25 via-blue-500/15 to-purple-600/10 blur-3xl opacity-60" />
+              <div className="pointer-events-none absolute -inset-4 rounded-[48px] bg-cyan-500/15 blur-2xl opacity-40" />
 
               <DepthCarousel
                 items={HERO_SHOWCASE_ITEMS}
