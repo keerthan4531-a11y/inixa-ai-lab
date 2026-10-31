@@ -32,3 +32,4 @@ export interface TextTypeProps {
 
 declare const TextType: React.FC<TextTypeProps>;
 export default TextType;
+
