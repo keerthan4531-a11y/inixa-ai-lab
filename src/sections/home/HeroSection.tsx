@@ -125,61 +125,53 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
     const video = videoRef.current
     if (!video) return
 
-    const startTime = 11
+    const START_TIME = 11.0
+    const END_TIME = 20.0
+    let isSeeking = false
+
     video.muted = true
     video.defaultMuted = true
 
-    const playFrom11 = () => {
+    const seekToStart = () => {
+      if (isSeeking) return
+      isSeeking = true
       try {
-        if (Math.abs(video.currentTime - startTime) > 1 && video.currentTime < startTime) {
-          video.currentTime = startTime
-        }
-        const promise = video.play()
-        if (promise !== undefined) {
-          promise.catch(() => {
-            // Autoplay fallback
-            video.muted = true
-            video.play().catch(() => {})
-          })
-        }
+        video.currentTime = START_TIME
+        video.play().catch(() => {})
       } catch (e) {}
-    }
-
-    const handleLoadedMetadata = () => {
-      playFrom11()
-    }
-
-    const handleCanPlay = () => {
-      playFrom11()
+      setTimeout(() => {
+        isSeeking = false
+      }, 350)
     }
 
     const handleTimeUpdate = () => {
-      // Loop smoothly from 11s to 20s
-      if (video.currentTime >= 19.8 || video.ended) {
-        video.currentTime = startTime
-        video.play().catch(() => {})
+      if (isSeeking) return
+      // When reaching 20s (or near end >=19.8s), loop back to 11s
+      if (video.currentTime >= END_TIME - 0.2 || video.ended) {
+        seekToStart()
+      } else if (video.currentTime < START_TIME - 0.5) {
+        // If somehow behind 11s, immediately seek to 11s
+        seekToStart()
       }
     }
 
-    const handleEnded = () => {
-      video.currentTime = startTime
-      video.play().catch(() => {})
+    const handleInitialLoad = () => {
+      seekToStart()
     }
 
-    video.addEventListener('loadedmetadata', handleLoadedMetadata)
-    video.addEventListener('canplay', handleCanPlay)
+    if (video.readyState >= 1) {
+      seekToStart()
+    } else {
+      video.addEventListener('loadedmetadata', handleInitialLoad, { once: true })
+    }
+
     video.addEventListener('timeupdate', handleTimeUpdate)
-    video.addEventListener('ended', handleEnded)
-
-    if (video.readyState >= 2) {
-      playFrom11()
-    }
+    video.addEventListener('ended', seekToStart)
 
     return () => {
-      video.removeEventListener('loadedmetadata', handleLoadedMetadata)
-      video.removeEventListener('canplay', handleCanPlay)
       video.removeEventListener('timeupdate', handleTimeUpdate)
-      video.removeEventListener('ended', handleEnded)
+      video.removeEventListener('ended', seekToStart)
+      video.removeEventListener('loadedmetadata', handleInitialLoad)
     }
   }, [])
 
@@ -199,16 +191,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
       <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none" aria-hidden="true">
         <video
           ref={videoRef}
+          src="/media/hero-showcase.mp4"
           autoPlay
           muted={isMuted}
           defaultMuted
           playsInline
-          loop={false}
           preload="auto"
-          className="h-full w-full object-cover object-[center_25%] opacity-90 transition-opacity duration-700"
-        >
-          <source src="/media/hero-showcase.mp4" type="video/mp4" />
-        </video>
+          className="h-full w-full object-cover object-[center_25%] opacity-90 transition-opacity duration-700 pointer-events-none"
+        />
         {/* Cinematic gradient overlays — protect text contrast while keeping moon and wolf in High HD */}
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/45" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-black/65" />
