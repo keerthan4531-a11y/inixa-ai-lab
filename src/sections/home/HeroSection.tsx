@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { GlassButton } from '../../components/common/GlassButton'
-import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import TechText from '../../components/TechText'
 import Shuffle from '../../components/Shuffle'
 import ElectricLogo from '../../components/ElectricLogo'
+import DepthCarousel, { DepthCarouselItem } from '../../components/DepthCarousel'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -14,10 +14,104 @@ interface HeroSectionProps {
 }
 
 /**
+ * 12 genuine flagship Android on-device captures requested by the user,
+ * cycled seamlessly with React Bits DepthCarousel in 3D perspective depth stack.
+ */
+const HERO_SHOWCASE_ITEMS: DepthCarouselItem[] = [
+  {
+    image: '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg',
+    alt: 'BeatBox Ultra — Ambient Glass Player',
+    title: 'BeatBox Ultra',
+    subtitle: 'Ambient Glass Now Playing',
+    badge: 'AUDIO 405'
+  },
+  {
+    image: '/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg',
+    alt: 'BeatBox Ultra — Artist Page & Top Tracks',
+    title: 'BeatBox Ultra',
+    subtitle: 'Artist Page & Top Tracks',
+    badge: 'AUDIO 405'
+  },
+  {
+    image: '/shots/beat-pro/9e4cfaf7-819b-46d3-b81f-613509ae3971.jpg',
+    alt: 'BeatBox Pro — Parametric Equalizer',
+    title: 'BeatBox Pro',
+    subtitle: '31-Band Parametric DSP Engine',
+    badge: 'PRO HI-RES'
+  },
+  {
+    image: '/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg',
+    alt: 'BeatBox Pro — Bit-Perfect Audio Pipeline',
+    title: 'BeatBox Pro',
+    subtitle: 'Direct ALSA / USB Audio Stream',
+    badge: 'PRO HI-RES'
+  },
+  {
+    image: '/shots/clipster/5051e47d-12c0-4d5f-9222-4b5b5c522955.jpg',
+    alt: 'Clipster — Audio Extraction Studio',
+    title: 'Clipster',
+    subtitle: 'Hardware Ringtone & Sample Slicer',
+    badge: 'STUDIO TOOL'
+  },
+  {
+    image: '/shots/inixa-ai/image.png',
+    alt: 'INIXA AI — Autonomous Neural Sandbox',
+    title: 'INIXA AI',
+    subtitle: 'Autonomous Agent Sandbox',
+    badge: 'AI PROTOCOL'
+  },
+  {
+    image: '/shots/liquid-streaming/6c8accae-f5a9-4c25-840a-6f11a1b3b389.jpg',
+    alt: 'Liquid Stream — Edge HLS Ultra-Low Latency',
+    title: 'Liquid Stream',
+    subtitle: 'Edge HLS Live Stream Hub',
+    badge: '4K BROADCAST'
+  },
+  {
+    image: '/shots/liquid-streaming/b50f38c2-a738-443a-a4fe-1c7708624c65.jpg',
+    alt: 'Liquid Stream — Dynamic Audio Spectrum',
+    title: 'Liquid Stream',
+    subtitle: 'Dynamic 120Hz Visualizer Sheen',
+    badge: '4K BROADCAST'
+  },
+  {
+    image: '/shots/lumina/6ceac216-b3aa-41d1-ae2b-2c5cdd476bfe.jpg',
+    alt: 'Lumina Browser — Hardened Tor Engine',
+    title: 'Lumina Browser',
+    subtitle: 'Air-Gapped Privacy Routing',
+    badge: 'HARDENED'
+  },
+  {
+    image: '/shots/lumina/66fbb727-fb12-4a8d-8730-eecf0f0aa2b2.jpg',
+    alt: 'Lumina Browser — Instant Sandbox Wipe',
+    title: 'Lumina Browser',
+    subtitle: 'One-Tap Ram Session Eraser',
+    badge: 'HARDENED'
+  },
+  {
+    image: '/shots/my-tube/0dc8c448-f622-445e-9d91-3d369983fe0b.jpg',
+    alt: 'My Tube — Zero-Ad Stream Extractor',
+    title: 'My Tube',
+    subtitle: 'Clean Algorithmic Feed Engine',
+    badge: 'STREAMING'
+  },
+  {
+    image: '/shots/my-tube/dc7d8287-2b77-4d9c-8d6c-d22bafc21880.jpg',
+    alt: 'My Tube — Background PIP & SponsorBlock',
+    title: 'My Tube',
+    subtitle: 'True Background PIP Playback',
+    badge: 'STREAMING'
+  }
+]
+
+/**
  * Clean, ultra-high-end hero showcasing physical flagship Android hardware
- * with pure dark optics and zero distracting looping animations.
+ * with pure dark optics, React Bits 3D DepthCarousel, and interactive typography.
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
+  const [activeSlide, setActiveSlide] = useState(0)
+  const currentItem = HERO_SHOWCASE_ITEMS[activeSlide] || HERO_SHOWCASE_ITEMS[0]
+
   const stats = [
     { value: '9', label: 'Flagship apps' },
     { value: '15', label: 'Verified APKs' },
@@ -173,28 +267,55 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          {/* Right Column: Physical Device Showcase with Tactile 3D Tilt */}
-          <div className="flex justify-center lg:col-span-5">
-            <div className="relative w-full max-w-[340px] sm:max-w-[380px]">
-              {/* Soft ambient back-glow */}
-              <div className="pointer-events-none absolute -inset-4 rounded-[48px] bg-gradient-to-tr from-cyan-500/20 via-blue-500/10 to-transparent blur-2xl" />
+          {/* Right Column: Physical Device 3D DepthCarousel */}
+          <div className="flex flex-col items-center justify-center lg:col-span-5">
+            <div className="relative w-full max-w-[340px] sm:max-w-[400px] h-[570px] sm:h-[620px] flex items-center justify-center">
+              {/* Soft ambient back-glow aura */}
+              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-gradient-to-tr from-cyan-500/25 via-blue-500/15 to-purple-600/10 blur-3xl opacity-60" />
 
-              <DeviceMockup
-                src="/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg"
-                alt="BeatBox Ultra 405 Ambient Player"
-                glowColor="#00f2fe"
-                className="relative z-10 w-full"
+              <DepthCarousel
+                items={HERO_SHOWCASE_ITEMS}
+                cardWidth={260}
+                cardHeight={520}
+                radius={34}
+                depth={160}
+                spread={55}
+                tilt={16}
+                tiltDirection="right"
+                perspective={1300}
+                visibleCards={4}
+                falloff={0.22}
+                blur={4}
+                autoplay={true}
+                autoplayDelay={3200}
+                loop={true}
+                showControls={true}
+                showIndicators={true}
+                showDeviceFrame={true}
+                onChange={(idx) => setActiveSlide(idx)}
+                className="w-full h-full"
               />
 
-              {/* Floating feature pills - static and crisp */}
-              <div className="absolute -left-6 top-1/4 z-20 hidden rounded-full border border-white/15 bg-black/85 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5">
+              {/* Floating feature pills - dynamic and crisp */}
+              <div className="absolute -left-6 top-1/4 z-30 hidden rounded-full border border-white/15 bg-black/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
                 <Music2 className="h-3.5 w-3.5 text-amber-400" />
-                <span className="font-medium">Synced lyrics, live</span>
+                <span className="font-medium">{currentItem.badge || 'Verified Flagship'}</span>
               </div>
-              <div className="absolute -right-6 bottom-1/4 z-20 hidden rounded-full border border-white/15 bg-black/85 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5">
+              <div className="absolute -right-6 bottom-1/4 z-30 hidden rounded-full border border-white/15 bg-black/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
                 <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
-                <span className="font-medium">0 telemetry</span>
+                <span className="font-medium">100% Real Device</span>
               </div>
+            </div>
+
+            {/* Dynamic Active Screenshot Pill */}
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs backdrop-blur-xl shadow-lg">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+              <span className="font-bold text-white">{currentItem.title}</span>
+              <span className="text-white/40">•</span>
+              <span className="text-white/70 truncate max-w-[190px]">{currentItem.subtitle}</span>
+              <span className="ml-1 text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800/40 px-2 py-0.5 rounded-full">
+                {activeSlide + 1}/12
+              </span>
             </div>
           </div>
         </div>
