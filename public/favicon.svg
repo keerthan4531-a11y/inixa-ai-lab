@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" fill="none">
+  <defs>
+    <linearGradient id="inixaGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f2fe" />
+      <stop offset="50%" stop-color="#4facfe" />
+      <stop offset="100%" stop-color="#f59e0b" />
+    </linearGradient>
+    <radialGradient id="inixaAura" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0" />
+    </radialGradient>
+    <filter id="inixaGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Obsidian rounded squircle container -->
+  <rect x="4" y="4" width="112" height="112" rx="30" fill="#080c14" stroke="rgba(255,255,255,0.18)" stroke-width="2.5" />
+  <circle cx="60" cy="60" r="48" fill="url(#inixaAura)" />
+
+  <!-- Monogram IX with neural connections -->
+  <g filter="url(#inixaGlow)">
+    <!-- 'I' stem -->
+    <line x1="36" y1="32" x2="36" y2="88" stroke="url(#inixaGrad)" stroke-width="10" stroke-linecap="round" />
+    
+    <!-- 'X' cross -->
+    <line x1="58" y1="32" x2="92" y2="88" stroke="url(#inixaGrad)" stroke-width="10" stroke-linecap="round" />
+    <line x1="92" y1="32" x2="58" y2="88" stroke="url(#inixaGrad)" stroke-width="10" stroke-linecap="round" />
+
+    <!-- Quantum node spheres -->
+    <circle cx="36" cy="32" r="5.5" fill="#00f2fe" />
+    <circle cx="36" cy="88" r="5.5" fill="#4facfe" />
+    <circle cx="58" cy="32" r="5.5" fill="#00f2fe" />
+    <circle cx="92" cy="32" r="5.5" fill="#f59e0b" />
+    <circle cx="92" cy="88" r="5.5" fill="#f59e0b" />
+    <circle cx="58" cy="88" r="5.5" fill="#4facfe" />
+    <circle cx="75" cy="60" r="4" fill="#ffffff" />
+  </g>
+</svg>

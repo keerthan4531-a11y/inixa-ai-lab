@@ -1,0 +1,5148 @@
+/* =========================================================================
+   INIXA LABS — inixa.ai
+
+   Built to Apple's rules, not to a landing-page template:
+
+     · The page opens with an OBJECT, not a headline. Light in a black room.
+     · Pure #000 everywhere. Color only ever comes from the light itself.
+     · One neutral face at semibold. No display grotesk, no poster typography.
+     · Grey is #86868b and it does all the secondary work.
+     · Enormous negative space. A section is allowed to be one sentence.
+
+   The one thing that is ours rather than borrowed: every color on the page
+   is three custom properties that the album art overwrites, so the ribbon,
+   the device, the accents and the links all retint together, which is the
+   app's own architecture, not a decoration.
+   ========================================================================= */
+
+:root {
+  --ink: #f5f5f7; /* off-white, not #fff; softer on black */
+  --grey: #86868b; /* Apple's secondary grey, verbatim */
+  --grey-dim: #6e6e73;
+
+  --rose: #ed5564; /* the app's DefaultThemeColor (Theme.kt) */
+  --ember: #ff8a6b;
+  --iris: #7b6cff;
+  --cyan: #38d3d6;
+
+  --tile: #101012;
+  --tile-lift: #17171a;
+  --hairline: rgba(255, 255, 255, 0.1);
+
+  --bar-h: 44px;
+  --seg-h: 66px;
+  --shell: min(1120px, 100% - 44px);
+  --phone-scale: 1;
+
+  --settle: cubic-bezier(0.22, 1.16, 0.36, 1);
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: calc(var(--seg-h) + 20px);
+  -webkit-text-size-adjust: 100%;
+  background: #000;
+}
+
+body {
+  margin: 0;
+  background: #000;
+  color: var(--ink);
+  font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, Inter,
+    'Segoe UI', Roboto, sans-serif;
+  font-size: 17px;
+  line-height: 1.47;
+  letter-spacing: -0.012em;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+p {
+  margin: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+svg {
+  display: block;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--rose) 50%, transparent);
+}
+
+:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 4px;
+  border-radius: 10px;
+}
+
+.shell {
+  width: var(--shell);
+  margin-inline: auto;
+}
+
+/* ============================================================ type roles */
+
+/* Semibold, tight, big. Never heavier than 600: the weight comes from the
+   size. */
+.headline {
+  font-size: clamp(34px, 5.4vw, 76px);
+  font-weight: 600;
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+}
+
+.headline-sm {
+  font-size: clamp(28px, 3.8vw, 52px);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+}
+
+/* Apple's eyebrow is a small bold WHITE line, not a colored tracked-out
+   label. It names the section; it does not decorate it. */
+.kicker {
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: var(--ink);
+}
+
+.lede {
+  font-size: clamp(17px, 1.7vw, 21px);
+  font-weight: 400;
+  line-height: 1.42;
+  letter-spacing: -0.011em;
+  color: var(--grey);
+}
+
+/* Apple's inline link: colored, with a chevron that steps away on hover. */
+.textlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--rose);
+  font-size: clamp(16px, 1.6vw, 19px);
+  transition: color 0.6s var(--ease);
+}
+
+.textlink i {
+  font-style: normal;
+  transition: transform 0.35s var(--settle);
+}
+
+.textlink:hover {
+  text-decoration: underline;
+}
+
+.textlink:hover i {
+  transform: translateX(3px);
+}
+
+.linkrow {
+  display: flex;
+  gap: 34px;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 26px;
+}
+
+.center {
+  text-align: center;
+}
+
+/* ================================================================== bars */
+
+/* Tier one: the thin global bar. Deliberately quiet, so the
+   segmented control below it can be the only thing you notice. */
+.topbar {
+  position: relative;
+  z-index: 60;
+  height: var(--bar-h);
+  display: flex;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+}
+
+.topbar-inner {
+  width: var(--shell);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  /* Centred as a group, with one gap doing all the spacing. The reference's
+     row is evenly distributed across the middle of the page, which a
+     left/right split with a spacer can never look like. */
+  justify-content: center;
+  gap: clamp(16px, 2.3vw, 32px);
+  font-size: 12px;
+  color: rgba(245, 245, 247, 0.8);
+}
+
+.topbar-inner a,
+.topbar-inner button {
+  white-space: nowrap;
+  transition: color 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+.topbar-inner button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+.topicon {
+  display: grid;
+  place-items: center;
+  opacity: 0.8;
+}
+
+.topicon svg {
+  width: 15px;
+  height: 15px;
+}
+
+.topicon:hover {
+  opacity: 1;
+}
+
+.wordmark {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ink);
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.wordmark svg,
+.wordmark .mark {
+  /* Alone in the bar with no wordmark beside it, the icon IS the identity, so
+     it gets a couple more pixels than it had when it was only a bullet in
+     front of a label, and a couple more again now that it is a glyph on
+     transparency rather than a tile, since the artwork carries its own margin
+     and the visible mark is smaller than its box. */
+  width: 25px;
+  height: 25px;
+  display: block;
+}
+
+.topbar a:hover,
+.topbar button:hover {
+  color: var(--ink);
+}
+
+.topbar .spacer {
+  margin-left: auto;
+}
+
+/* Tier two: the segmented control, which is the app's dock on a web page.
+   ---------------------------------------------------------------------------
+   It was a row of separate dark chips, which is the reference's shape but not
+   this product's material: every chip drew its own opaque background, so the
+   bar had nothing to do with glass at all and the sliding pill read as a chip
+   lighting up rather than as an object moving.
+
+   Now it is built the way `LiquidTabBar` is: ONE frosted capsule holding the
+   row, the items transparent on top of it, and a single bright capsule that
+   slides between them. Same reason as in the app: a capsule that moves is one
+   object to follow, where a highlight that jumps is two blinking. */
+.segbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--seg-h);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Deliberately NOT a filled bar: the glass is the capsule below, and a
+     second frosted layer behind it would double the blur and grey the page. */
+  pointer-events: none;
+}
+
+.segments {
+  position: relative;
+  pointer-events: auto;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  max-width: calc(100% - 24px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-radius: 999px;
+
+  /* The app's chrome material: a real backdrop blur, a tint over it so it
+     stays legible on anything, and a rim that is bright along the top edge and
+     dark along the bottom, which is what reads as a pane with thickness
+     rather than a rounded box. */
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 18px 40px -22px rgba(0, 0, 0, 0.95);
+}
+
+.segments::-webkit-scrollbar {
+  display: none;
+}
+
+.segment {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: transparent;
+  font-size: 13.5px;
+  font-weight: 500;
+  letter-spacing: -0.008em;
+  color: rgba(245, 245, 247, 0.72);
+  transition: color 0.3s var(--ease);
+}
+
+.segment:hover {
+  color: var(--ink);
+}
+
+.segment[data-on='true'] {
+  color: #000;
+}
+
+/* The capsule.
+   `transform` and `width` both animate, which is what lets it stretch INTO a
+   move and recover on arrival instead of gliding rigidly. Same physics as the
+   app's, which is why the curve is a spring rather than an ease. */
+.segment-capsule {
+  position: absolute;
+  z-index: 0;
+  top: 4px;
+  left: 0;
+  height: 34px;
+  border-radius: 999px;
+  background: var(--ink);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 4px 12px -4px rgba(0, 0, 0, 0.6);
+  transition:
+    transform 0.5s var(--settle),
+    width 0.5s var(--settle);
+}
+
+/* ================================================================= hero */
+
+.ribbon-wrap {
+  position: relative;
+  /* Minus the chrome. Centring in 100vh when 110px of bars sit above it puts
+     the object visibly below the middle of the screen. */
+  min-height: calc(min(100vh, 900px) - var(--bar-h) - var(--seg-h));
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+}
+
+/* The object.
+   ---------------------------------------------------------------------------
+   Drawn on canvas; see Ribbon.jsx for why it can't be CSS. What lives here
+   is only the frame it occupies and the light treatment on top of it.
+*/
+.ribbon {
+  position: relative;
+  isolation: isolate;
+  width: min(1020px, 78vw);
+  /* Flat. The reference sits near 5:1, and the temptation to make it taller is
+     the single thing that stops it looking like the real one. */
+  aspect-ratio: 4.4 / 1;
+  max-height: 46vh;
+  /* The hero reacts to the scroll rather than sitting still while the page
+     moves past it. Set from JS as you leave the section. */
+  transform: scale(var(--hero-scale, 1));
+  opacity: var(--hero-fade, 1);
+  will-change: transform, opacity;
+}
+
+.ribbon-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* The blur belongs on the element, not in the 2D context: `ctx.filter` runs
+     a CPU convolution per path per frame, this is one GPU pass on a layer that
+     is already composited. Saturate/brightness bring the app's UI palette up
+     to emitter strength without hard-coding a second set of colors. */
+  filter: blur(var(--ribbon-blur, 9px)) saturate(1.5) brightness(1.02);
+}
+
+/* Eats the outer edges into black so the light tapers into a room instead of
+   ending at a boundary. */
+.ribbon::after {
+  content: '';
+  position: absolute;
+  inset: -40% -10%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse 48% 62% at 50% 50%,
+    transparent 56%,
+    #000 92%
+  );
+}
+
+/* Apple puts one of these bottom-right on every animated page. It is also
+   the reduced-motion escape hatch, so it earns its place twice. */
+.ambient-toggle {
+  position: absolute;
+  right: clamp(18px, 3vw, 40px);
+  bottom: clamp(18px, 3vw, 40px);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--ink);
+  background: rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background 0.25s var(--ease), transform 0.35s var(--settle);
+}
+
+.ambient-toggle svg {
+  width: 18px;
+  height: 18px;
+}
+
+.ambient-toggle:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.ambient-toggle:active {
+  transform: scale(0.92);
+}
+
+/* =============================================================== blocks */
+
+.block {
+  padding-block: clamp(80px, 11vw, 150px);
+}
+
+.block-tight {
+  padding-block: clamp(48px, 7vw, 92px);
+}
+
+.statement {
+  max-width: 900px;
+  margin-inline: auto;
+}
+
+.statement .headline {
+  margin-top: 14px;
+}
+
+.statement .lede {
+  margin-top: 22px;
+  /* Narrower than the headline and balanced, so the two lines come out even
+     instead of leaving one orphaned word on the last line. */
+  max-width: 46ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+
+/* The phone is 660px in layout and scaled in the draw phase, so the wrapper
+   has to reserve the SCALED height or narrow screens get a column of dead
+   space under it. */
+.hero-fan {
+  position: relative;
+  margin-top: clamp(52px, 8vw, 96px);
+  height: calc(660px * var(--phone-scale));
+  display: flex;
+  justify-content: center;
+}
+
+.device-hero {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  justify-content: center;
+}
+
+.fan {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* Parallax against the phone in front of it (see useHeroScroll). One custom
+     property, so scrolling only ever re-composites a transform. */
+  transform: translateY(calc(var(--fan, 0) * -24px))
+    scale(calc(1 + var(--fan, 0) * 0.045));
+  will-change: transform;
+}
+
+/* Offsets are multiples of a card's own size: a percentage in `translate`
+   resolves against the element, not its container, so the arrangement scales
+   with the phone instead of drifting apart on a wide screen. */
+.fan-card {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: 0;
+  width: calc(238px * var(--phone-scale));
+  aspect-ratio: 3 / 5;
+  border-radius: calc(24px * var(--phone-scale));
+  overflow: hidden;
+  background: #0a0a0c;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 50px 90px -42px rgba(0, 0, 0, 1);
+  opacity: 0;
+  /* They start stacked behind the phone and fan outwards, which is the only
+     entrance that explains the arrangement: six cards sliding in from the
+     edges would read as six unrelated things arriving. */
+  transform: translate(-50%, -50%) scale(0.62);
+  transition:
+    opacity 0.9s var(--ease),
+    transform 1.15s var(--settle);
+  transition-delay: var(--d, 0ms);
+}
+
+.hero-fan.in .fan-card {
+  opacity: var(--o);
+  transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y)))
+    rotate(var(--r)) scale(var(--s));
+}
+
+.fan-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--crop, top center);
+}
+
+/* The ones furthest out sit deepest, so they read as behind rather than
+   merely smaller. */
+.fan-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.fan-card:nth-child(2)::after,
+.fan-card:nth-child(5)::after {
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.fan-card:nth-child(3)::after,
+.fan-card:nth-child(4)::after {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+/* ============================================================ dock demo */
+
+/* The dock needs something with detail behind it or the blur proves nothing —
+   a pane over flat color is just a lighter rectangle. */
+.dock-demo {
+  position: relative;
+  margin-top: 26px;
+  padding: 18px;
+  border-radius: 26px;
+  overflow: hidden;
+  isolation: isolate;
+  background: #0a0a0c;
+}
+
+.dock-demo-art {
+  position: absolute;
+  inset: -30%;
+  z-index: 0;
+  filter: blur(2px);
+}
+
+.dock-demo-art span {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.75;
+  transition: background 0.9s var(--ease);
+}
+
+.dock-demo-art span:nth-child(1) {
+  width: 62%;
+  height: 90%;
+  left: -6%;
+  top: -18%;
+  background: radial-gradient(circle, var(--rose), transparent 66%);
+}
+
+.dock-demo-art span:nth-child(2) {
+  width: 58%;
+  height: 86%;
+  right: -8%;
+  top: 6%;
+  background: radial-gradient(circle, var(--iris), transparent 66%);
+}
+
+.dock-demo-art span:nth-child(3) {
+  width: 54%;
+  height: 80%;
+  left: 26%;
+  bottom: -20%;
+  background: radial-gradient(circle, var(--ember), transparent 66%);
+}
+
+.dock-demo .dock-row {
+  position: relative;
+  z-index: 1;
+}
+
+/* ================================================================= tour */
+
+/* Everything after the hero is panels on black: one wide one for lyrics, then
+   a grid of tiles, each with a real screen rising out of its bottom edge.
+   Panels rather than a pinned phone beside three paragraphs, because a pinned
+   phone leaves two thirds of every screen as dimmed text waiting its turn. */
+.tour {
+  /* The overview above ends on the phone fan and its own bottom padding;
+     that is already the break between the two. */
+  margin-top: calc(clamp(80px, 11vw, 150px) * -0.45);
+}
+
+.tour-lyrics {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(24px, 4vw, 64px);
+  padding: clamp(40px, 6vw, 84px) clamp(28px, 5vw, 72px) 0;
+  border-radius: 36px;
+  background:
+    radial-gradient(60% 80% at 78% 100%, color-mix(in oklab, var(--iris) 30%, transparent), transparent 70%),
+    radial-gradient(50% 70% at 60% 20%, color-mix(in oklab, var(--rose) 18%, transparent), transparent 72%),
+    var(--tile);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.tour-copy {
+  padding-bottom: clamp(40px, 6vw, 84px);
+}
+
+.tour-copy .headline,
+.tour-head .headline,
+.getit .headline {
+  font-size: clamp(34px, 4.6vw, 64px);
+  margin-top: 12px;
+}
+
+.tour-copy .lede {
+  margin-top: 20px;
+  max-width: 34ch;
+}
+
+.tour-note {
+  margin-top: 22px;
+  font-size: 13px;
+  color: var(--grey-dim);
+}
+
+/* The phone is 660px in layout and scaled at paint, so the box reserves the
+   scaled height of the part that shows — the rest runs under the panel's
+   bottom edge, which is what makes it rise out of the page. */
+.tour-lyrics-device {
+  align-self: end;
+  display: flex;
+  justify-content: center;
+  height: calc(560px * var(--phone-scale));
+}
+
+.tour-lyrics-device .phone {
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 -30px 120px -40px color-mix(in oklab, var(--iris) 60%, transparent);
+}
+
+.tour-design {
+  padding-top: clamp(96px, 12vw, 168px);
+}
+
+.tour-head {
+  text-align: center;
+  margin-bottom: clamp(36px, 5vw, 64px);
+}
+
+.ft-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(14px, 1.6vw, 22px);
+}
+
+/* Each tile is lit from below in its own accent, so a grid of five dark
+   panels reads as five objects rather than one table with gaps in it. */
+.ft {
+  --glow: var(--rose);
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  border-radius: 32px;
+  background:
+    radial-gradient(80% 60% at 50% 100%, color-mix(in oklab, var(--glow) 26%, transparent), transparent 72%),
+    var(--tile);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.ft:nth-child(2) { --glow: var(--ember); }
+.ft:nth-child(3) { --glow: var(--iris); }
+.ft:nth-child(4) { --glow: var(--cyan); }
+.ft:nth-child(5) { --glow: var(--rose); }
+
+.ft-copy {
+  padding: clamp(30px, 3.4vw, 44px) clamp(28px, 3.4vw, 44px) 0;
+}
+
+.ft-kicker {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--glow, var(--rose));
+  transition: color 0.7s var(--ease);
+}
+
+.ft-title {
+  margin-top: 8px;
+  font-size: clamp(24px, 2.4vw, 32px);
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.022em;
+  text-wrap: balance;
+}
+
+.ft-body {
+  margin-top: 12px;
+  max-width: 40ch;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--grey);
+}
+
+.ft-shot {
+  margin-top: auto;
+  padding: clamp(28px, 3vw, 40px) 16% 0;
+}
+
+.ft-shot img {
+  display: block;
+  width: 100%;
+  height: clamp(300px, 30vw, 420px);
+  object-fit: cover;
+  object-position: top center;
+  border-radius: 26px 26px 0 0;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.08),
+    0 -24px 80px -30px rgba(0, 0, 0, 0.9);
+}
+
+.ft-shot[data-crop='middle'] img {
+  object-position: 50% 36%;
+}
+
+.ft-wide {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+  padding-bottom: clamp(30px, 3.4vw, 44px);
+}
+
+.ft-wide .ft-dock {
+  margin: clamp(30px, 3.4vw, 44px) clamp(28px, 3.4vw, 44px) 0 0;
+}
+
+/* ============================================================= features */
+
+.tour-features {
+  padding-top: clamp(96px, 12vw, 168px);
+}
+
+.fx-grid {
+  list-style: none;
+  margin: clamp(36px, 4.4vw, 60px) 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(32px, 3.6vw, 48px) clamp(20px, 2.6vw, 36px);
+}
+
+.fx {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 20px;
+  border-top: 1px solid var(--hairline);
+}
+
+.fx-glyph {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  color: var(--rose);
+  transition: color 0.7s var(--ease);
+}
+
+.fx-glyph svg {
+  width: 100%;
+  height: 100%;
+}
+
+.fx-title {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.fx-body {
+  font-size: 15px;
+  line-height: 1.45;
+  color: var(--grey);
+}
+
+/* ============================================================== finale */
+
+.finale {
+  /* The footer brings its own top margin, so the panel ends the page on that
+     and nothing more. */
+  padding-top: clamp(96px, 12vw, 168px);
+}
+
+.getit-icon {
+  display: block;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto 26px;
+  border-radius: 22px;
+  filter: drop-shadow(0 18px 40px rgba(255, 170, 40, 0.28));
+}
+
+.getit-read {
+  display: inline-flex;
+  margin-top: 22px;
+}
+
+.open {
+  margin-top: clamp(14px, 1.6vw, 22px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: clamp(14px, 1.6vw, 22px);
+}
+
+.open-copy,
+.open-build {
+  padding: clamp(28px, 3.4vw, 44px);
+  border-radius: 32px;
+  background: var(--tile);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+}
+
+.open-copy .ft-title {
+  font-size: clamp(22px, 2.2vw, 28px);
+}
+
+.open-facts {
+  margin: 26px 0 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px 26px;
+}
+
+.open-facts dt {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.open-facts dd {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--grey);
+}
+
+.open-build {
+  display: flex;
+  flex-direction: column;
+}
+
+.open-build .code {
+  margin: 18px 0 0;
+  max-width: none;
+}
+
+.open-build .subnote {
+  margin-top: auto;
+  padding-top: 18px;
+}
+
+@media (max-width: 999px) {
+  .tour-lyrics,
+  .ft-wide,
+  .open {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tour-lyrics {
+    padding-top: 40px;
+    border-radius: 28px;
+  }
+
+  .tour-copy {
+    padding-bottom: 0;
+  }
+
+  .ft-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ft {
+    border-radius: 28px;
+  }
+
+  .ft-wide .ft-dock {
+    margin: 0 18px;
+  }
+
+  .ft-shot {
+    padding-inline: 14%;
+  }
+
+  .ft-shot img {
+    height: min(96vw, 400px);
+  }
+
+  .fx-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .tour-head {
+    text-align: left;
+  }
+}
+
+@media (max-width: 520px) {
+  /* Two narrow columns rather than one long one: twelve features stacked
+     singly is most of a phone's scroll spent on one-liners. */
+  .fx-grid {
+    gap: 28px 18px;
+  }
+
+  .fx-glyph {
+    width: 26px;
+    height: 26px;
+    margin-bottom: 6px;
+  }
+
+  .fx-title {
+    font-size: 15px;
+  }
+
+  .fx-body {
+    font-size: 13.5px;
+  }
+
+  .open-facts {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ============================================================ big title */
+
+/* Section headings: large, left-aligned, arriving grey and filling in.
+   filling to white as they cross into view. It is the one piece of motion on
+   the page that is driven by scroll position rather than by a state change,
+   and it is worth the exception: a heading that lights up as you reach it does
+   the job an eyebrow and a rule would otherwise be doing. */
+.bigtitle {
+  font-size: clamp(30px, 4.4vw, 56px);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.026em;
+  max-width: 18ch;
+  color: #48484d;
+  transition: color 1.1s var(--ease);
+}
+
+.bigtitle.in {
+  color: var(--ink);
+}
+
+/* The reference's small grey line under the lede: the caveat, at a size that
+   says it is a caveat. */
+.subnote {
+  margin-top: 14px;
+  font-size: clamp(14px, 1.2vw, 16px);
+  line-height: 1.45;
+  color: var(--grey-dim);
+}
+
+/* ============================================================= download */
+
+.getit {
+  position: relative;
+  overflow: hidden;
+  border-radius: 34px;
+  background:
+    radial-gradient(
+      ellipse 70% 120% at 50% -20%,
+      color-mix(in oklab, var(--rose) 12%, transparent),
+      transparent 70%
+    ),
+    var(--tile);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.03);
+  padding: clamp(52px, 8vw, 96px) clamp(24px, 5vw, 60px);
+  text-align: center;
+}
+
+.getit .lede {
+  margin: 20px auto 0;
+  max-width: 46ch;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  height: 50px;
+  padding: 0 28px;
+  border-radius: 999px;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #fff;
+  background: var(--rose);
+  transition: transform 0.4s var(--settle), filter 0.2s var(--ease),
+    background 0.7s var(--ease);
+}
+
+.btn:hover {
+  filter: brightness(1.1);
+}
+
+.btn:active {
+  transform: scale(0.95);
+}
+
+.btn-sm {
+  height: 32px;
+  padding: 0 15px;
+  font-size: 13px;
+}
+
+.btn-ghost {
+  background: #1c1c1e;
+  color: var(--ink);
+}
+
+.btn-ghost:hover {
+  background: #262629;
+  filter: none;
+}
+
+.btnrow {
+  margin-top: 30px;
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.facts {
+  margin: 32px auto 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 18px clamp(30px, 4vw, 52px);
+}
+
+.facts div {
+  text-align: center;
+}
+
+.facts dt {
+  font-size: 12px;
+  color: var(--grey-dim);
+}
+
+.facts dd {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+.code {
+  margin: 30px auto 0;
+  max-width: 460px;
+  text-align: left;
+  /* The clone URL is longer than a phone is wide and it is meant to be copied,
+     so it scrolls inside its own box rather than being clipped by it. */
+  overflow-x: auto;
+  white-space: pre;
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: #000;
+  font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
+  font-size: 12.5px;
+  line-height: 2;
+  color: var(--grey);
+}
+
+.code b {
+  font-weight: 400;
+  color: var(--rose);
+  transition: color 0.7s var(--ease);
+}
+
+/* ================================================================ phone */
+
+.phone {
+  position: relative;
+  /* The device is a screenshot, not a paragraph: it must not inherit the
+     alignment of whatever block it happens to be placed in. Dropped into the
+     centred statement section, every row inside it centred itself. */
+  text-align: left;
+  width: 318px;
+  height: 660px;
+  flex: none;
+  border-radius: 54px;
+  padding: 11px;
+  transform: scale(var(--phone-scale));
+  transform-origin: top center;
+  background: linear-gradient(155deg, #2a2a31 0%, #0b0b0e 44%, #26262d 100%);
+  box-shadow:
+    inset 0 2px 0 rgba(255, 255, 255, 0.14),
+    0 0 0 1px rgba(255, 255, 255, 0.05),
+    0 70px 130px -55px rgba(0, 0, 0, 1);
+}
+
+.phone-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 44px;
+  overflow: hidden;
+  background: #050507;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+
+.phone-art {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.phone-art i {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(38px);
+  opacity: 0.5;
+  transition: background 0.9s var(--ease);
+}
+
+.phone-art i:nth-child(1) {
+  width: 250px;
+  height: 250px;
+  top: -50px;
+  left: -60px;
+  background: var(--rose);
+  animation: float-a 21s var(--ease) infinite alternate;
+}
+
+.phone-art i:nth-child(2) {
+  width: 210px;
+  height: 210px;
+  right: -70px;
+  top: 32%;
+  background: var(--ember);
+  animation: float-b 26s var(--ease) infinite alternate;
+}
+
+.phone-art i:nth-child(3) {
+  width: 230px;
+  height: 230px;
+  left: 8%;
+  bottom: -70px;
+  background: var(--iris);
+  animation: float-c 31s var(--ease) infinite alternate;
+}
+
+@keyframes float-a {
+  to {
+    transform: translate3d(16%, 12%, 0) scale(1.18);
+  }
+}
+@keyframes float-b {
+  to {
+    transform: translate3d(-18%, 14%, 0) scale(0.88);
+  }
+}
+@keyframes float-c {
+  to {
+    transform: translate3d(12%, -16%, 0) scale(1.22);
+  }
+}
+
+.status {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 24px 4px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.status b {
+  font-weight: 600;
+}
+
+.status .sig {
+  display: flex;
+  gap: 3px;
+  align-items: flex-end;
+}
+
+.status .sig i {
+  width: 3px;
+  border-radius: 1px;
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.status .sig i:nth-child(1) {
+  height: 4px;
+}
+.status .sig i:nth-child(2) {
+  height: 6px;
+}
+.status .sig i:nth-child(3) {
+  height: 8px;
+}
+.status .sig i:nth-child(4) {
+  height: 10px;
+}
+
+/* Real screens, stacked and cross-faded so the frame never resizes between
+   beats. `object-fit: cover` with a top anchor keeps the status bar aligned
+   whatever the capture's exact aspect turns out to be. */
+.phone-shot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  opacity: 0;
+  transform: scale(1.012);
+  transition: opacity 0.7s var(--ease), transform 0.9s var(--settle);
+}
+
+.phone-shot[data-on='true'] {
+  opacity: 1;
+  transform: none;
+}
+
+/* A <video> is replaced content with its own intrinsic size, so without this
+   it lays out at its own aspect ratio inside the screen instead of filling it
+   the way the stills do. */
+video.phone-shot {
+  display: block;
+  background: #050507;
+}
+
+.credit {
+  margin-top: 10px;
+  font-size: 13px;
+  color: var(--grey-dim);
+}
+
+.phone-view {
+  position: relative;
+  z-index: 2;
+  flex: 1;
+  min-height: 0;
+  display: grid;
+}
+
+.view {
+  grid-area: 1 / 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: scale(0.985);
+  pointer-events: none;
+  transition: opacity 0.55s var(--ease), transform 0.7s var(--settle);
+}
+
+.view[data-on='true'] {
+  opacity: 1;
+  transform: none;
+  pointer-events: auto;
+}
+
+.view-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 20px 12px;
+}
+
+.view-head b {
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.view-head .avatar {
+  margin-left: auto;
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  background: linear-gradient(140deg, var(--rose), var(--iris));
+  transition: background 0.9s var(--ease);
+}
+
+.view-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  padding-inline: 16px;
+  mask-image: linear-gradient(180deg, #000 80%, transparent 100%);
+}
+
+.rowlabel {
+  margin: 12px 4px 9px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.songrow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 6px 4px;
+}
+
+.cover {
+  flex: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px -8px rgba(0, 0, 0, 0.9);
+}
+
+.lines {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.lines i {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.32);
+}
+
+.lines i + i {
+  height: 6px;
+  width: 62%;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.tilerow {
+  display: flex;
+  gap: 11px;
+  margin-top: 4px;
+}
+
+.tile {
+  flex: 1;
+  min-width: 0;
+}
+
+.tile .cover {
+  width: 100%;
+  height: 88px;
+  border-radius: 16px;
+}
+
+.tile i {
+  display: block;
+  height: 7px;
+  border-radius: 4px;
+  margin-top: 9px;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.tile i + i {
+  width: 58%;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.player {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 4px 22px 0;
+}
+
+.player .art {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 26px;
+  box-shadow: 0 34px 60px -30px rgba(0, 0, 0, 1);
+  transition: background 0.9s var(--ease);
+}
+
+.player .now {
+  margin-top: 18px;
+}
+
+.player .now b {
+  display: block;
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.022em;
+}
+
+.player .now span {
+  display: block;
+  margin-top: 2px;
+  font-size: 13.5px;
+  color: var(--grey);
+}
+
+.player .track {
+  margin-top: 18px;
+  height: 5px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.16);
+  overflow: hidden;
+}
+
+.player .track i {
+  display: block;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--rose);
+  transition: width 1s linear, background 0.8s var(--ease);
+}
+
+.player .times {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 7px;
+  font-size: 10.5px;
+  color: var(--grey-dim);
+}
+
+.player .transport {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 26px;
+}
+
+.player .transport button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: transform 0.35s var(--settle), color 0.2s var(--ease);
+}
+
+.player .transport button:hover {
+  color: #fff;
+}
+
+.player .transport button:active {
+  transform: scale(0.88);
+}
+
+.player .transport .primary {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--rose);
+  transition: background 0.8s var(--ease), transform 0.35s var(--settle);
+}
+
+.player .transport .primary svg {
+  width: 26px;
+  height: 26px;
+}
+
+.lyricbox {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 2px;
+  padding: 0 26px;
+  overflow: hidden;
+}
+
+.lyric {
+  font-size: 19px;
+  font-weight: 600;
+  letter-spacing: -0.024em;
+  line-height: 1.28;
+  padding: 7px 0;
+  color: rgba(255, 255, 255, 0.22);
+  transform-origin: left center;
+  filter: blur(1.5px);
+  transition: color 0.55s var(--ease), transform 0.75s var(--settle),
+    filter 0.55s var(--ease);
+}
+
+.lyric[data-d='0'] {
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+  filter: none;
+}
+
+.lyric[data-d='1'] {
+  color: rgba(255, 255, 255, 0.48);
+  filter: blur(0.4px);
+}
+
+.lyric[data-d='2'] {
+  color: rgba(255, 255, 255, 0.3);
+  filter: blur(0.9px);
+}
+
+/* The one place real glass appears: the app's own chrome, blurring the app's
+   own content. Everywhere else on this page, glass would be decoration. */
+.chrome {
+  position: relative;
+  z-index: 3;
+  padding: 0 12px 13px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.glass {
+  background: rgba(255, 255, 255, 0.055);
+  backdrop-filter: blur(34px) saturate(170%);
+  -webkit-backdrop-filter: blur(34px) saturate(170%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 20px 40px -24px rgba(0, 0, 0, 0.9);
+}
+
+.mini {
+  position: relative;
+  height: 56px;
+  border-radius: 999px;
+  padding-inline: 7px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  overflow: hidden;
+}
+
+.mini .cover {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.mini .meta {
+  flex: 1;
+  min-width: 0;
+}
+
+.mini .meta b {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini .meta span {
+  display: block;
+  font-size: 11px;
+  color: var(--grey);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mini button {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: transform 0.35s var(--settle);
+}
+
+.mini button:active {
+  transform: scale(0.85);
+}
+
+.mini button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.mini .bar {
+  position: absolute;
+  left: 22px;
+  right: 22px;
+  bottom: 4px;
+  height: 2.5px;
+  border-radius: 2px;
+  background: rgba(255, 255, 255, 0.18);
+  overflow: hidden;
+}
+
+.mini .bar i {
+  display: block;
+  height: 100%;
+  border-radius: 2px;
+  background: var(--rose);
+  transition: width 1s linear, background 0.8s var(--ease);
+}
+
+.dock-row {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.dock {
+  position: relative;
+  flex: 1;
+  min-width: 0;
+  height: 62px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  isolation: isolate;
+}
+
+.dock-capsule {
+  position: absolute;
+  top: 4px;
+  bottom: 4px;
+  left: 4px;
+  z-index: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(5px) saturate(150%) brightness(1.18);
+  -webkit-backdrop-filter: blur(5px) saturate(150%) brightness(1.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.34),
+    inset 0 -1px 2px rgba(0, 0, 0, 0.26),
+    0 6px 16px -8px rgba(0, 0, 0, 0.8);
+  transition: transform 0.62s var(--settle), width 0.62s var(--settle);
+}
+
+.dock-tab {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--grey);
+  font-family: inherit;
+  font-size: 9.5px;
+  font-weight: 500;
+  transition: color 0.32s var(--ease), transform 0.4s var(--settle);
+}
+
+.dock-tab svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dock-tab[data-on='true'] {
+  color: #fff;
+  font-weight: 600;
+}
+
+.dock-tab:active {
+  transform: scale(0.93);
+}
+
+.dock-circle {
+  flex: none;
+  width: 62px;
+  height: 62px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  border: 0;
+  color: var(--grey);
+  cursor: pointer;
+  transition: transform 0.4s var(--settle), color 0.25s var(--ease);
+}
+
+.dock-circle svg {
+  width: 22px;
+  height: 22px;
+}
+
+.dock-circle:hover {
+  color: #fff;
+}
+
+.dock-circle:active {
+  transform: scale(0.88);
+}
+
+/* ======================================================== release notes */
+
+/* The sheet stays mounted and hidden so it has something to animate out of.
+   Visibility rather than display, because display cannot be transitioned and a
+   sheet that disappears on one frame is exactly what the app stopped doing. */
+.notes {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.notes[data-open='true'] {
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.notes-veil {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.66);
+  backdrop-filter: saturate(140%) blur(22px);
+  -webkit-backdrop-filter: saturate(140%) blur(22px);
+  opacity: 0;
+  transition: opacity 0.42s var(--ease);
+}
+
+.notes[data-open='true'] .notes-veil {
+  opacity: 1;
+}
+
+.notes-sheet {
+  position: relative;
+  width: min(700px, 100%);
+  max-width: 100%;
+  max-height: min(84vh, 880px);
+  display: flex;
+  flex-direction: column;
+  border-radius: 26px;
+  border: 1px solid var(--hairline);
+  background: #0b0b0d;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(16px) scale(0.985);
+  transition: opacity 0.34s var(--ease), transform 0.52s var(--settle);
+}
+
+.notes[data-open='true'] .notes-sheet {
+  opacity: 1;
+  transform: none;
+}
+
+.notes-sheet:focus {
+  outline: none;
+}
+
+/* The one place on the page where light comes from the surface rather than
+   from the ribbon: a sheet needs a top edge or it reads as a hole. */
+.notes-sheet::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.22),
+    transparent
+  );
+}
+
+.notes-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 26px 30px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.notes-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--grey);
+}
+
+.notes-head h2 {
+  margin-top: 3px;
+  font-size: clamp(23px, 2.6vw, 30px);
+  font-weight: 600;
+  letter-spacing: -0.021em;
+}
+
+.notes-date {
+  margin-top: 5px;
+  font-size: 13px;
+  color: var(--grey);
+}
+
+.notes-close {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #1c1c1e;
+  color: var(--grey);
+  cursor: pointer;
+  transition: background 0.2s var(--ease), color 0.2s var(--ease),
+    transform 0.4s var(--settle);
+}
+
+.notes-close:hover {
+  background: #262629;
+  color: var(--ink);
+}
+
+.notes-close:active {
+  transform: scale(0.9);
+}
+
+.notes-versions {
+  display: flex;
+  gap: 8px;
+  padding: 14px 30px 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.notes-versions button {
+  flex: none;
+  height: 30px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #17171a;
+  color: var(--grey);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+}
+
+.notes-versions button[data-on='true'] {
+  background: var(--ink);
+  color: #000;
+}
+
+.notes-body {
+  padding: 22px 30px 32px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.notes-summary {
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--grey);
+  max-width: 52ch;
+}
+
+.notes-group {
+  margin-top: 30px;
+}
+
+/* Small, grey, sentence case. A group label names four items; it is not a
+   heading anyone reads on its own. */
+.notes-group h3 {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--grey);
+}
+
+.notes-group ul {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.notes-group li {
+  padding: 15px 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+.notes-group li b {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+.notes-group li span {
+  display: block;
+  margin-top: 4px;
+  font-size: 14.5px;
+  line-height: 1.52;
+  color: var(--grey);
+  max-width: 58ch;
+}
+
+.notes-foot {
+  margin-top: 30px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--grey-dim);
+}
+
+.notes-foot a {
+  color: var(--grey);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.notes-foot a:hover {
+  color: var(--ink);
+}
+
+/* =============================================================== footer */
+
+.footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: clamp(70px, 10vw, 130px);
+  padding: 44px 0 40px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--grey-dim);
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 28px;
+}
+
+.footer h4 {
+  margin-bottom: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.footer ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.footer button {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.footer a:hover,
+.footer button:hover {
+  color: var(--ink);
+  text-decoration: underline;
+}
+
+/* A larger lockup closes the page, the way the reference signs its footer. */
+.footer-mark {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 34px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.footer-mark img {
+  /* Transparent artwork: no tile to round off. */
+  width: 30px;
+  height: 30px;
+  display: block;
+}
+
+.footer-legal {
+  margin-top: 38px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+/* ============================================================== reveals */
+
+/* Entrance choreography.
+   Nothing fades in as a whole block: the kicker arrives, the
+   headline follows it, then the supporting line, then the links. `--d` staggers
+   them; the rise is small on purpose, because a long travel reads as a slide
+   deck rather than as something settling into place. */
+.reveal {
+  opacity: 0;
+  /* A hair of scale with the rise. Translation alone slides an element into
+     position; the two together read as it arriving from slightly further away,
+     which is the difference between a transition and an entrance. */
+  transform: translateY(18px) scale(0.988);
+  transition: opacity 0.8s var(--ease), transform 0.9s var(--settle);
+  transition-delay: var(--d, 0ms);
+}
+
+.reveal.in {
+  opacity: 1;
+  transform: none;
+}
+
+/* The big titles fill in a word at a time as they arrive, rather than the
+   whole line changing color together. */
+.words span {
+  color: #45454a;
+  transition: color 0.5s var(--ease);
+  transition-delay: var(--d, 0ms);
+}
+
+.words.in span {
+  color: var(--ink);
+}
+
+/* =========================================================== responsive */
+
+@media (max-width: 999px) {
+  /* Anchored to the bottom edge and full width, which is where a sheet on a
+     phone comes from — and it is the only shape that leaves the notes a
+     readable measure once the gutters are gone. */
+  .notes {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .notes-sheet {
+    width: 100%;
+    max-height: 88vh;
+    border-radius: 24px 24px 0 0;
+    border-bottom: 0;
+    transform: translateY(28px);
+  }
+
+  .notes-head,
+  .notes-versions,
+  .notes-body {
+    padding-inline: 22px;
+  }
+
+  .notes-veil {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(0, 0, 0, 0.8);
+  }
+
+  :root {
+    /* 24px of gutter each side, which is what the reference uses on a phone.
+       14px read as edge-to-edge text and left the type nowhere to breathe. */
+    --shell: min(1120px, 100% - 48px);
+    --phone-scale: 0.62;
+  }
+
+  /* Centred text is a wide-screen luxury. In a 342px column a centred
+     paragraph gives every line a different start, so the eye has to re-find
+     the left edge on every line. */
+  .statement.center {
+    text-align: left;
+  }
+
+  .statement .lede {
+    margin-inline: 0;
+    max-width: none;
+  }
+
+  .statement.center .linkrow {
+    justify-content: flex-start;
+  }
+
+  /* Pills are a touch target before they are a label. */
+  .segment {
+    height: 38px;
+    padding: 0 15px;
+  }
+
+  .segment-capsule {
+    height: 38px;
+  }
+
+  .segments {
+    max-width: calc(100% - 20px);
+    scroll-behavior: smooth;
+  }
+
+  /* The hero is the object on this page, and at 78vw by 4.4:1 it was 304 by 69
+     CSS pixels on a phone: a hairline that reads as a progress bar. Wider and
+     much less flat, so it is something to look at. */
+  .ribbon {
+    width: 92vw;
+    aspect-ratio: 2.5 / 1;
+    max-height: 34vh;
+  }
+
+  /* The outer pair of the fan are off the screen entirely by this width, and
+     the next pair are mostly off it, which leaves a crowded edge rather than
+     an arrangement. Two cards, closer in. */
+  .fan-card:nth-child(1),
+  .fan-card:nth-child(2),
+  .fan-card:nth-child(5),
+  .fan-card:nth-child(6) {
+    display: none;
+  }
+
+  /* Narrow: the project row keeps the mark, the two things anyone actually
+     came for, and the icons. Section navigation is the pills' job anyway. */
+  .topbar-inner .hide-sm {
+    display: none;
+  }
+}
+
+@media (max-width: 420px) {
+  :root {
+    --phone-scale: 0.56;
+  }
+
+  /* Six words of monospace is all that fits; the box scrolls for the rest. */
+  .code {
+    font-size: 11.5px;
+    padding: 16px 18px;
+  }
+
+  .getit {
+    border-radius: 26px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+
+  .notes[data-open='true'] .notes-sheet {
+    transform: none;
+  }
+
+  .words span {
+    color: var(--ink);
+  }
+}
+
+/* The home page reserves room for its segmented control on every anchor jump.
+   The release page does not have one, so that offset would drop every jump
+   eighty-six pixels past the heading it aimed at; the release page's own
+   `scroll-margin-top` is the whole story there. */
+html:has(.release) {
+  scroll-padding-top: 0;
+}
+
+/* ========================================================== announcement */
+
+/* The strip above everything. A release is news exactly once, and news goes
+   at the top — one line, full width, and a link rather than a banner you have
+   to dismiss, because nothing here interrupts anything. */
+.announce {
+  position: relative;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 40px;
+  padding: 9px 22px;
+  font-size: 13px;
+  letter-spacing: -0.005em;
+  color: rgba(245, 245, 247, 0.82);
+  background: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--iris) 22%, #000) 0%,
+    color-mix(in oklab, var(--rose) 20%, #000) 52%,
+    color-mix(in oklab, var(--ember) 16%, #000) 100%
+  );
+  border-bottom: 1px solid var(--hairline);
+  transition: color 0.3s var(--ease);
+}
+
+.announce:hover {
+  color: var(--ink);
+}
+
+.announce-tag {
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: #000;
+  background: var(--ink);
+}
+
+.announce-text {
+  /* One line on a laptop, two on a phone, never three. */
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.announce-go {
+  flex: none;
+  font-size: 16px;
+  transition: transform 0.35s var(--settle);
+}
+
+.announce:hover .announce-go {
+  transform: translateX(3px);
+}
+
+/* =============================================================== release */
+
+/* A document, not a product page.
+   The rest of the site is one claim per screen at poster size. This is the
+   other genre: article measure, a rail you can jump from, and prose that is
+   allowed to run several paragraphs. It keeps the black, the greys and the
+   three retinting properties, and nothing else. */
+
+.release {
+  --measure: min(760px, 100% - 44px);
+  --rl-gap: clamp(22px, 3.4vw, 34px);
+}
+
+/* Reading progress. One scaled bar; nothing here re-renders React. */
+.rl-progress {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 95;
+  height: 2px;
+  pointer-events: none;
+}
+
+.rl-progress span {
+  display: block;
+  height: 100%;
+  transform: scaleX(var(--read, 0));
+  transform-origin: left center;
+  background: linear-gradient(90deg, var(--iris), var(--rose) 55%, var(--ember));
+}
+
+/* ------------------------------------------------------------ head */
+
+.rl-head {
+  padding-top: clamp(34px, 5vw, 68px);
+}
+
+.rl-measure {
+  width: var(--measure);
+  margin-inline: auto;
+}
+
+.rl-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: clamp(26px, 4vw, 44px);
+  font-size: 14px;
+  color: var(--grey);
+  transition: color 0.25s var(--ease);
+}
+
+.rl-back:hover {
+  color: var(--ink);
+}
+
+.rl-back-arrow {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  transition: transform 0.35s var(--settle), border-color 0.25s var(--ease);
+}
+
+.rl-back:hover .rl-back-arrow {
+  transform: translateX(-3px);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+/* Category, date, length. The three facts a reader wants before the headline
+   rather than after it — how current this is, and how long it will take. */
+.rl-eyebrow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--grey);
+}
+
+.rl-eyebrow > span:first-child {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Only on an older release. A line, not a banner: the page is still that
+   release's announcement, and it should not read as an error. */
+.rl-newer {
+  display: inline-flex;
+  margin-top: 12px;
+  font-size: 15px;
+}
+
+.rl-eyebrow > * + *::before {
+  content: '·';
+  margin-right: 10px;
+  color: var(--grey-dim);
+}
+
+.rl-read {
+  color: var(--grey-dim);
+}
+
+.rl-title {
+  margin-top: 18px;
+  font-size: clamp(40px, 7.2vw, 92px);
+  font-weight: 600;
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+.rl-dek {
+  margin-top: clamp(20px, 2.4vw, 28px);
+  font-size: clamp(18px, 1.9vw, 23px);
+  line-height: 1.44;
+  letter-spacing: -0.011em;
+  color: var(--grey);
+}
+
+.rl-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(26px, 3vw, 36px);
+}
+
+.rl-copy {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 50px;
+  padding: 0 22px;
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--grey);
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease),
+    transform 0.4s var(--settle);
+}
+
+.rl-copy:hover {
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.26);
+}
+
+.rl-copy:active {
+  transform: scale(0.96);
+}
+
+.rl-copy[data-done='true'] {
+  color: var(--ink);
+  border-color: color-mix(in oklab, var(--rose) 60%, transparent);
+}
+
+/* ------------------------------------------------------------ hero */
+
+.rl-hero {
+  width: min(1120px, 100% - 44px);
+  margin: clamp(38px, 5vw, 66px) auto 0;
+}
+
+.rl-hero-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: clamp(20px, 2.4vw, 30px);
+  border: 1px solid var(--hairline);
+  /* Tall enough to hold three phones with their feet cut off, short enough
+     that the first heading is still reachable in one flick. */
+  aspect-ratio: 16 / 8.4;
+  min-height: 240px;
+  background: #050506;
+}
+
+.rl-hero-ground {
+  position: absolute;
+  inset: 0;
+  /* The same wash the app draws behind its own artwork: three blobs of the
+     palette, blurred past the point where you can find an edge. */
+  filter: blur(58px);
+  opacity: 0.85;
+}
+
+.rl-hero-blob {
+  position: absolute;
+  border-radius: 50%;
+}
+
+.rl-hero-blob-a {
+  left: 4%;
+  top: -34%;
+  width: 46%;
+  aspect-ratio: 1;
+  background: var(--iris);
+  opacity: 0.5;
+}
+
+.rl-hero-blob-b {
+  left: 30%;
+  top: -46%;
+  width: 52%;
+  aspect-ratio: 1;
+  background: var(--rose);
+  opacity: 0.46;
+}
+
+.rl-hero-blob-c {
+  right: 0%;
+  top: -30%;
+  width: 42%;
+  aspect-ratio: 1;
+  background: var(--ember);
+  opacity: 0.36;
+}
+
+.rl-hero-fan {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  /* The feet run off the bottom edge. A phone with its whole body in frame
+     reads as a picture of a phone; one leaving the frame reads as an object
+     the page is standing on. */
+  padding-top: clamp(28px, 5vw, 64px);
+}
+
+.rl-hero-slot {
+  position: relative;
+  flex: none;
+  width: clamp(126px, 17vw, 230px);
+  border-radius: clamp(14px, 1.6vw, 24px);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.6);
+  background: #0a0a0c;
+  transform-origin: 50% 100%;
+}
+
+.rl-hero-slot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.rl-hero-slot[data-slot='0'] {
+  transform: rotate(-7deg) scale(0.86) translateY(4%);
+  margin-right: -5%;
+  z-index: 1;
+}
+
+.rl-hero-slot[data-slot='1'] {
+  z-index: 3;
+}
+
+.rl-hero-slot[data-slot='2'] {
+  transform: rotate(7deg) scale(0.86) translateY(4%);
+  margin-left: -5%;
+  z-index: 2;
+}
+
+.rl-hero figcaption,
+.rl-figure figcaption {
+  margin-top: 14px;
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--grey-dim);
+}
+
+.rl-hero figcaption {
+  width: var(--measure);
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* ----------------------------------------------------------- facts */
+
+/* The table a release page owes anyone who came to check one number. */
+.rl-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1px;
+  margin: clamp(38px, 5vw, 64px) 0 0;
+  border: 1px solid var(--hairline);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--hairline);
+}
+
+.rl-facts div {
+  padding: 18px 20px;
+  background: #08080a;
+}
+
+.rl-facts dt {
+  font-size: 12px;
+  color: var(--grey-dim);
+}
+
+.rl-facts dd {
+  margin: 5px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+}
+
+/* ------------------------------------------------------------ body */
+
+/* ----------------------------------------------------------------------------
+   The story
+   ----------------------------------------------------------------------------
+   One chapter per screenful. The page is deliberately mostly air: the whole
+   argument for this layout is that a screenshot at the size you can read the
+   app in says more than the paragraph that would have described it, and a
+   paragraph that has to share a screen with three others gets skimmed.
+
+   Nothing here is a document. There is no measure, no rail and no numbering,
+   because those are the furniture of something you read top to bottom and this
+   is something you scroll through.
+   ---------------------------------------------------------------------------- */
+
+.rl-story {
+  width: var(--shell);
+  margin: 0 auto;
+  padding: clamp(56px, 9vw, 120px) 0 0;
+}
+
+.rl-chap {
+  display: grid;
+  grid-template-columns: 1fr min(430px, 44%);
+  align-items: center;
+  gap: clamp(28px, 5vw, 76px);
+  padding: clamp(52px, 9vw, 118px) 0;
+  border-top: 1px solid var(--hairline);
+}
+
+.rl-chap:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+
+/* One picture leads, so the eye is not tracking down a rigid column of the same
+   two shapes. Which one is named in the data rather than derived from position:
+   the narrow chapters all sit at odd positions here, so an `nth-of-type(even)`
+   rule reads as alternation and never fires once. */
+.rl-chap[data-flip='true'] .rl-chap-say {
+  order: 2;
+}
+
+.rl-chap[data-wide='true'] {
+  grid-template-columns: 1fr;
+  justify-items: center;
+  text-align: center;
+  padding: clamp(64px, 11vw, 150px) 0;
+}
+
+/* The cap belongs on the lines, not on the block. Capping the container clamps
+   the headline and the paragraph to the same measure, and the measure that
+   makes a 54px headline break well is the one that makes 17px body text break
+   every four words. */
+.rl-chap[data-wide='true'] .rl-chap-h {
+  max-width: 17ch;
+  margin-inline: auto;
+}
+
+.rl-chap[data-wide='true'] .rl-chap-p {
+  max-width: 52ch;
+}
+
+.rl-chap-kick {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+
+/* The size is the weight. `clamp` runs from something a phone can hold on one
+   line to something a laptop reads as a headline rather than as a heading. */
+.rl-chap-h {
+  margin: 0 0 18px;
+  font-size: clamp(30px, 4.4vw, 54px);
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  font-weight: 600;
+  color: var(--ink);
+  text-wrap: balance;
+}
+
+.rl-chap-p {
+  margin: 0;
+  font-size: clamp(16px, 1.35vw, 19px);
+  line-height: 1.55;
+  color: var(--grey);
+  max-width: 46ch;
+}
+
+.rl-chap[data-wide='true'] .rl-chap-p {
+  margin-inline: auto;
+}
+
+/* ---- the picture ---- */
+
+.rl-chap-fig {
+  margin: 0;
+}
+
+/* Lit, not floated. The phone sits in a pool of its own colour on a slightly
+   raised plate, which is what stops a dark screenshot on a dark page from
+   reading as a hole in the layout. */
+.rl-chap-stage {
+  position: relative;
+  border-radius: 30px;
+  padding: clamp(18px, 3vw, 34px);
+  /* The same sweep the hero stage runs — blue at one corner, iris through the
+     middle, the app's rose at the other — rather than a single rose glow. It is
+     the one place on the page where the palette is allowed to be all three at
+     once, and it is what stops three dark screenshots in a row reading as three
+     identical rectangles. */
+  background:
+    linear-gradient(
+      122deg,
+      rgba(46, 91, 214, 0.30) 0%,
+      rgba(123, 108, 255, 0.19) 44%,
+      rgba(237, 85, 100, 0.24) 100%
+    ),
+    linear-gradient(180deg, var(--tile-lift) 0%, var(--tile) 100%);
+  border: 1px solid var(--hairline);
+  overflow: hidden;
+}
+
+.rl-chap-stage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  box-shadow:
+    0 32px 70px rgba(0, 0, 0, 0.6),
+    0 2px 0 rgba(255, 255, 255, 0.06) inset;
+}
+
+.rl-chap-fig figcaption {
+  margin: 16px 2px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--grey-dim);
+}
+
+/* ----------------------------------------------------------------------------
+   The receipt
+   ----------------------------------------------------------------------------
+   Deliberately plain and deliberately last. The chapters above are the release;
+   this is the same release at the length someone scanning a diff wants, and it
+   is set small enough that nobody reading the story feels obliged to stop here.
+   ---------------------------------------------------------------------------- */
+
+.rl-all {
+  padding: clamp(56px, 9vw, 110px) 0 clamp(20px, 4vw, 44px);
+  border-top: 1px solid var(--hairline);
+}
+
+.rl-all-h {
+  margin: 0 0 clamp(28px, 4vw, 48px);
+  font-size: clamp(22px, 2.4vw, 30px);
+  letter-spacing: -0.02em;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.rl-all-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: clamp(26px, 4vw, 52px);
+}
+
+.rl-all-tag {
+  margin: 0 0 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--hairline);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--grey-dim);
+}
+
+.rl-all-col ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.rl-all-col li {
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--grey);
+}
+
+.rl-all-col li + li {
+  margin-top: 12px;
+}
+
+.rl-tail {
+  padding-top: clamp(48px, 7vw, 88px);
+}
+
+.rl-more {
+  padding-top: clamp(56px, 7vw, 92px);
+}
+
+.rl-more-grid {
+  margin-top: var(--rl-gap);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.rl-more-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 20px;
+  border-radius: 20px;
+  border: 1px solid var(--hairline);
+  background: var(--tile);
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease),
+    transform 0.5s var(--settle);
+}
+
+.rl-more-card:hover {
+  background: var(--tile-lift);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+.rl-more-tag {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--rose);
+}
+
+.rl-more-card b {
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.014em;
+  line-height: 1.25;
+}
+
+.rl-more-body {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--grey);
+}
+
+/* The release page ends on the footer, which was written for a page that
+   opens on light. A rule keeps them from touching. */
+.release .footer {
+  margin-top: clamp(72px, 9vw, 128px);
+  border-top: 1px solid var(--hairline);
+}
+
+/* Sends people to the long read from the download panel. */
+.getit-read {
+  display: inline-flex;
+  margin-top: 18px;
+}
+
+/* ------------------------------------------------------ release: small */
+
+@media (max-width: 940px) {
+  /* One column, picture under the words. Below this width the two-up chapter is
+     a 300px image beside a 300px paragraph, which flatters neither. */
+  .rl-chap,
+  .rl-chap[data-flip='true'] {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 30px;
+    text-align: center;
+    justify-items: center;
+  }
+
+  .rl-chap[data-flip='true'] .rl-chap-say {
+    order: 0;
+  }
+
+  .rl-chap-h {
+    max-width: 18ch;
+    margin-inline: auto;
+  }
+
+  .rl-chap-p,
+  .rl-chap[data-wide='true'] .rl-chap-p {
+    margin-inline: auto;
+    max-width: 50ch;
+  }
+
+  .rl-chap-fig {
+    width: min(360px, 100%);
+  }
+
+  .rl-chap-fig figcaption {
+    text-align: center;
+  }
+}
+
+@media (max-width: 700px) {
+  .release {
+    --measure: calc(100% - 36px);
+  }
+
+  .rl-hero {
+    width: calc(100% - 36px);
+  }
+
+  .rl-hero-stage {
+    aspect-ratio: 16 / 12;
+  }
+
+  .rl-facts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .announce {
+    font-size: 12.5px;
+    gap: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rl-progress span {
+    transition: none;
+  }
+}
+
+/* ==================================================== release: the object */
+
+/* The first screen is the release, and nothing else.
+   A field of light in the middle, the name split to the two outside edges so
+   the type frames the object rather than sitting on it, and one control. The
+   nav floats over it without a bar of its own, because a black strip across
+   artwork is a piece of furniture the artwork did not ask for. */
+
+.release {
+  position: relative;
+}
+
+.release .topbar {
+  position: absolute;
+  inset: 0 0 auto 0;
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.rh {
+  position: relative;
+  min-height: 100svh;
+  /* A floor, so the object does not become a stripe on a short laptop window
+     in landscape. */
+  min-height: max(560px, 100svh);
+  overflow: hidden;
+  /* Night, and only here.
+
+     A sky photographed at any exposure has some blue in it, and stars on #000
+     read as dots on a page rather than as light at a distance — so the object
+     gets a real navy to sit in, held most of the way across the frame rather
+     than given up after the first stop.
+
+     It still lands on #000 at the bottom edge. The blue is the hero's
+     atmosphere, not the page's: everything below this is a black page, and a
+     tint that leaks into it would make the article look like it was waiting for
+     a background image to load. */
+  background:
+    radial-gradient(
+      124% 88% at 50% 32%,
+      #101a3a 0%,
+      #0b1229 34%,
+      #070b1a 58%,
+      #03050c 80%,
+      #000 100%
+    ),
+    #000;
+}
+
+.rh-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* The 1.0.304 field sits on warm ground rather than on night.
+
+   The navy above is the 203 hero's atmosphere - a sky for a star field. This
+   release's object is glass over gold, and gold on navy is a different release
+   than the one being announced. Same rule as up there: it lands on #000 at the
+   bottom edge, so the article below is a black page and not a tinted one. */
+.rh[data-field='glass'] {
+  background:
+    radial-gradient(
+      120% 86% at 50% 30%,
+      #201607 0%,
+      #170f06 36%,
+      #0d0904 62%,
+      #050302 82%,
+      #000 100%
+    ),
+    #000;
+}
+
+.gf {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.rh-type {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 0 clamp(20px, 4.2vw, 76px);
+  margin: 0;
+  /* The object behind it is the thing on this screen; the words must never
+     eat a click meant for the replay control. */
+  pointer-events: none;
+  /* Deliberately smaller than a headline. These two words are the frame; the
+     number between them is the subject, and a word at display size either
+     side of it competes with the thing it is introducing — and, at this
+     width, physically runs into it. */
+  font-size: clamp(28px, 3.4vw, 60px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.028em;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.rh-word {
+  flex: none;
+}
+
+/* One letter at a time, starting from the end nearest the number (see `Word`),
+   so the two words look pushed outward by the object between them. It runs
+   once, on the same beat as the field assembling behind it. */
+.rh-word span {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.14em);
+  animation: rh-letter 900ms var(--settle) forwards;
+  animation-delay: calc(320ms + var(--i) * 70ms);
+}
+
+@keyframes rh-letter {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Present for anything that reads the page rather than looks at it: the
+   number the canvas draws, in text, in the heading, in reading order. */
+.rh-said {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.rh-replay {
+  position: absolute;
+  right: clamp(18px, 2.6vw, 34px);
+  bottom: clamp(18px, 2.6vw, 34px);
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: 1px solid var(--hairline);
+  background: rgba(0, 0, 0, 0.3);
+  color: rgba(245, 245, 247, 0.55);
+  cursor: pointer;
+  transition: color 0.25s var(--ease), border-color 0.25s var(--ease),
+    transform 0.5s var(--settle);
+}
+
+.rh-replay:hover {
+  color: var(--ink);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.rh-replay:active {
+  transform: rotate(-40deg) scale(0.94);
+}
+
+/* Portrait, and anything narrow enough that the two words would meet in the
+   middle: the split becomes a stack in the lower third, still hard against
+   the left margin the rest of the page uses. */
+/* Upright.
+   Keyed off `data-tall`, which the page sets from the hero box's own aspect
+   ratio and also hands to the canvas — one decision, so the digits and the two
+   words can never disagree about which way up the screen is.
+
+   The number is set one digit per line here and takes most of the screen, so
+   the words stop being a line either side of it and become two marks *on* it,
+   at opposite corners. Giving them a lane of their own would mean shrinking
+   the object to make room, and an object that has been made room for is
+   furniture. */
+.rh[data-tall='true'] .rh-type {
+  display: block;
+  padding: 0;
+  font-size: clamp(26px, 7.6vw, 46px);
+}
+
+/* Held off the corners themselves: type in a corner reads as a watermark, type
+   a third of the way down reads as a title. */
+.rh[data-tall='true'] .rh-word {
+  position: absolute;
+}
+
+.rh[data-tall='true'] .rh-word:first-of-type {
+  left: clamp(16px, 5vw, 30px);
+  top: 27%;
+}
+
+.rh[data-tall='true'] .rh-word:last-of-type {
+  right: clamp(16px, 5vw, 30px);
+  top: 65%;
+}
+
+.rh[data-tall='true'] .rh-replay {
+  right: clamp(14px, 4vw, 22px);
+  bottom: clamp(14px, 4vw, 22px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rh-replay {
+    display: none;
+  }
+
+  /* No entrance to replay, so the words are simply there. */
+  .rh-word span {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+}
+
+/* ==================================================================== support
+
+   Built to the release page's standard, not to its layout.
+
+   That page opens with a full screen of object because a release is an event
+   you arrive at to look at. This is a page you arrive at to use, usually with
+   something already broken — so it takes the craft and leaves the furniture:
+   a hero whose real job is a search box over the answers, and then straight
+   into the thing you came to do.
+
+   Two things here are specific. The fields, the section stepper and the door
+   cards are borrowed from Origin UI and Magic UI and live in components/ui,
+   styled by Tailwind through tw.css rather than here. And the FAQ is native
+   <details>, so open and closed are styled through [open] rather than through
+   a class some JavaScript has to remember to set.
+   ========================================================================= */
+
+.support main {
+  padding-bottom: clamp(80px, 12vw, 160px);
+}
+
+/* ------------------------------------------------------------ the chooser */
+
+.sp-choose {
+  padding-bottom: clamp(60px, 9vw, 120px);
+}
+
+.sp-rows {
+  border-top: 1px solid var(--hairline);
+}
+
+/* Full width, one per line. Tiles fitted in a row and read as four equal
+   options in a settings screen; these are the page's entire purpose, so they
+   get the width, and the number down the left gives the set an order. */
+.sp-row {
+  display: grid;
+  grid-template-columns: clamp(48px, 6vw, 84px) minmax(0, 1fr) 40px;
+  align-items: center;
+  gap: 0 clamp(12px, 2vw, 26px);
+  width: 100%;
+  padding: clamp(22px, 2.8vw, 34px) clamp(6px, 1.2vw, 16px);
+  border: 0;
+  border-bottom: 1px solid var(--hairline);
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.35s var(--ease), padding-left 0.45s var(--settle);
+}
+
+.sp-row:hover {
+  background: #08080a;
+  padding-left: clamp(12px, 1.8vw, 24px);
+}
+
+/* The chosen row keeps the accent so it stays findable once you have scrolled
+   down into the form it opened. */
+.sp-row[data-active='true'] {
+  background: color-mix(in oklab, var(--rose) 7%, #08080a);
+}
+
+.sp-row-n {
+  font-size: clamp(13px, 1.2vw, 15px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  color: var(--grey-dim);
+  transition: color 0.3s var(--ease);
+}
+
+.sp-row:hover .sp-row-n,
+.sp-row[data-active='true'] .sp-row-n {
+  color: var(--rose);
+}
+
+.sp-row-say {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sp-row-h {
+  font-size: clamp(21px, 2.5vw, 32px);
+  font-weight: 600;
+  line-height: 1.14;
+  letter-spacing: -0.022em;
+}
+
+.sp-row-b {
+  max-width: 56ch;
+  font-size: clamp(14.5px, 1.4vw, 16px);
+  line-height: 1.46;
+  color: var(--grey);
+}
+
+.sp-row-go {
+  justify-self: end;
+  opacity: 0;
+  transform: translateX(-6px);
+  transition: opacity 0.3s var(--ease), transform 0.45s var(--settle);
+}
+
+.sp-row-go svg {
+  width: 18px;
+  height: 18px;
+}
+
+.sp-row:hover .sp-row-go,
+.sp-row[data-active='true'] .sp-row-go {
+  opacity: 0.6;
+  transform: none;
+}
+
+.sp-row[data-active='true'] .sp-row-go {
+  transform: rotate(90deg);
+}
+
+/* --------------------------------------------------------------- the form */
+
+/* Said before the first field rather than under the submit button. Someone
+   about to paste a token into a public tracker needs to know beforehand. */
+.sp-public {
+  max-width: 64ch;
+  margin: clamp(28px, 3.4vw, 40px) 0 0;
+  padding: 15px 19px;
+  border-radius: 16px;
+  border: 1px solid color-mix(in oklab, var(--ember) 30%, transparent);
+  background: color-mix(in oklab, var(--ember) 7%, transparent);
+  font-size: 14.5px;
+  line-height: 1.52;
+  color: var(--ink);
+}
+
+.sp-public b {
+  font-weight: 600;
+}
+
+.sp-public-quiet {
+  margin-top: 10px;
+  border-color: var(--hairline);
+  background: var(--tile);
+  color: var(--grey);
+}
+
+.sp-public a {
+  color: var(--rose);
+}
+
+.sp-public a:hover {
+  text-decoration: underline;
+}
+
+/* The sheet, and the light under it.
+
+   The app's own material is glass over album color, and a form on this site
+   had been a stack of outlined boxes on flat black — the one surface in the
+   whole product that looked like nothing in the product. This is the app's
+   answer instead: a frosted sheet with the theme colors burning underneath it.
+
+   Frost needs something to be frosted over, and a black page offers nothing,
+   so `.sp-glow` puts the light there on purpose. Take it away and the
+   backdrop-filter has zero work to do and the sheet reads as flat grey. */
+.sp-stage {
+  position: relative;
+  margin-top: 22px;
+  isolation: isolate;
+}
+
+.sp-glow {
+  position: absolute;
+  inset: -16% -8% -22%;
+  z-index: -1;
+  background:
+    radial-gradient(
+      46% 60% at 20% 20%,
+      color-mix(in oklab, var(--rose) 52%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      44% 58% at 84% 32%,
+      color-mix(in oklab, var(--iris) 46%, transparent),
+      transparent 72%
+    ),
+    radial-gradient(
+      42% 52% at 56% 96%,
+      color-mix(in oklab, var(--ember) 34%, transparent),
+      transparent 74%
+    );
+  filter: blur(30px);
+  opacity: 0.62;
+  pointer-events: none;
+}
+
+.sp-panel {
+  position: relative;
+  padding: clamp(24px, 3.4vw, 46px);
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(34px) saturate(150%);
+  -webkit-backdrop-filter: blur(34px) saturate(150%);
+  /* The inset hairline along the top is the lit edge of a physical sheet, and
+     it is the single detail that separates glass from a grey rectangle. */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.08),
+    0 40px 90px -40px rgba(0, 0, 0, 0.9);
+}
+
+/* Firefox without backdrop-filter would show the glow at full strength through
+   a near-transparent panel, which is unreadable rather than merely different. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .sp-panel {
+    background: #0d0d10;
+  }
+
+  .sp-glow {
+    opacity: 0.22;
+  }
+}
+
+/* ---------------------------------------------------------------- the panes */
+
+.sp-note {
+  max-width: 62ch;
+  margin: 0 0 clamp(24px, 3vw, 32px);
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--grey);
+}
+
+.sp-pane {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(22px, 2.8vw, 32px);
+}
+
+/* The device pane is four short answers, so it is a grid rather than a column
+   of full-width rules with one word sitting on each. */
+.sp-pane-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 2.6vw, 30px) clamp(24px, 3vw, 40px);
+}
+
+.sp-warn {
+  margin: 22px 0 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--ember);
+}
+
+/* -------------------------------------------------------------- the actions */
+
+.sp-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 18px;
+  margin-top: clamp(28px, 3.4vw, 40px);
+  padding-top: clamp(22px, 2.6vw, 30px);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.sp-actions .btn svg {
+  width: 17px;
+  height: 17px;
+}
+
+/* Disabled says "not yet", so it stays legible rather than dropping to 30% and
+   becoming something whose label you cannot read. */
+.sp-actions .btn:disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.42;
+}
+
+.sp-actions .btn:disabled:hover {
+  transform: none;
+}
+
+.sp-back {
+  padding: 0 4px;
+  border: 0;
+  background: transparent;
+  color: var(--grey);
+  font-family: inherit;
+  font-size: 15px;
+  cursor: pointer;
+  transition: color 0.2s var(--ease);
+}
+
+.sp-back:hover {
+  color: var(--ink);
+}
+
+.sp-meta {
+  font-size: 13.5px;
+  color: var(--grey);
+}
+
+.sp-sent {
+  margin: 20px 0 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--grey);
+}
+
+.sp-sent a {
+  color: var(--rose);
+  text-decoration: underline;
+}
+
+/* -------------------------------------------------------------- elsewhere */
+
+.sp-else {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 12px;
+}
+
+/* ------------------------------------------------------- section headings */
+
+.sp-sec-head {
+  max-width: 46ch;
+  margin-bottom: clamp(34px, 4.6vw, 60px);
+}
+
+.sp-sec-head .kicker {
+  margin-bottom: 12px;
+  color: var(--rose);
+}
+
+.sp-sec-dek {
+  margin-top: 18px;
+  font-size: clamp(16px, 1.6vw, 19px);
+  line-height: 1.5;
+  color: var(--grey);
+}
+
+/* ---------------------------------------------------------- what happens */
+
+.sp-process {
+  padding: clamp(60px, 8vw, 110px) 0 clamp(50px, 7vw, 90px);
+  border-top: 1px solid var(--hairline);
+}
+
+.sp-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: clamp(20px, 3vw, 40px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: none;
+}
+
+.sp-step {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hairline);
+}
+
+.sp-step-n {
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--rose);
+}
+
+.sp-step b {
+  font-size: clamp(17px, 1.7vw, 20px);
+  font-weight: 600;
+  letter-spacing: -0.016em;
+}
+
+.sp-step span:not(.sp-step-n) {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--grey);
+}
+
+/* ---------------------------------------------------------------- the faq */
+
+.sp-faq {
+  padding: clamp(56px, 8vw, 110px) 0 clamp(50px, 7vw, 90px);
+  border-top: 1px solid var(--hairline);
+}
+
+.sp-faq-list {
+  border-top: 1px solid var(--hairline);
+}
+
+.sp-q {
+  border-bottom: 1px solid var(--hairline);
+}
+
+.sp-q summary {
+  display: grid;
+  grid-template-columns: clamp(44px, 5.5vw, 74px) minmax(0, 1fr) 20px;
+  align-items: center;
+  gap: 0 clamp(10px, 1.6vw, 20px);
+  padding: clamp(20px, 2.4vw, 28px) clamp(6px, 1.2vw, 16px);
+  cursor: pointer;
+  list-style: none;
+  transition: background 0.3s var(--ease);
+}
+
+/* Safari draws its own triangle and ignores list-style on the summary. */
+.sp-q summary::-webkit-details-marker {
+  display: none;
+}
+
+.sp-q summary:hover {
+  background: #08080a;
+}
+
+.sp-q-n {
+  font-size: clamp(12.5px, 1.1vw, 14px);
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--grey-dim);
+  transition: color 0.3s var(--ease);
+}
+
+.sp-q-t {
+  font-size: clamp(16.5px, 1.8vw, 21px);
+  font-weight: 500;
+  line-height: 1.28;
+  letter-spacing: -0.017em;
+  transition: color 0.2s var(--ease);
+}
+
+.sp-q summary:hover .sp-q-t {
+  color: var(--rose);
+}
+
+.sp-q[open] .sp-q-n {
+  color: var(--rose);
+}
+
+/* A plus that becomes a minus, drawn in CSS. Two pseudo-element bars beat an
+   icon import for something with exactly two states. */
+.sp-q-mark {
+  position: relative;
+  justify-self: end;
+  width: 15px;
+  height: 15px;
+}
+
+.sp-q-mark::before,
+.sp-q-mark::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 1.5px;
+  border-radius: 2px;
+  background: var(--grey);
+  transform: translateY(-50%);
+  transition: transform 0.4s var(--settle), background 0.2s var(--ease);
+}
+
+.sp-q-mark::after {
+  transform: translateY(-50%) rotate(90deg);
+}
+
+.sp-q[open] .sp-q-mark::after {
+  transform: translateY(-50%) rotate(0deg);
+}
+
+.sp-q[open] .sp-q-mark::before,
+.sp-q[open] .sp-q-mark::after {
+  background: var(--rose);
+}
+
+/* Indented to the same column the question sits in, so the answer reads as
+   hanging off it rather than as a new block starting at the margin. */
+.sp-q-a {
+  max-width: 70ch;
+  padding: 0 clamp(6px, 1.2vw, 16px) clamp(24px, 2.6vw, 32px);
+  margin-left: clamp(54px, 7.1vw, 94px);
+}
+
+.sp-q-a p {
+  margin-bottom: 15px;
+  font-size: 15.5px;
+  line-height: 1.64;
+  color: var(--grey);
+}
+
+.sp-q-a p:last-child {
+  margin-bottom: 0;
+}
+
+/* --------------------------------------------------------------- the tail */
+
+.sp-tail {
+  padding-top: clamp(44px, 6vw, 74px);
+  border-top: 1px solid var(--hairline);
+}
+
+/* ------------------------------------------------------------- responsive */
+
+@media (max-width: 860px) {
+  .sp-q-a {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 700px) {
+  /* The device pane stops being two columns before its answers get too
+     narrow to read the placeholder in. */
+  .sp-pane-meta {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sp-actions .btn {
+    width: 100%;
+  }
+
+  /* The number column costs more than it gives once the title has to wrap;
+     the arrow goes with it, since hover is not a thing here anyway. */
+  .sp-row {
+    grid-template-columns: 34px minmax(0, 1fr);
+  }
+
+  .sp-row-go {
+    display: none;
+  }
+
+  .sp-q summary {
+    grid-template-columns: 34px minmax(0, 1fr) 16px;
+  }
+}
+
+/* ============================================================ gold release */
+
+/* 1.0.304's own dress: the gold key art, mark and wordmark from its About
+   screen. Scoped to that release's page (data-theme on the page root), so the
+   landing page and every other release keep their own palette. The page's
+   older rules all read the three palette tokens, so re-pointing them here
+   turns every kicker, link, tag and the reading bar gold in one place. */
+.release[data-theme='gold'] {
+  --gold: #ffc21a;
+  --gold-hot: #ffe08a;
+  --gold-deep: #e58600;
+  --rose: var(--gold);
+  --ember: #ff9a1f;
+  --iris: #ffdd7a;
+}
+
+.release[data-theme='gold'] .btn {
+  color: #1c1100;
+  font-weight: 600;
+  background: linear-gradient(180deg, var(--gold-hot), var(--gold) 52%, var(--gold-deep));
+  box-shadow:
+    0 14px 34px -14px rgba(255, 176, 0, 0.7),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+
+/* The app's glass, as the second button. */
+.release[data-theme='gold'] .btn-ghost {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(22px) saturate(1.7);
+  -webkit-backdrop-filter: blur(22px) saturate(1.7);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.release[data-theme='gold'] .btn-ghost:hover {
+  background: rgba(255, 255, 255, 0.16);
+  filter: none;
+}
+
+/* The three phones stand on a liquid-gold ambient stage. */
+.release[data-theme='gold'] .rl-hero-stage {
+  background:
+    radial-gradient(ellipse at 50% 30%, rgba(245, 158, 11, 0.25) 0%, rgba(20, 15, 5, 0.95) 70%, #000 100%);
+  border-color: rgba(255, 200, 80, 0.22);
+}
+
+.release[data-theme='gold'] .rl-hero-ground {
+  display: none;
+}
+
+/* Each screenshot sits on a warm stage, lit from one corner */
+.release[data-theme='gold'] .rl-chap-stage {
+  background:
+    radial-gradient(90% 70% at 0% 0%, rgba(255, 194, 26, 0.34), transparent 62%),
+    radial-gradient(80% 70% at 100% 100%, rgba(229, 134, 0, 0.28), transparent 64%),
+    #120c03;
+  box-shadow: inset 0 0 0 1px rgba(255, 200, 80, 0.16);
+}
+
+.release[data-theme='gold'] .rl-more-card:hover {
+  border-color: rgba(255, 200, 80, 0.35);
+}
+
+/* The About screen's poster, closing the page. */
+.rl-poster {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  margin-top: clamp(56px, 8vw, 104px);
+  padding: clamp(48px, 7vw, 88px) 24px;
+  border-radius: clamp(26px, 3vw, 36px);
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(245, 158, 11, 0.2) 0%, rgba(0, 0, 0, 0.8) 75%),
+    linear-gradient(180deg, #1a1205 0%, #080602 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 200, 80, 0.2);
+}
+
+.rl-poster-mark {
+  display: block;
+  width: clamp(80px, 9vw, 104px);
+  height: auto;
+  margin: 0 auto;
+  border-radius: 24px;
+  filter: drop-shadow(0 18px 44px rgba(0, 0, 0, 0.45));
+}
+
+.rl-poster-word {
+  display: block;
+  width: min(420px, 70%);
+  height: auto;
+  margin: clamp(22px, 3vw, 30px) auto 0;
+  filter: drop-shadow(0 8px 30px rgba(0, 0, 0, 0.4));
+}
+
+.rl-poster-ver {
+  margin-top: 10px;
+  font-size: clamp(20px, 2.2vw, 26px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #fff;
+}
+
+.rl-poster-actions {
+  margin-top: clamp(26px, 3.4vw, 36px);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+/* The section pills scroll sideways on a phone; fade them into the edges so
+   the last one reads as "more this way" instead of being cut off. */
+@media (max-width: 700px) {
+  .segments {
+    -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0, #000 18px, #000 calc(100% - 18px), transparent 100%);
+  }
+}
+
+/* ============================================================ release: chapters
+   Each chapter is numbered and its words travel with the picture: on a wide
+   screen the copy is sticky beside a tall screenshot, so there is never a
+   column of empty page next to the phone. */
+
+.rl-chap {
+  align-items: start;
+  counter-increment: chapter;
+}
+
+.rl-story {
+  counter-reset: chapter;
+}
+
+.rl-chap:not([data-wide='true']) .rl-chap-say {
+  position: sticky;
+  top: calc(var(--bar-h, 56px) + 110px);
+  padding-top: clamp(20px, 8vh, 120px);
+}
+
+.rl-chap-num {
+  display: block;
+  margin-bottom: 18px;
+  font-size: clamp(56px, 7vw, 96px);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(255, 255, 255, 0.22);
+}
+
+.release[data-theme='gold'] .rl-chap-num {
+  -webkit-text-stroke-color: rgba(255, 194, 26, 0.45);
+}
+
+.rl-chap-h {
+  font-size: clamp(32px, 4.8vw, 62px);
+}
+
+.rl-chap-p {
+  font-size: clamp(17px, 1.45vw, 20px);
+  color: rgba(245, 245, 247, 0.72);
+}
+
+/* The rail: the chapters, in the margin, with the one you are in lit. */
+.rl-rail {
+  position: fixed;
+  left: clamp(16px, 2.2vw, 40px);
+  top: 50%;
+  translate: 0 -50%;
+  z-index: 20;
+  display: none;
+  flex-direction: column;
+  gap: 4px;
+  max-width: 170px;
+  opacity: 0;
+  transition: opacity 0.4s var(--ease);
+}
+
+.rl-rail[data-on='true'] {
+  opacity: 1;
+}
+
+.rl-rail a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  font-size: 12.5px;
+  line-height: 1.3;
+  color: rgba(245, 245, 247, 0.38);
+  text-decoration: none;
+  transition: color 0.25s var(--ease);
+}
+
+.rl-rail a::before {
+  content: '';
+  flex: none;
+  width: 14px;
+  height: 1.5px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: width 0.35s var(--settle), background 0.25s var(--ease);
+}
+
+.rl-rail a:hover {
+  color: rgba(245, 245, 247, 0.75);
+}
+
+.rl-rail a[data-on='true'] {
+  color: var(--ink);
+}
+
+.rl-rail a[data-on='true']::before {
+  width: 26px;
+  background: var(--gold, var(--rose));
+}
+
+@media (min-width: 1380px) {
+  .rl-rail {
+    display: flex;
+  }
+}
+
+@media (max-width: 940px) {
+  .rl-chap:not([data-wide='true']) .rl-chap-say {
+    position: static;
+    padding-top: 0;
+  }
+
+  .rl-chap-num {
+    margin-inline: auto;
+  }
+}
+
+/* ===================================================================== highlights */
+
+.hl {
+  padding: clamp(90px, 11vw, 160px) 0 clamp(70px, 8vw, 120px);
+}
+
+.hl-title {
+  margin: 0 auto clamp(30px, 4vw, 52px);
+  font-size: clamp(36px, 4.8vw, 64px);
+  line-height: 1.07;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--ink);
+}
+
+.hl-rail {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding-inline: max(24px, calc((100% - 1120px) / 2));
+  scroll-padding-inline: max(24px, calc((100% - 1120px) / 2));
+  padding-bottom: 4px;
+}
+
+.hl-rail::-webkit-scrollbar {
+  display: none;
+}
+
+.hl-card {
+  position: relative;
+  flex: none;
+  width: clamp(290px, 29vw, 400px);
+  height: clamp(540px, 52vw, 700px);
+  border-radius: 28px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  background: #1d1d1f;
+}
+
+/* Each tile carries a faint wash of its own, so seven dark cards in a row are
+   seven places rather than one card printed seven times. */
+.hl-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.55;
+  background: radial-gradient(ellipse 90% 60% at 50% 100%, var(--hl-wash, rgba(237, 85, 100, 0.35)), transparent 70%);
+}
+
+.hl-card:nth-child(7n + 2) { --hl-wash: rgba(255, 138, 107, 0.38); }
+.hl-card:nth-child(7n + 3) { --hl-wash: rgba(123, 108, 255, 0.4); }
+.hl-card:nth-child(7n + 4) { --hl-wash: rgba(56, 211, 214, 0.32); }
+.hl-card:nth-child(7n + 5) { --hl-wash: rgba(255, 194, 26, 0.3); }
+.hl-card:nth-child(7n + 6) { --hl-wash: rgba(46, 91, 214, 0.38); }
+.hl-card:nth-child(7n + 7) { --hl-wash: rgba(255, 194, 26, 0.36); }
+
+.hl-cap {
+  position: relative;
+  margin: 0;
+  padding: 34px 32px 0;
+  font-size: clamp(17px, 1.45vw, 21px);
+  line-height: 1.3;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: #86868b;
+}
+
+.hl-cap b {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.hl-kick {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #f2c14e;
+}
+
+.hl-shot {
+  position: absolute;
+  left: 50%;
+  bottom: -8%;
+  width: 72%;
+  translate: -50% 0;
+}
+
+.hl-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 26px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+}
+
+.hl-controls {
+  position: relative;
+  margin-top: 28px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hl-dots {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 56px;
+  padding: 0 22px;
+  border-radius: 999px;
+  background: rgba(66, 66, 69, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.hl-dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.42);
+  transition: width 0.45s var(--settle), background 0.3s var(--ease);
+}
+
+.hl-dot[data-on='true'] {
+  width: 44px;
+  background: var(--ink);
+}
+
+.hl-arrows {
+  position: absolute;
+  right: 0;
+  display: flex;
+  gap: 14px;
+}
+
+.hl-arrow {
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  color: var(--ink);
+  background: rgba(66, 66, 69, 0.72);
+  transition: background 0.2s var(--ease), opacity 0.2s var(--ease);
+}
+
+.hl-arrow svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.hl-arrow:hover:not(:disabled) {
+  background: rgba(90, 90, 94, 0.8);
+}
+
+.hl-arrow:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+@media (max-width: 734px) {
+  .hl-arrows {
+    display: none;
+  }
+
+}
+
+/* ================================================================ os hero
+   The opening of Apple's OS pages, on black: the product name set small, three
+   short lines set very large, one grey sentence, then the devices. */
+
+.os-hero {
+  padding-top: clamp(64px, 9vw, 120px);
+}
+
+.os-hero-copy {
+  text-align: center;
+}
+
+.os-hero-name {
+  margin: 0;
+  font-size: clamp(24px, 2.6vw, 34px);
+  line-height: 1.1;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.os-hero-title {
+  margin: clamp(16px, 2vw, 26px) auto 0;
+  max-width: 14ch;
+  font-size: clamp(44px, 7vw, 96px);
+  line-height: 1.04;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--ink);
+}
+
+.os-hero-sub {
+  margin: clamp(22px, 2.6vw, 34px) auto 0;
+  max-width: 34ch;
+  font-size: clamp(21px, 2vw, 28px);
+  line-height: 1.25;
+  font-weight: 600;
+  letter-spacing: -0.012em;
+  color: #86868b;
+  text-wrap: balance;
+}
+
+.os-hero-links {
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.os-hero-devices {
+  padding-bottom: clamp(40px, 6vw, 90px);
+}
+
+@media (max-width: 700px) {
+  .statement.center.os-hero-copy,
+  .os-hero-copy {
+    text-align: center;
+  }
+
+  .os-hero-copy .linkrow {
+    justify-content: center;
+  }
+}
+
+.os-hero-title {
+  max-width: none;
+  font-size: clamp(34px, 9.4vw, 84px);
+}
+
+.os-hero-title span {
+  display: block;
+  white-space: nowrap;
+}
+
+@media (min-width: 701px) {
+  .os-hero-title {
+    font-size: clamp(48px, 6.4vw, 84px);
+  }
+}
+
+/* ==================================================== os hero, closer to Apple */
+
+.os-hero {
+  padding-top: clamp(56px, 7vw, 96px);
+}
+
+.os-hero-name {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+.os-hero-title {
+  margin-top: clamp(14px, 1.6vw, 22px);
+  font-size: clamp(32px, 8.6vw, 80px);
+  line-height: 1.08;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 701px) {
+  .os-hero-title {
+    font-size: clamp(48px, 5.8vw, 80px);
+  }
+}
+
+.os-hero-sub {
+  margin-top: clamp(24px, 2.4vw, 32px);
+  max-width: none;
+  font-size: clamp(19px, 2.2vw, 28px);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+/* The lineup: one stage the width of the page, sized in its own width so the
+   arrangement keeps its proportions from a phone to a desktop. */
+.lineup {
+  position: relative;
+  container-type: inline-size;
+  width: 100%;
+  max-width: 1680px;
+  margin: clamp(40px, 6vw, 80px) auto 0;
+  aspect-ratio: 2.1 / 1;
+  overflow: hidden;
+}
+
+.lu,
+.lu-tile {
+  position: absolute;
+  background: #0b0b0c;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 40px 80px -30px rgba(0, 0, 0, 0.9);
+}
+
+.lu {
+  border-radius: calc(var(--w) * 0.14);
+  padding: calc(var(--w) * 0.028);
+  /* the bezel: dark, with a faint metal edge */
+  background: linear-gradient(160deg, #2a2a2e, #0d0d0f 40%, #1b1b1e);
+}
+
+.lu img,
+.lu-tile img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: calc(var(--w) * 0.115);
+}
+
+.lu-left {
+  --w: 26cqw;
+  width: var(--w);
+  left: -7cqw;
+  top: 2cqw;
+}
+
+.lu-right {
+  --w: 24cqw;
+  width: var(--w);
+  right: -6cqw;
+  top: 0;
+}
+
+.lu-center {
+  --w: 15cqw;
+  width: var(--w);
+  left: 50%;
+  translate: -50% 0;
+  top: 9cqw;
+  z-index: 2;
+}
+
+.lu-tile {
+  --w: 8.4cqw;
+  width: var(--w);
+  aspect-ratio: 1 / 1.15;
+  left: 61.5cqw;
+  top: 33cqw;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  padding: calc(var(--w) * 0.2);
+  border-radius: calc(var(--w) * 0.3);
+  background:
+    radial-gradient(circle at 50% 40%, #3b2a09, #0d0b06 75%),
+    #0d0b06;
+}
+
+.lu-tile img {
+  border-radius: 0;
+}
+
+@media (max-width: 734px) {
+  .lineup {
+    aspect-ratio: 1 / 1.05;
+  }
+
+  .lu-left {
+    --w: 46cqw;
+    left: -22cqw;
+    top: 6cqw;
+  }
+
+  .lu-right {
+    --w: 44cqw;
+    right: -20cqw;
+    top: 0;
+  }
+
+  .lu-center {
+    --w: 30cqw;
+    top: 18cqw;
+  }
+
+  .lu-tile {
+    --w: 17cqw;
+    left: 64cqw;
+    top: 72cqw;
+  }
+}
+
+@media (min-width: 735px) {
+  .lineup {
+    aspect-ratio: 2.7 / 1;
+  }
+
+  .lu-left {
+    --w: 19cqw;
+    left: -3.5cqw;
+    top: 3cqw;
+  }
+
+  .lu-right {
+    --w: 18cqw;
+    right: -3cqw;
+    top: 0;
+  }
+
+  .lu-center {
+    --w: 11.5cqw;
+    top: 6cqw;
+  }
+
+  .lu-tile {
+    --w: 6.6cqw;
+    left: 60cqw;
+    top: 24cqw;
+  }
+}
+
+/* ======================================================== lineup, as hardware
+   Phones built the way a product photo shows them: a polished metal band, a
+   black bezel, a camera in the glass, side buttons, a sheen across the screen.
+   The two big ones lie at an angle like objects on a table; the small one
+   stands in the middle; a watch sits beside it. */
+
+.lineup {
+  aspect-ratio: 1 / 1.02;
+  overflow: hidden;
+  perspective: 1600px;
+}
+
+.lu,
+.lu-tile {
+  display: none;
+}
+
+.lu-stage {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+}
+
+.dev {
+  --w: 30cqw;
+  position: absolute;
+  width: var(--w);
+  aspect-ratio: 720 / 1500;
+  border-radius: calc(var(--w) * 0.16);
+  padding: calc(var(--w) * 0.03);
+  /* titanium: graphite with light running along the edge */
+  background:
+    linear-gradient(135deg, #8d8f94 0%, #3b3c40 14%, #1c1d20 40%, #57585d 58%, #232427 78%, #7a7c81 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+    inset 0 0 calc(var(--w) * 0.01) rgba(0, 0, 0, 0.8),
+    0 calc(var(--w) * 0.18) calc(var(--w) * 0.3) calc(var(--w) * -0.08) rgba(0, 0, 0, 0.95);
+}
+
+/* side buttons */
+.dev::before,
+.dev::after {
+  content: '';
+  position: absolute;
+  width: calc(var(--w) * 0.018);
+  border-radius: 2px;
+  background: linear-gradient(90deg, #5b5c61, #2a2b2e);
+}
+
+.dev::before {
+  right: calc(var(--w) * -0.014);
+  top: 27%;
+  height: 13%;
+}
+
+.dev::after {
+  left: calc(var(--w) * -0.014);
+  top: 21%;
+  height: 7%;
+  box-shadow: 0 calc(var(--w) * 0.22) 0 0 #3a3b3f;
+}
+
+.dev-screen {
+  position: relative;
+  height: 100%;
+  overflow: hidden;
+  border-radius: calc(var(--w) * 0.135);
+  background: #000;
+  border: calc(var(--w) * 0.022) solid #000;
+}
+
+.dev-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  border-radius: calc(var(--w) * 0.11);
+}
+
+/* the camera, and the glass catching the light */
+.dev-screen::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  top: calc(var(--w) * 0.035);
+  left: 50%;
+  width: calc(var(--w) * 0.06);
+  aspect-ratio: 1;
+  translate: -50% 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #2b3a55, #05070b 60%);
+}
+
+.dev-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(115deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 28%, transparent 46%);
+}
+
+/* the warm one in the middle, like Apple's coloured model */
+.dev-center {
+  --w: 22cqw;
+  left: 50%;
+  top: 14cqw;
+  translate: -50% 0;
+  z-index: 3;
+  background:
+    linear-gradient(135deg, #c98a96 0%, #6b2d3a 16%, #3a1219 42%, #8a4250 60%, #3d151c 80%, #b77885 100%);
+}
+
+.dev-left {
+  --w: 44cqw;
+  left: -21cqw;
+  top: 4cqw;
+  transform: rotateX(16deg) rotateY(22deg) rotateZ(-7deg);
+  transform-origin: 60% 40%;
+}
+
+.dev-right {
+  --w: 42cqw;
+  right: -19cqw;
+  top: 0;
+  transform: rotateX(14deg) rotateY(-20deg) rotateZ(6deg);
+  transform-origin: 40% 40%;
+}
+
+/* the watch */
+.watch {
+  --w: 15cqw;
+  position: absolute;
+  z-index: 4;
+  left: 63cqw;
+  top: 72cqw;
+  width: var(--w);
+  aspect-ratio: 1 / 1.2;
+}
+
+/* strap, above and below the case */
+.watch::before {
+  content: '';
+  position: absolute;
+  left: 14%;
+  right: 14%;
+  top: -42%;
+  bottom: -42%;
+  z-index: 0;
+  border-radius: calc(var(--w) * 0.12);
+  background: linear-gradient(180deg, #2a0f15 0%, #5b1f2b 22%, #4a1822 50%, #5b1f2b 78%, #2a0f15 100%);
+}
+
+/* crown */
+.watch::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  right: calc(var(--w) * -0.06);
+  top: 28%;
+  width: calc(var(--w) * 0.08);
+  height: 18%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, #9a5a66, #4a1d26);
+}
+
+.watch-face {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  border-radius: calc(var(--w) * 0.3);
+  padding: calc(var(--w) * 0.05);
+  background: linear-gradient(135deg, #c98a96, #5a2230 30%, #3a1219 60%, #a86a77);
+  box-shadow: 0 calc(var(--w) * 0.2) calc(var(--w) * 0.35) rgba(0, 0, 0, 0.9);
+}
+
+.watch-face img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 18%;
+  border-radius: calc(var(--w) * 0.26);
+  background: radial-gradient(circle at 50% 42%, #3a2708, #000 72%);
+}
+
+@media (min-width: 735px) {
+  .lineup {
+    aspect-ratio: 2.5 / 1;
+  }
+
+  .dev-center {
+    --w: 12cqw;
+    top: 5cqw;
+  }
+
+  .dev-left {
+    --w: 21cqw;
+    left: -2cqw;
+    top: 2cqw;
+  }
+
+  .dev-right {
+    --w: 20cqw;
+    right: -1cqw;
+    top: 0;
+  }
+
+  .watch {
+    --w: 6.5cqw;
+    left: 59cqw;
+    top: 25cqw;
+  }
+}
+
+/* The slots carry the position and the entrance; the devices inside them carry
+   the tilt, so the fade-in's own transform never flattens it. */
+.dev-slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  perspective: 1400px;
+}
+
+.dev {
+  aspect-ratio: 9 / 18.2;
+}
+
+.dev-screen img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+.dev {
+  aspect-ratio: 9 / 16.3;
+}
+
+/* ===================================================== lineup, on a table
+   Every object lies on one surface seen from above, so they share a single
+   perspective the way a product photograph does. Dark, thin frames; screens a
+   touch dimmed so they glow rather than shout; a soft shadow under each. */
+
+.dev-slot,
+.dev,
+.watch {
+  display: none;
+}
+
+.lineup {
+  perspective: 1500px;
+  perspective-origin: 50% 0%;
+  aspect-ratio: 1 / 1.08;
+}
+
+.table {
+  position: absolute;
+  inset: -4% -6% 0;
+  transform-style: preserve-3d;
+}
+
+.table.reveal.in,
+.table {
+  transform: rotateX(24deg);
+  transform-origin: 50% 0%;
+}
+
+.obj {
+  --w: 30cqw;
+  position: absolute;
+  width: var(--w);
+  background: #18181a;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.14),
+    inset 0 0 0 calc(var(--w) * 0.006) #000,
+    0 calc(var(--w) * 0.08) calc(var(--w) * 0.16) rgba(0, 0, 0, 0.85),
+    0 calc(var(--w) * 0.02) calc(var(--w) * 0.03) rgba(0, 0, 0, 0.6);
+}
+
+.obj-screen {
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  background: #000;
+}
+
+.obj-screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  filter: brightness(0.88) saturate(1.05);
+}
+
+/* the glass: a faint reflection, and the edges falling into shadow */
+.obj-screen::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(118deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 30%, transparent 48%),
+    radial-gradient(ellipse 120% 90% at 50% 40%, transparent 60%, rgba(0, 0, 0, 0.35) 100%);
+}
+
+.hw-tab {
+  --w: 62cqw;
+  aspect-ratio: 3 / 4;
+  left: -30cqw;
+  top: 10cqw;
+  padding: calc(var(--w) * 0.035);
+  border-radius: calc(var(--w) * 0.07);
+  rotate: 3deg;
+}
+
+.hw-tab .obj-screen {
+  border-radius: calc(var(--w) * 0.04);
+}
+
+.hw-phone {
+  aspect-ratio: 9 / 18.6;
+  padding: calc(var(--w) * 0.03);
+  border-radius: calc(var(--w) * 0.17);
+}
+
+.hw-phone .obj-screen {
+  border-radius: calc(var(--w) * 0.14);
+}
+
+.hw-side {
+  --w: 44cqw;
+  right: -20cqw;
+  top: 2cqw;
+  rotate: -4deg;
+}
+
+.hw-hero {
+  --w: 26cqw;
+  left: 50%;
+  translate: -50% 0;
+  top: 22cqw;
+  z-index: 2;
+  /* the coloured one: a deep plum band with a lit edge */
+  background: #3a1820;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 190, 200, 0.28),
+    inset 0 0 0 calc(var(--w) * 0.012) #2a0f15,
+    0 calc(var(--w) * 0.08) calc(var(--w) * 0.18) rgba(0, 0, 0, 0.9);
+}
+
+.hw-wrist {
+  --w: 16cqw;
+  left: 66cqw;
+  top: 84cqw;
+  z-index: 3;
+  aspect-ratio: 1 / 1.2;
+  padding: calc(var(--w) * 0.06);
+  border-radius: calc(var(--w) * 0.3);
+  background: #2c1419;
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 190, 200, 0.22),
+    0 calc(var(--w) * 0.1) calc(var(--w) * 0.2) rgba(0, 0, 0, 0.9);
+}
+
+/* the band, running off above and below */
+.hw-wrist::before {
+  content: '';
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  top: -55%;
+  bottom: -55%;
+  z-index: -1;
+  border-radius: calc(var(--w) * 0.1);
+  background: linear-gradient(180deg, transparent 0%, #3b151d 18%, #3b151d 82%, transparent 100%);
+}
+
+.hw-wrist::after {
+  content: '';
+  position: absolute;
+  right: calc(var(--w) * -0.05);
+  top: 30%;
+  width: calc(var(--w) * 0.07);
+  height: 16%;
+  border-radius: 2px;
+  background: #4a2129;
+}
+
+.hw-wrist-face {
+  height: 100%;
+  border-radius: calc(var(--w) * 0.24);
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--w) * 0.04);
+}
+
+.hw-wrist-time {
+  font-size: calc(var(--w) * 0.24);
+  line-height: 1;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+.hw-wrist-face img {
+  width: 34%;
+  height: auto;
+  opacity: 0.95;
+}
+
+@media (min-width: 735px) {
+  .lineup {
+    aspect-ratio: 2.6 / 1;
+  }
+
+  .table {
+    inset: -6% 0 0;
+    transform: rotateX(30deg);
+  }
+
+  .hw-tab {
+    --w: 30cqw;
+    left: 2cqw;
+    top: 3cqw;
+    aspect-ratio: 4 / 3;
+  }
+
+  .hw-side {
+    --w: 17cqw;
+    right: 6cqw;
+    top: 0;
+  }
+
+  .hw-hero {
+    --w: 11.5cqw;
+    top: 8cqw;
+  }
+
+  .hw-wrist {
+    --w: 6.6cqw;
+    left: 61cqw;
+    top: 26cqw;
+  }
+}
+
+.hw-phone {
+  aspect-ratio: 9 / 16.4;
+}
+
+@media (min-width: 735px) {
+  .lineup {
+    aspect-ratio: 2.4 / 1;
+  }
+
+  .table {
+    inset: 0;
+    transform: rotateX(26deg);
+  }
+
+  .hw-tab {
+    --w: 24cqw;
+    aspect-ratio: 3 / 4;
+    left: 3cqw;
+    top: 1cqw;
+  }
+
+  .hw-side {
+    --w: 15cqw;
+    right: 8cqw;
+    top: 1cqw;
+  }
+
+  .hw-hero {
+    --w: 11cqw;
+    top: 5cqw;
+  }
+
+  .hw-wrist {
+    --w: 6.2cqw;
+    left: 60cqw;
+    top: 22cqw;
+  }
+}
+
+/* The canvas reaches past the ribbon's frame, 45% above and 90% below, for
+   the glow and the floor reflection the shader draws there. In WebGL mode the
+   softness is computed, so there is no CSS blur to pay for. */
+.ribbon-canvas {
+  inset: auto;
+  left: 0;
+  top: -45%;
+  width: 100%;
+  height: 235%;
+}
+
+.ribbon[data-renderer='gl'] .ribbon-canvas {
+  filter: none;
+}
+
+.ribbon[data-renderer='gl']::after {
+  /* The shader fades its own ends into black. */
+  display: none;
+}
+
+@media (max-width: 700px) {
+  .ribbon {
+    width: 104vw;
+    aspect-ratio: 1.9 / 1;
+    max-height: 42vh;
+  }
+}
+
+/* ==================================================== home, ColorOS-style */
+
+/* The chapter row: the name on the left, the chapters across, the one being
+   read set heavier with a rule under it — ColorOS 17's page, on black. Sticks
+   once the announce strip and the top bar have scrolled away. */
+.home-chapters {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  height: var(--seg-h, 52px);
+  background: rgba(0, 0, 0, 0.78);
+  backdrop-filter: saturate(180%) blur(22px);
+  -webkit-backdrop-filter: saturate(180%) blur(22px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.home-chapters-row {
+  width: min(1240px, 100% - 40px);
+  height: 100%;
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 2.4vw, 34px);
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+
+.home-chapters-row::-webkit-scrollbar { display: none; }
+
+.home-chapters-name {
+  margin-right: auto;
+  font-size: 17px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+
+.home-chapters-row a {
+  position: relative;
+  padding-block: 6px;
+  font-size: 13px;
+  color: rgba(245, 245, 247, 0.72);
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+.home-chapters-row a:hover { color: var(--ink); }
+
+.home-chapters-row a[data-on='true'] {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.home-chapters-row a[data-on='true']::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--ink);
+}
+
+@media (max-width: 760px) {
+  .home-chapters-row { justify-content: flex-start; }
+}
+
+/* The highlight controls as ColorOS draws them: a dark capsule of small dots
+   whose active one is a long bar filling while it holds, and two large round
+   arrows beside it. */
+.hl-controls {
+  justify-content: center;
+  gap: 14px;
+}
+
+.hl-dots {
+  height: 64px;
+  padding: 0 26px;
+  gap: 14px;
+  background: rgba(30, 31, 34, 0.86);
+}
+
+.hl-dot {
+  position: relative;
+  overflow: hidden;
+  width: 10px;
+  height: 10px;
+  background: rgba(255, 255, 255, 0.22);
+  transition: width 0.5s cubic-bezier(0.2, 0.9, 0.3, 1), background 0.3s ease;
+}
+
+.hl-dot[data-on='true'] {
+  width: 90px;
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.hl-dot-fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: var(--ink);
+  transform-origin: left center;
+  transform: scaleX(1);
+}
+
+.hl-dot[data-auto='true'] .hl-dot-fill {
+  animation: hl-fill var(--hl-hold, 5200ms) linear both;
+}
+
+@keyframes hl-fill {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+.hl-arrows {
+  position: static;
+  gap: 14px;
+}
+
+.hl-arrow {
+  width: 64px;
+  height: 64px;
+  background: rgba(30, 31, 34, 0.86);
+}
+
+.hl-arrow svg {
+  width: 24px;
+  height: 24px;
+}
+
+@media (max-width: 734px) {
+  .hl-arrows { display: none; }
+}
+
+/* "Ultra fluid": the film in a framed card that grows to the full window as
+   the page scrolls, ColorOS's "smooth to the touch". --film runs 0 → 1. */
+.film {
+  --film: 0;
+  position: relative;
+  height: 230vh;
+  margin-top: clamp(80px, 12vh, 140px);
+}
+
+.film-stick {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.film-head {
+  text-align: center;
+  padding-inline: 20px;
+  margin-bottom: calc(36px * (1 - var(--film)));
+  opacity: calc(1 - var(--film) * 1.6);
+  transform: translate3d(0, calc(var(--film) * -60px), 0);
+  height: calc(150px * (1 - var(--film)));
+  overflow: visible;
+}
+
+.film-kicker {
+  margin: 0 0 10px;
+  font-size: clamp(15px, 1.4vw, 19px);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.film-title {
+  margin: 0;
+  font-size: clamp(34px, 5.2vw, 72px);
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.film-grad {
+  background: linear-gradient(100deg, var(--iris), #6fd6ff 30%, var(--rose) 62%, var(--ember));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.film-frame {
+  position: relative;
+  width: calc(min(1100px, 76vw) + (100vw - min(1100px, 76vw)) * var(--film));
+  height: calc(min(1100px, 76vw) * 0.5625 + (100vh - min(1100px, 76vw) * 0.5625) * var(--film));
+  border-radius: calc(34px * (1 - var(--film)));
+  overflow: hidden;
+  background: #0b0b0d;
+  box-shadow: 0 40px 120px -40px rgba(123, 108, 255, calc(0.5 * (1 - var(--film))));
+}
+
+.film-frame video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.film-watch {
+  position: absolute;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px 0 16px;
+  border: 0;
+  border-radius: 999px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  transition: background 0.2s ease, transform 0.25s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.film-watch:hover { background: rgba(255, 255, 255, 0.24); }
+.film-watch:active { transform: translateX(-50%) scale(0.96); }
+
+.film-watch svg {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .film { height: auto; }
+  .film-stick { position: static; height: auto; padding-block: 40px; }
+}
