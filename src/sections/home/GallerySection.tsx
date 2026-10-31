@@ -1,19 +1,14 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ALL_AUDITED_SCREENSHOTS, SCREENSHOT_MAP, ScreenshotMeta } from '../../data/screenshotMap'
 import { ALL_PRODUCTS, PRODUCTS_BY_ID } from '../../data/products'
-import { SafeImage } from '../../components/common/SafeImage'
 import { GlassButton } from '../../components/common/GlassButton'
-import { Search, X, Maximize2, ExternalLink, ChevronLeft, ChevronRight, ImageOff } from 'lucide-react'
+import FlexCarousel from '../../components/FlexCarousel'
+import { Search, X, Maximize2, ExternalLink, ChevronLeft, ChevronRight, ImageOff, Sparkles } from 'lucide-react'
 import { navigate } from '../../router'
 
-const PAGE_SIZE = 12
-
 /**
- * Round-robin across products (BearBox 1, BeatBox Pro 1, …) so the first
- * screenful shows the whole ecosystem. The registry order starts with 11
- * near-identical INIXA AI chat screens, which is why the old wall looked
- * like one app repeated — plus every broken <img> printed its alt text.
- * SafeImage now guarantees a card can never render as raw alt text.
+ * Round-robin across products (BearBox 1, BeatBox Pro 1, …) so the
+ * carousel shows a rich mixture of the whole ecosystem.
  */
 function interleavedScreenshots(): ScreenshotMeta[] {
   const byProduct = ALL_PRODUCTS.map((p) => Object.values(SCREENSHOT_MAP[p.id] || {})).filter(
@@ -32,7 +27,7 @@ function interleavedScreenshots(): ScreenshotMeta[] {
 export const GallerySection: React.FC = () => {
   const [selectedProduct, setSelectedProduct] = useState<string>('all')
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [expanded, setExpanded] = useState(false)
+  const [currentPreset, setCurrentPreset] = useState<'liquid' | 'vortex' | 'arch' | 'ribbon'>('liquid')
   const [activeIndex, setActiveIndex] = useState<number | null>(null)
 
   const ordered = useMemo(interleavedScreenshots, [])
@@ -52,17 +47,25 @@ export const GallerySection: React.FC = () => {
   }, [ordered, selectedProduct, searchQuery])
 
   useEffect(() => {
-    setExpanded(false)
     setActiveIndex(null)
   }, [selectedProduct, searchQuery])
 
-  const visible = expanded ? filteredScreenshots : filteredScreenshots.slice(0, PAGE_SIZE)
+  // Map to FlexCarousel item format: { src, alt, title, subtitle }
+  const carouselItems = useMemo(() => {
+    return filteredScreenshots.map((shot) => ({
+      src: shot.assetPath,
+      alt: shot.altText,
+      title: shot.whatItShows,
+      subtitle: PRODUCTS_BY_ID[shot.product]?.name || shot.product.toUpperCase(),
+    }))
+  }, [filteredScreenshots])
+
   const activeShot = activeIndex !== null ? filteredScreenshots[activeIndex] : undefined
   const productsWithShots = ALL_PRODUCTS.filter(
     (p) => (SCREENSHOT_MAP[p.id] ? Object.keys(SCREENSHOT_MAP[p.id]).length : 0) > 0,
   )
 
-  /* Modal keyboard support + scroll lock (ESC/arrows did nothing before). */
+  /* Modal keyboard support + scroll lock */
   useEffect(() => {
     if (!activeShot) return undefined
     const onKey = (e: KeyboardEvent) => {
@@ -88,27 +91,26 @@ export const GallerySection: React.FC = () => {
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6" id="gallery">
-      <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
+      <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-cyan-400">
-            Verified pixels · Direct from hardware
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-cyan-400 inline-flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <span>WebGL Liquid Glass Refraction Stream</span>
           </p>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
-            Real screens. Real devices.
+            Real screens. Liquid glass optics.
           </h2>
           <p className="text-sm leading-relaxed text-white/60 sm:text-base">
-            No mockups and no placeholders — unedited captures from physical Android hardware.
-            Tap any screen to inspect it up close.
+            Interactive WebGL FlexCarousel displaying real Android hardware captures. Drag, scroll or swipe to bend the row through the liquid glass lens.
           </p>
         </div>
         <p className="text-sm text-white/50" aria-live="polite">
-          Showing{' '}
-          <span className="font-bold text-white">{visible.length}</span> of{' '}
-          <span className="font-bold text-white">{filteredScreenshots.length}</span> screens
+          Active stream:{' '}
+          <span className="font-bold text-white">{carouselItems.length}</span> verified screens
         </p>
       </div>
 
-      {/* Filters — one scrollable row on phones instead of a 3-line pill pile */}
+      {/* Filters — one scrollable row on phones */}
       <div className="no-scrollbar -mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
         <button
           type="button"
@@ -173,51 +175,51 @@ export const GallerySection: React.FC = () => {
         )}
       </div>
 
-      {/* Straight, readable cards — no perspective wall, no tilt-on-every-card */}
-      {visible.length > 0 ? (
-        <div className="grid grid-cols-2 gap-4 sm:gap-5 md:grid-cols-3 xl:grid-cols-4">
-          {visible.map((shot) => {
-            const shotIndex = filteredScreenshots.indexOf(shot)
-            return (
-              <button
-                type="button"
-                key={`${shot.product}-${shot.featureId}`}
-                onClick={() => setActiveIndex(shotIndex)}
-                className="liquid-glass-card group cursor-pointer p-2 text-left transition-transform duration-300 hover:-translate-y-1"
-                aria-label={`Inspect ${productName(shot.product)} — ${shot.whatItShows}`}
-              >
-                <span className="relative z-10 block">
-                  <span className="relative block aspect-[9/17] overflow-hidden rounded-[20px] bg-black/60">
-                    <SafeImage
-                      src={shot.assetPath}
-                      alt={shot.altText}
-                      fallbackLabel={productName(shot.product)}
-                      accentColor={accent(shot.product)}
-                      className="h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.03]"
-                    />
-                    <span className="absolute inset-x-0 bottom-0 flex justify-center bg-gradient-to-t from-black/85 to-transparent p-3 pt-8 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-cyan-300">
-                        <Maximize2 className="h-3.5 w-3.5" aria-hidden="true" /> Inspect
-                      </span>
-                    </span>
-                  </span>
-                  <span className="block px-2 py-3">
-                    <span className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-white/55">
-                      <span
-                        className="h-1.5 w-1.5 rounded-full"
-                        style={{ backgroundColor: accent(shot.product) }}
-                        aria-hidden="true"
-                      />
-                      {productName(shot.product)}
-                    </span>
-                    <span className="mt-1 block line-clamp-2 text-sm font-semibold leading-snug text-white">
-                      {shot.whatItShows}
-                    </span>
-                  </span>
-                </span>
-              </button>
-            )
-          })}
+      {/* React Bits FlexCarousel — WebGL Liquid Glass Optical Refraction Carousel */}
+      {carouselItems.length > 0 ? (
+        <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.04] to-black/80 backdrop-blur-2xl shadow-2xl p-3 sm:p-5">
+          {/* Preset Controls */}
+          <div className="flex flex-wrap items-center justify-between gap-3 px-2 pb-3 mb-2 border-b border-white/10">
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-semibold uppercase tracking-wider text-white/50">Lens Preset:</span>
+              {(['liquid', 'vortex', 'arch', 'ribbon'] as const).map((preset) => (
+                <button
+                  key={preset}
+                  type="button"
+                  onClick={() => setCurrentPreset(preset)}
+                  className={`px-3 py-1 text-xs rounded-full capitalize font-medium transition-all ${
+                    currentPreset === preset
+                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                      : 'text-white/60 hover:text-white border border-transparent'
+                  }`}
+                >
+                  {preset}
+                </button>
+              ))}
+            </div>
+            <div className="hidden sm:flex items-center gap-2 text-xs text-cyan-400/80">
+              <span>Scroll or drag horizontally • Click card to open</span>
+            </div>
+          </div>
+
+          <div style={{ width: '100%', height: '560px', position: 'relative' }}>
+            <FlexCarousel
+              items={carouselItems}
+              preset={currentPreset}
+              intro="rise"
+              cardHeight={0.52}
+              gap={14}
+              radius={16}
+              squeeze={0.2}
+              focusOnClick
+              captions
+              onSelect={(idx) => {
+                if (filteredScreenshots[idx]) {
+                  setActiveIndex(idx)
+                }
+              }}
+            />
+          </div>
         </div>
       ) : (
         <div className="liquid-glass-panel flex flex-col items-center gap-3 px-6 py-16 text-center">
@@ -241,82 +243,75 @@ export const GallerySection: React.FC = () => {
         </div>
       )}
 
-      {filteredScreenshots.length > PAGE_SIZE && (
-        <div className="mt-10 text-center">
-          <GlassButton variant="secondary" className="!px-6 !py-3 !text-sm" onClick={() => setExpanded((v) => !v)}>
-            {expanded ? 'Show less' : `Show all ${filteredScreenshots.length} screens`}
-          </GlassButton>
-        </div>
-      )}
-
       {/* Inspect dialog */}
       {activeShot && activeIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={`${productName(activeShot.product)} — ${activeShot.whatItShows}`}>
           <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={() => setActiveIndex(null)} aria-hidden="true" />
-          <div className="relative z-10 flex max-h-[90vh] w-full max-w-4xl flex-col items-center gap-6 overflow-y-auto rounded-3xl border border-white/20 bg-[#080d1a] p-6 shadow-2xl md:flex-row">
-            <button
-              type="button"
-              onClick={() => setActiveIndex(null)}
-              aria-label="Close"
-              autoFocus
-              className="absolute right-4 top-4 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white"
-            >
-              <X className="h-4 w-4" aria-hidden="true" />
-            </button>
-
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                aria-label="Previous screenshot"
-                onClick={() =>
-                  setActiveIndex((activeIndex - 1 + filteredScreenshots.length) % filteredScreenshots.length)
-                }
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 hover:text-white"
-              >
-                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-              </button>
-              <div className="relative aspect-[9/19] max-h-[70vh] w-[240px] overflow-hidden rounded-2xl border border-white/20 bg-black shadow-xl sm:w-[270px]">
-                <SafeImage
-                  src={activeShot.assetPath}
-                  alt={activeShot.altText}
-                  fallbackLabel={productName(activeShot.product)}
-                  accentColor={accent(activeShot.product)}
-                  eager
-                  className="h-full w-full object-contain"
-                />
+          <div className="liquid-glass-panel relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto p-4 sm:p-6 text-white border border-cyan-500/30">
+            <div className="mb-4 flex items-center justify-between">
+              <div>
+                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                  {productName(activeShot.product)}
+                </span>
+                <h3 className="text-lg font-bold text-white sm:text-xl">{activeShot.whatItShows}</h3>
               </div>
               <button
                 type="button"
-                aria-label="Next screenshot"
-                onClick={() => setActiveIndex((activeIndex + 1) % filteredScreenshots.length)}
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white/80 hover:text-white"
+                onClick={() => setActiveIndex(null)}
+                aria-label="Close dialog"
+                className="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white"
               >
-                <ChevronRight className="h-5 w-5" aria-hidden="true" />
+                <X className="h-5 w-5" />
               </button>
             </div>
 
-            <div className="flex-1 text-left">
-              <p className="mb-2 text-xs font-bold uppercase tracking-wider" style={{ color: accent(activeShot.product) }}>
-                {productName(activeShot.product)}
-                <span className="ml-2 font-mono font-normal text-white/40">
-                  {activeIndex + 1} / {filteredScreenshots.length}
-                </span>
-              </p>
-              <h3 className="mb-3 text-2xl font-bold text-white">{activeShot.whatItShows}</h3>
-              <p className="mb-7 text-sm leading-relaxed text-white/65">{activeShot.altText}</p>
+            <div className="relative mx-auto aspect-[9/17] max-h-[62vh] overflow-hidden rounded-2xl bg-black">
+              <img
+                src={activeShot.assetPath}
+                alt={activeShot.altText}
+                className="h-full w-full object-contain"
+              />
+            </div>
+
+            <p className="mt-4 text-xs text-white/70 sm:text-sm">{activeShot.altText}</p>
+
+            <div className="mt-5 flex items-center justify-between border-t border-white/10 pt-4">
+              <div className="flex gap-2">
+                <GlassButton
+                  variant="ghost"
+                  className="!px-3 !py-1.5 !text-xs"
+                  onClick={() =>
+                    setActiveIndex((i) =>
+                      i === null ? i : (i - 1 + filteredScreenshots.length) % filteredScreenshots.length,
+                    )
+                  }
+                >
+                  <ChevronLeft className="h-4 w-4" /> Prev
+                </GlassButton>
+                <GlassButton
+                  variant="ghost"
+                  className="!px-3 !py-1.5 !text-xs"
+                  onClick={() =>
+                    setActiveIndex((i) =>
+                      i === null ? i : (i - 1 + filteredScreenshots.length) % filteredScreenshots.length,
+                    )
+                  }
+                >
+                  Next <ChevronRight className="h-4 w-4" />
+                </GlassButton>
+              </div>
+
               <GlassButton
                 variant="primary"
-                className="!px-5 !py-2.5 !text-sm"
-                icon={<ExternalLink className="h-4 w-4" aria-hidden="true" />}
+                className="!px-4 !py-1.5 !text-xs"
                 onClick={() => {
-                  /* Was /products/:id — no such route; that landed on the 404 page. */
-                  navigate(`/product/${activeShot.product}`)
                   setActiveIndex(null)
+                  navigate(`/product/${activeShot.product}`)
                 }}
+                icon={<ExternalLink className="h-3.5 w-3.5" />}
               >
-                View {productName(activeShot.product)}
+                Go to Product
               </GlassButton>
-              <p className="mt-5 hidden text-xs text-white/35 md:block">← → to browse · Esc to close</p>
             </div>
           </div>
         </div>
