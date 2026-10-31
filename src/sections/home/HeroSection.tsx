@@ -5,6 +5,7 @@ import { ShinyText } from '../../components/react-bits/ShinyText'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import TechText from '../../components/TechText'
+import Shuffle from '../../components/Shuffle'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -81,10 +82,26 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left Column: Headlines & Action CTAs */}
           <div className="text-center lg:col-span-7 lg:text-left">
-            <h1 className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl">
-              Frontiers of AI &amp;{' '}
-              <ShinyText text="Liquid Glass Flagships" className="font-black" />
-            </h1>
+            <Shuffle
+              text="Frontiers of AI & Liquid Glass Flagships"
+              tag="h1"
+              className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl"
+              textAlign="inherit"
+              effect="slide"
+              shuffleDirection="right"
+              duration={0.35}
+              animationMode="evenodd"
+              shuffleTimes={1}
+              ease="power3.out"
+              stagger={0.03}
+              threshold={0.1}
+              triggerOnce={true}
+              triggerOnHover={true}
+              hoverRadius={0}
+              motionBlur={false}
+              respectReducedMotion={true}
+              accentColor="#22d3ee"
+            />
 
             <p className="mb-8 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg">
               Nine native applications — audiophile bit-perfect players, an autonomous AI
