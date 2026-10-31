@@ -6,9 +6,28 @@ import { Hardware3DSection } from '../sections/home/Hardware3DSection'
 import { GallerySection } from '../sections/home/GallerySection'
 import { GlassCard } from '../components/common/GlassCard'
 import { GlassButton } from '../components/common/GlassButton'
+import DriftWall from '../components/DriftWall'
 import { ALL_PRODUCTS } from '../data/products'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
+
+const DRIFT_ITEMS = [
+  { image: '/shots/beat-pro/01ee46059637b8d80f08933fa7e06ec7.jpg', title: 'BeatBox Pro — Equalizer DSP', href: '/product/beatbox-pro' },
+  { image: '/shots/beat-box-ultra/a0c4f8ebcb5049cf3df383a8fdf4f499.jpg', title: 'BearBox Ultra — Liquid Glass Player', href: '/product/bearbox-ultra' },
+  { image: '/shots/liquid-streaming/c615a6b0fd01e850b5558e0a8118d042.jpg', title: 'Liquid Stream — 4K Stream Engine', href: '/product/liquid-stream' },
+  { image: '/shots/my-tube/425a74070be4fb5e243912aa45c7553f.jpg', title: 'MyTube — Decentralized Player', href: '/product/mytube' },
+  { image: '/shots/clipster/a958e8b0a94e82f7d3ec032f3cb5fb49.jpg', title: 'Clipster — Format Transcoder', href: '/product/clipster' },
+  { image: '/shots/inixa-ai/image.png', title: 'INIXA AI — Neural Workspace', href: '/product/inixa-ai' },
+  { image: '/shots/beat-box-lite/50cfb8bb268067cbff89fdbd5f1ca857.jpg', title: 'BeatBox Lite — Offline Vault', href: '/product/beatbox-lite' },
+  { image: '/shots/beat-pro/19db634125b290dfc71161d904b6b610.jpg', title: 'BeatBox Pro — Dynamic Lyrics', href: '/product/beatbox-pro' },
+  { image: '/shots/beat-box-ultra/b1d7d028a3f8a42b1029c78275994236.jpg', title: 'BearBox Ultra — Ambient Canvas', href: '/product/bearbox-ultra' },
+  { image: '/shots/liquid-streaming/6b4d32e9fa5776ef982c5f6e80b2d35d.jpg', title: 'Liquid Stream — Gesture ExoPlayer', href: '/product/liquid-stream' },
+  { image: '/shots/my-tube/d2f62a433be53846610b6417387ce8f6.jpg', title: 'MyTube — SponsorBlock UI', href: '/product/mytube' },
+  { image: '/shots/clipster/4f6bcba436ebba5121b658d519d0879e.jpg', title: 'Clipster — Multi-thread Downloader', href: '/product/clipster' },
+  { image: '/shots/beat-pro/b404d80a373fe4d98a002ebbcfe8ae01.jpg', title: 'BeatBox Pro — Dual Audio Pipeline', href: '/product/beatbox-pro' },
+  { image: '/shots/beat-box-ultra/a0445d47bf1b2df9a997d8b58a12e3e9.jpg', title: 'BearBox Ultra — Dynamic Waveform', href: '/product/bearbox-ultra' },
+  { image: '/shots/liquid-streaming/0022d86a4e3ff9a29d66141444dd1a6c.jpg', title: 'Liquid Stream — AI Concierge', href: '/product/liquid-stream' },
+]
 
 export const HomePage: React.FC = () => {
   return (
@@ -90,6 +109,44 @@ export const HomePage: React.FC = () => {
               </div>
             </div>
           </GlassCard>
+        </div>
+      </section>
+
+      {/* 7. React Bits 3D DriftWall Showcase — Living Ecosystem Horizon */}
+      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-black via-neutral-950 to-[#060010]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <span>3D SPATIAL DRIFT WALL • INTERACTIVE PERSPECTIVE VIEW</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+            Infinite Software Horizon
+          </h2>
+          <p className="text-neutral-400 text-sm sm:text-base max-w-xl mx-auto mt-2">
+            Interactive real-time 3D perspective stream of verified production UI frames across all 9 INIXA Labs flagships. Hover to lift, tilt to explore.
+          </p>
+        </div>
+
+        <div style={{ height: 600, width: '100%', position: 'relative' }}>
+          <DriftWall
+            items={DRIFT_ITEMS}
+            columns={5}
+            tileWidth={200}
+            tileHeight={132}
+            gap={18}
+            tilt={16}
+            turn={-14}
+            perspective={1200}
+            depth={120}
+            speed={42}
+            direction="up"
+            variance={0.45}
+            parallax={0.6}
+            lift={64}
+            fade={0.6}
+            dim={0.55}
+            overlayColor="#060010"
+          />
         </div>
       </section>
     </div>
