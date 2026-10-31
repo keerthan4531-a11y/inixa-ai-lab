@@ -12,21 +12,22 @@ import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
 
 const DRIFT_ITEMS = [
-  { image: '/shots/beat-pro/01ee46059637b8d80f08933fa7e06ec7.jpg', title: 'BeatBox Pro — Equalizer DSP', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/a0c4f8ebcb5049cf3df383a8fdf4f499.jpg', title: 'BearBox Ultra — Liquid Glass Player', href: '/product/bearbox-ultra' },
-  { image: '/shots/liquid-streaming/c615a6b0fd01e850b5558e0a8118d042.jpg', title: 'Liquid Stream — 4K Stream Engine', href: '/product/liquid-stream' },
-  { image: '/shots/my-tube/425a74070be4fb5e243912aa45c7553f.jpg', title: 'MyTube — Decentralized Player', href: '/product/mytube' },
-  { image: '/shots/clipster/a958e8b0a94e82f7d3ec032f3cb5fb49.jpg', title: 'Clipster — Format Transcoder', href: '/product/clipster' },
+  { image: '/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg', title: 'BeatBox Pro — Equalizer DSP', href: '/product/beatbox-pro' },
+  { image: '/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg', title: 'BearBox Ultra — Liquid Glass Player', href: '/product/bearbox-ultra' },
+  { image: '/shots/liquid-streaming/104338c6-3296-46a9-b63f-241c8ddbbda9.jpg', title: 'Liquid Stream — 4K Stream Engine', href: '/product/liquid-stream' },
+  { image: '/shots/my-tube/0dc8c448-f622-445e-9d91-3d369983fe0b.jpg', title: 'MyTube — Decentralized Player', href: '/product/mytube' },
+  { image: '/shots/clipster/089378e2-9f36-4469-9b1f-bb71b23e803d.jpg', title: 'Clipster — Format Transcoder', href: '/product/clipster' },
   { image: '/shots/inixa-ai/image.png', title: 'INIXA AI — Neural Workspace', href: '/product/inixa-ai' },
-  { image: '/shots/beat-box-lite/50cfb8bb268067cbff89fdbd5f1ca857.jpg', title: 'BeatBox Lite — Offline Vault', href: '/product/beatbox-lite' },
-  { image: '/shots/beat-pro/19db634125b290dfc71161d904b6b610.jpg', title: 'BeatBox Pro — Dynamic Lyrics', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/b1d7d028a3f8a42b1029c78275994236.jpg', title: 'BearBox Ultra — Ambient Canvas', href: '/product/bearbox-ultra' },
-  { image: '/shots/liquid-streaming/6b4d32e9fa5776ef982c5f6e80b2d35d.jpg', title: 'Liquid Stream — Gesture ExoPlayer', href: '/product/liquid-stream' },
-  { image: '/shots/my-tube/d2f62a433be53846610b6417387ce8f6.jpg', title: 'MyTube — SponsorBlock UI', href: '/product/mytube' },
-  { image: '/shots/clipster/4f6bcba436ebba5121b658d519d0879e.jpg', title: 'Clipster — Multi-thread Downloader', href: '/product/clipster' },
-  { image: '/shots/beat-pro/b404d80a373fe4d98a002ebbcfe8ae01.jpg', title: 'BeatBox Pro — Dual Audio Pipeline', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/a0445d47bf1b2df9a997d8b58a12e3e9.jpg', title: 'BearBox Ultra — Dynamic Waveform', href: '/product/bearbox-ultra' },
-  { image: '/shots/liquid-streaming/0022d86a4e3ff9a29d66141444dd1a6c.jpg', title: 'Liquid Stream — AI Concierge', href: '/product/liquid-stream' },
+  { image: '/shots/beat-box-lite/2968f3b4-4781-4414-9dba-ebe488859c3d.jpg', title: 'BeatBox Lite — Offline Vault', href: '/product/beatbox-lite' },
+  { image: '/shots/lumina/1dbdeee2-29bd-428c-9a98-2ef080a1a015.jpg', title: 'Lumina Browser — Fire Wipe Engine', href: '/product/lumina' },
+  { image: '/shots/beat-pro/19db6341-8988-4fb8-ba73-41f97dc665ed.jpg', title: 'BeatBox Pro — Dynamic Lyrics', href: '/product/beatbox-pro' },
+  { image: '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg', title: 'BearBox Ultra — Ambient Canvas', href: '/product/bearbox-ultra' },
+  { image: '/shots/liquid-streaming/42ef5c25-7aac-48ce-80d0-606989fba156.jpg', title: 'Liquid Stream — Gesture ExoPlayer', href: '/product/liquid-stream' },
+  { image: '/shots/my-tube/7a5397cb-7e56-4576-8b3f-94743ad77412.jpg', title: 'MyTube — SponsorBlock UI', href: '/product/mytube' },
+  { image: '/shots/clipster/19b0165f-2102-4044-b938-cca4d546c829.jpg', title: 'Clipster — Multi-thread Downloader', href: '/product/clipster' },
+  { image: '/shots/inixa-ai/373d0497-e6b1-4e11-aedf-13578c79edb6.jpg', title: 'INIXA AI — Multi-Model Gateway', href: '/product/inixa-ai' },
+  { image: '/shots/beat-box-lite/32a1e6bf-213f-4046-874d-83adda9d3bd0.jpg', title: 'BeatBox Lite — Dynamic Visuals', href: '/product/beatbox-lite' },
+  { image: '/shots/lumina/21e8bad7-558f-4b2e-8922-4d879f811d03.jpg', title: 'Lumina Browser — DuckPlayer Sandbox', href: '/product/lumina' },
 ]
 
 export const HomePage: React.FC = () => {
