@@ -4,6 +4,7 @@ import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { ShinyText } from '../../components/react-bits/ShinyText'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
+import TechText from '../../components/TechText'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -32,22 +33,54 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
+        {/* Brand band: interactive TechText wordmark */}
+        <div className="mb-2 sm:mb-4 text-center">
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-3">
+            <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+            <DecryptedText
+              text="INIXA AI LABS • 2026 SHOWCASE"
+              animateOn="view"
+              speed={40}
+              maxIterations={10}
+              revealDirection="start"
+              className="tracking-widest uppercase font-mono text-cyan-300"
+            />
+          </div>
+          <div className="relative mx-auto w-full max-w-4xl h-[120px] sm:h-[160px] md:h-[200px] text-white">
+            <TechText
+              text="INIXA LAB"
+              fontWeight={700}
+              fontSize={150}
+              reveal="letter"
+              dashLength={4}
+              dashGap={2}
+              specks={15}
+              intro="none"
+              introDuration={2}
+              clickKick
+              draggable
+              guides={false}
+              fontFamily=""
+              letterSpacing={-0.03}
+              accentColor="#22d3ee"
+              reach={200}
+              softness={0.7}
+              lineStyle="dashed"
+              strokeWidth={1.5}
+              speed={1}
+              bounce={0.4}
+              selection
+              labels
+              color="currentColor"
+              align="center"
+              sweep
+            />
+          </div>
+        </div>
+
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left Column: Headlines & Action CTAs */}
           <div className="text-center lg:col-span-7 lg:text-left">
-            {/* Elegant Brand Pill Badge with React Bits DecryptedText */}
-            <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-6">
-              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
-              <DecryptedText
-                text="INIXA AI LABS • 2026 SHOWCASE"
-                animateOn="view"
-                speed={40}
-                maxIterations={10}
-                revealDirection="start"
-                className="tracking-widest uppercase font-mono text-cyan-300"
-              />
-            </div>
-
             <h1 className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl">
               Frontiers of AI &amp;{' '}
               <ShinyText text="Liquid Glass Flagships" className="font-black" />
