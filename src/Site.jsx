@@ -4,6 +4,7 @@ import { useLenis } from './hooks/useLenis'
 import { InixaNav } from './components/navigation/InixaNav'
 import { CommandMenu } from './components/navigation/CommandMenu'
 import { InixaFooter } from './components/footer/InixaFooter'
+import CursorGrid from './components/CursorGrid'
 
 // New Phase 6 Liquid Glass Pages
 import { HomePage } from './pages/HomePage'
@@ -141,7 +142,18 @@ export default function Site() {
   const isCustomChromePage = isRelease || isSupport
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col selection:bg-cyan-500 selection:text-black">
+    <div className="min-h-screen bg-black text-white flex flex-col selection:bg-cyan-500 selection:text-black relative">
+            {/* Interactive Cybernetic Grid — Pure OLED Black & Zero Wash */}
+      <div 
+        className="fixed inset-0 pointer-events-none z-0" 
+        style={{
+          backgroundImage: 'linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px)',
+          backgroundSize: '60px 60px',
+          maskImage: 'radial-gradient(ellipse 80% 80% at 50% 30%, black 40%, transparent 90%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 30%, black 40%, transparent 90%)'
+        }}
+        aria-hidden="true"
+      />
       {/* Floating Liquid Glass Navigation */}
       {!isCustomChromePage && (
         <InixaNav onOpenSearch={() => setSearchOpen(true)} />
@@ -151,7 +163,7 @@ export default function Site() {
       <CommandMenu isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
       {/* Main Page Content */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {renderContent()}
       </main>
 

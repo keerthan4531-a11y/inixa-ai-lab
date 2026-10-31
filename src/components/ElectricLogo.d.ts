@@ -26,3 +26,4 @@ export interface ElectricLogoProps {
 
 declare const ElectricLogo: React.FC<ElectricLogoProps>;
 export default ElectricLogo;
+

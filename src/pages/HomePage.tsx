@@ -36,7 +36,7 @@ interface HomePageProps {
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
-    <div className="relative min-h-screen bg-black text-white selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen bg-transparent text-white selection:bg-cyan-500 selection:text-black">
       {/* 1. Glass 3D Hero */}
       <HeroSection onOpenSearch={onOpenSearch} />
 
