@@ -30,11 +30,15 @@ const DRIFT_ITEMS = [
   { image: '/shots/lumina/21e8bad7-558f-4b2e-8922-4d879f811d03.jpg', title: 'Lumina Browser — DuckPlayer Sandbox', href: '/product/lumina' },
 ]
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  onOpenSearch?: () => void
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
     <div className="relative min-h-screen bg-black text-white selection:bg-cyan-500 selection:text-black">
       {/* 1. Glass 3D Hero */}
-      <HeroSection />
+      <HeroSection onOpenSearch={onOpenSearch} />
 
       {/* 2. Interactive Marquee */}
       <ProductMarquee />
@@ -120,11 +124,11 @@ export const HomePage: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>3D SPATIAL DRIFT WALL • INTERACTIVE PERSPECTIVE VIEW</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
             Infinite Software Horizon
           </h2>
           <p className="text-neutral-400 text-sm sm:text-base max-w-xl mx-auto mt-2">
-            Interactive real-time 3D perspective stream of verified production UI frames across all 9 INIXA Labs flagships. Hover to lift, tilt to explore.
+            A slow 3D drift of verified production screens from all 9 INIXA Labs flagships, in their real portrait format. Hover a frame to lift it, click to open the product.
           </p>
         </div>
 
@@ -132,20 +136,20 @@ export const HomePage: React.FC = () => {
           <DriftWall
             items={DRIFT_ITEMS}
             columns={5}
-            tileWidth={200}
-            tileHeight={132}
-            gap={18}
-            tilt={16}
-            turn={-14}
+            tileWidth={168}
+            tileHeight={296}
+            gap={16}
+            tilt={12}
+            turn={-9}
             perspective={1200}
-            depth={120}
-            speed={42}
+            depth={70}
+            speed={30}
             direction="up"
-            variance={0.45}
-            parallax={0.6}
-            lift={64}
-            fade={0.6}
-            dim={0.55}
+            variance={0.35}
+            parallax={0.45}
+            lift={56}
+            fade={0.35}
+            dim={0.88}
             overlayColor="#060010"
           />
         </div>

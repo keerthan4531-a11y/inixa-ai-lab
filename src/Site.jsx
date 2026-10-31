@@ -123,7 +123,7 @@ export default function Site() {
 
   // Render Page Content
   const renderContent = () => {
-    if (isHome) return <HomePage />
+    if (isHome) return <HomePage onOpenSearch={() => setSearchOpen(true)} />
     if (isProducts) return <ProductsPage />
     if (isProductDetail) return <ProductDetailPage productId={activeProductId} />
     if (isDownloads) return <DownloadsPage />

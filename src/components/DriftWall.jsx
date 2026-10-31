@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import './DriftWall.css';
+import { navigate } from '../router.jsx';
 
 const DEFAULT_ITEMS = Array.from({ length: 15 }, (_, i) => {
   const ids = [1015, 1025, 1039, 1043, 1044, 1050, 1062, 1069, 1074, 1080, 1084, 106, 110, 133, 164];
@@ -43,7 +44,7 @@ const DriftWall = ({
   grayscale = false,
   overlayColor = '#060010',
   className = '',
-  style
+  style = undefined
 }) => {
   const containerRef = useRef(null);
   const planeRef = useRef(null);
@@ -226,10 +227,24 @@ const DriftWall = ({
     [tileWidth, tileHeight, gap, radius, perspective, lift, dim, grayscale, overlayColor, fade, style]
   );
 
-  const renderTile = (item, id, colIndex) => {
+  const renderTile = (item, id, colIndex, duplicate = false) => {
+    // Broken-image-proof: alt is intentionally empty (the tile link carries
+    // the accessible name) so a failed request can never spill raw alt text
+    // across the wall — the exact failure in the reported screenshot. On
+    // error the <img> hides and the branded fallback tile underneath shows.
     const inner = (
       <span className="drift-wall__inner">
-        <img src={item.image} alt={item.title ?? ''} loading="lazy" decoding="async" draggable={false} />
+        <span className="drift-wall__fallback" aria-hidden="true">{item.title ?? ''}</span>
+        <img
+          src={item.image ? encodeURI(item.image) : item.image}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          draggable={false}
+          onError={e => {
+            e.currentTarget.style.display = 'none';
+          }}
+        />
         <span className="drift-wall__overlay" aria-hidden="true" />
       </span>
     );
@@ -237,18 +252,37 @@ const DriftWall = ({
       className: `drift-wall__tile${activeId === id ? ' is-active' : ''}`,
       'data-tile-id': id,
       'data-col': colIndex,
+      'aria-label': item.title ?? 'tile',
+      // Loop copies are visual duplicates: keep them out of tab order / AT.
+      tabIndex: duplicate ? -1 : undefined,
+      'aria-hidden': duplicate || undefined,
       onFocus: () => activate(id, colIndex),
       onBlur: release
     };
     if (item.href) {
+      const isInternal = item.href.startsWith('/');
       return (
-        <a key={id} href={item.href} target="_blank" rel="noreferrer noopener" {...commonProps}>
+        <a
+          key={id}
+          href={item.href}
+          {...(isInternal ? {} : { target: '_blank', rel: 'noreferrer noopener' })}
+          onClick={
+            isInternal
+              ? e => {
+                  if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+                  e.preventDefault();
+                  navigate(item.href);
+                }
+              : undefined
+          }
+          {...commonProps}
+        >
           {inner}
         </a>
       );
     }
     return (
-      <div key={id} tabIndex={0} role="button" aria-label={item.title ?? 'tile'} {...commonProps}>
+      <div key={id} tabIndex={duplicate ? -1 : 0} role="button" {...commonProps}>
         {inner}
       </div>
     );
@@ -277,7 +311,7 @@ const DriftWall = ({
             <div className="drift-wall__col" key={`col-${c}`}>
               <div className="drift-wall__track" ref={el => (trackRefs.current[c] = el)}>
                 {copies.map((_, copyIndex) =>
-                  col.map((item, itemIndex) => renderTile(item, `${c}-${copyIndex}-${itemIndex}`, c))
+                  col.map((item, itemIndex) => renderTile(item, `${c}-${copyIndex}-${itemIndex}`, c, copyIndex > 0))
                 )}
               </div>
             </div>
