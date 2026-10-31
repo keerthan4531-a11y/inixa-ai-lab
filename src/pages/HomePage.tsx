@@ -10,11 +10,15 @@ import { ALL_PRODUCTS } from '../data/products'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
 
-export const HomePage: React.FC = () => {
+interface HomePageProps {
+  onOpenSearch?: () => void
+}
+
+export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
     <div className="relative min-h-screen bg-black text-white selection:bg-cyan-500 selection:text-black">
       {/* 1. Glass 3D Hero */}
-      <HeroSection />
+      <HeroSection onOpenSearch={onOpenSearch} />
 
       {/* 2. Interactive Marquee */}
       <ProductMarquee />

@@ -1,5 +1,6 @@
 import React from 'react'
 import { cn } from '../../utils/cn'
+import { SafeImage } from './SafeImage'
 
 interface DeviceMockupProps {
   src: string
@@ -48,11 +49,12 @@ export const DeviceMockup: React.FC<DeviceMockupProps> = ({
 
         {/* Inner Glass Display Area */}
         <div className="relative aspect-[9/19.5] w-[260px] sm:w-[280px] md:w-[300px] overflow-hidden rounded-[34px] bg-[#020408]">
-          <img
+          <SafeImage
             src={src}
             alt={alt}
-            className="h-full w-full object-cover object-top transition-transform duration-700 hover:scale-105"
-            loading="lazy"
+            fallbackLabel={alt}
+            accentColor={glowColor}
+            className="h-full w-full object-cover object-top"
           />
 
           {/* Diagonal Glass Reflection Sheen */}

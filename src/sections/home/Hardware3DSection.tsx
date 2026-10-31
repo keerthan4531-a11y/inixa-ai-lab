@@ -40,12 +40,14 @@ export const Hardware3DSection: React.FC = () => {
         </p>
 
         {/* Product Selector Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-8">
+        <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:items-center sm:justify-center sm:px-0">
           {ALL_PRODUCTS.map((prod) => (
             <button
+              type="button"
               key={prod.id}
               onClick={() => setSelectedProductId(prod.id)}
-              className={`rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
+              aria-pressed={selectedProductId === prod.id}
+              className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
                 selectedProductId === prod.id
                   ? 'bg-white text-black font-bold shadow-lg shadow-white/20'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/5'
@@ -131,6 +133,7 @@ export const Hardware3DSection: React.FC = () => {
               {latestApk && (
                 <GlassButton
                   href={latestApk.downloadPath}
+                  download
                   icon={<Download className="h-4 w-4 text-emerald-400" />}
                 >
                   Download {latestApk.fileName} ({latestApk.sizeFormatted})

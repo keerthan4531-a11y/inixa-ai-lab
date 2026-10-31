@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react'
 import { useMagnetic, MagneticOptions } from '../../design/magnetic'
 import { useCursorLight } from '../../design/cursor'
+import { navigate } from '../../router'
 import { cn } from '../../utils/cn'
 
 export interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -16,10 +17,15 @@ export interface GlassButtonProps extends React.ButtonHTMLAttributes<HTMLButtonE
   download?: boolean | string
 }
 
+/** File downloads must stay real navigations — the SPA router must not eat them. */
+const FILE_HREF = /\.(apk|zip|dmg|exe|pdf|mp4|json)(\?.*)?$/i
+
 export const GlassButton: React.FC<GlassButtonProps> = ({
   children,
   variant = 'default',
-  magnetic = true,
+  // Opt-in: magnetic pull on every pill (including the tiny nav button)
+  // just makes the chrome feel unstable, and it does nothing on touch.
+  magnetic = false,
   magneticOptions,
   href,
   className = '',
@@ -51,13 +57,34 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
 
   const content = (
     <>
-      <span className="liquid-glass-light-layer" />
-      {icon && <span className="inline-flex shrink-0">{icon}</span>}
+      <span className="liquid-glass-light-layer" aria-hidden="true" />
+      {icon && <span className="relative z-10 inline-flex shrink-0">{icon}</span>}
       <span className="relative z-10">{children}</span>
     </>
   )
 
   if (href) {
+    const isInternalRoute = href.startsWith('/') && !download && !FILE_HREF.test(href) && !target
+
+    const onAnchorClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+      ;(onClick as unknown as React.MouseEventHandler<HTMLAnchorElement> | undefined)?.(event)
+      if (
+        !isInternalRoute ||
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return // modified clicks (⌘/ctrl/middle) keep native behaviour
+      }
+      // Internal routes go through the SPA router — previously this was a
+      // plain <a>, so hero CTAs triggered a full reload of the ~1 MB bundle.
+      event.preventDefault()
+      navigate(href)
+    }
+
     return (
       <a
         href={href}
@@ -65,7 +92,7 @@ export const GlassButton: React.FC<GlassButtonProps> = ({
         rel={rel}
         download={download}
         className={cn('liquid-glass-btn group', variantClass, className)}
-        onClick={onClick as any}
+        onClick={onAnchorClick}
       >
         {content}
       </a>

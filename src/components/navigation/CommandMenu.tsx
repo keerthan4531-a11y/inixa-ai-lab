@@ -3,6 +3,7 @@ import { ALL_PRODUCTS } from '../../data/products'
 import { ALL_VERIFIED_APKS } from '../../data/apks'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Search, X, Download, ArrowRight, Layers } from 'lucide-react'
+import { SafeImage } from '../common/SafeImage'
 import { navigate } from '../../router'
 
 interface CommandMenuProps {
@@ -106,7 +107,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                 <div
                   key={p.id}
                   onClick={() => {
-                    navigate(`/products/${p.id}`)
+                    navigate(`/product/${p.id}`)
                     onClose()
                   }}
                   className="group flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 transition-colors hover:bg-white/10"
@@ -171,15 +172,17 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                   <div
                     key={idx}
                     onClick={() => {
-                      navigate(`/products/${shot.product}`)
+                      navigate(`/product/${shot.product}`)
                       onClose()
                     }}
                     className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-2 hover:border-cyan-400/40"
                   >
-                    <img
+                    <SafeImage
                       src={shot.assetPath}
                       alt={shot.altText}
-                      className="h-10 w-8 rounded object-cover"
+                      fallbackLabel={shot.whatItShows}
+                      wrapperClassName="h-10 w-8 shrink-0 rounded"
+                      className="h-full w-full object-cover"
                     />
                     <div className="overflow-hidden">
                       <div className="truncate text-xs font-medium text-white">

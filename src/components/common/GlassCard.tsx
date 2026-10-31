@@ -15,7 +15,7 @@ export interface GlassCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export const GlassCard: React.FC<GlassCardProps> = ({
   children,
-  tilt = true,
+  tilt = false, /* opt-in: tilt on every card made grids wobble & cost 56 listeners; hero cards can enable it */
   enableTilt,
   tiltOptions,
   className = '',
@@ -53,12 +53,12 @@ export const GlassCard: React.FC<GlassCardProps> = ({
   return (
     <div
       ref={setRef}
-      className={cn(levelClass, 'tilt-card-container', className)}
+      className={cn(levelClass, shouldTilt && 'tilt-card-container', className)}
       style={dynamicStyles}
       {...rest}
     >
       {/* Specular Glare Layer */}
-      <div className="tilt-glare" />
+      {shouldTilt && <div className="tilt-glare" />}
 
       {/* Surface Light Reflection */}
       <div className="liquid-glass-light-layer" />

@@ -24,6 +24,15 @@ const pagesFallback = () => ({
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), pagesFallback()],
+  // Dev only: reachable from LAN / cloud preview hosts, not just localhost.
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: ['.e2b.app'],
+  },
+  preview: {
+    host: '0.0.0.0',
+    allowedHosts: ['.e2b.app'],
+  },
   // Served from the root of custom domain inixa.ai
   base: '/',
   build: {

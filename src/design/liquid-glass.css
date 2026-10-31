@@ -236,12 +236,105 @@
   }
 }
 
+/* --------------------------------------------------- Missing variants (were referenced in TSX but never defined) */
+/* GlassCard glassLevel="panel" | "specular" | "pill" and GlassButton
+   variant="secondary" produced class names that existed nowhere, so those
+   surfaces rendered unstyled. They all share the liquid-glass-card base. */
+.liquid-glass-panel,
+.liquid-glass-specular,
+.liquid-glass-pill {
+  position: relative;
+  background: radial-gradient(
+    650px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    var(--lg-glass-tint) 85%
+  );
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--lg-border-subtle);
+  box-shadow:
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    0 16px 40px -12px rgba(0, 0, 0, 0.5);
+  overflow: hidden;
+}
+.liquid-glass-panel { border-radius: 24px; }
+.liquid-glass-pill { border-radius: 9999px; }
+.liquid-glass-specular {
+  border-radius: 28px;
+  border-color: var(--lg-border-glow, rgba(0, 242, 254, 0.35));
+  box-shadow:
+    inset 0 1px 2px 0 rgba(255, 255, 255, 0.32),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.45),
+    0 24px 56px -12px rgba(0, 0, 0, 0.6),
+    0 0 44px -10px rgba(0, 242, 254, 0.22);
+}
+
+/* The light layer spans in GlassCard/GlassButton: a soft top-left sheen.
+   Without this rule they were unstyled inline spans taking up flex space. */
+.liquid-glass-light-layer {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, transparent 42%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Secondary button: quiet glass, cyan edge (primary stays the loud one). */
+.liquid-glass-btn-secondary {
+  background: rgba(10, 18, 32, 0.72);
+  border-color: rgba(0, 242, 254, 0.35);
+  color: #e6fbff;
+}
+.liquid-glass-btn-secondary:hover {
+  border-color: rgba(0, 242, 254, 0.6);
+  background: rgba(10, 24, 42, 0.85);
+}
+
+/* Keyboard focus must be visible on every glass surface (matches accent). */
+.liquid-glass-btn:focus-visible,
+.liquid-glass-card:focus-visible,
+.liquid-glass-panel:focus-visible,
+.liquid-glass-specular:focus-visible {
+  outline: 2px solid var(--lg-cyan);
+  outline-offset: 3px;
+}
+
+/* Horizontally scrollable pill rows without a visible scrollbar. */
+.no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Marquee pauses when the pointer is on it — unreadable at speed otherwise. */
+.marquee-row:hover { animation-play-state: paused; }
+
+/* Phones: 28–32px backdrop blur on dozens of cards is the scroll-jank
+   source on mid-range Android. Half the radius, same look at arm's length. */
+@media (max-width: 640px) {
+  .liquid-glass-card,
+  .liquid-glass-panel,
+  .liquid-glass-specular,
+  .liquid-glass-pill {
+    backdrop-filter: blur(12px) saturate(150%);
+    -webkit-backdrop-filter: blur(12px) saturate(150%);
+  }
+  .liquid-glass-nav {
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+  }
+}
+
 /* --------------------------------------------------- Prefers-Reduced-Motion */
 @media (prefers-reduced-motion: reduce) {
   .liquid-glass-card,
+  .liquid-glass-panel,
+  .liquid-glass-specular,
+  .liquid-glass-pill,
   .liquid-glass-btn,
   .tilt-card-container,
-  .ambient-blob {
+  .ambient-blob,
+  .marquee-row {
     animation: none !important;
     transition: none !important;
     transform: none !important;

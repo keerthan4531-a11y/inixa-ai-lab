@@ -23,10 +23,11 @@ export const ProductMarquee: React.FC = () => {
       <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10" />
 
       {/* Row 1: Products */}
-      <div className="flex w-max animate-marquee space-x-6 mb-4 select-none">
+      <div className="marquee-row flex w-max animate-marquee space-x-6 mb-4 select-none">
         {[...ALL_PRODUCTS, ...ALL_PRODUCTS].map((p, i) => (
           <div
             key={`${p.id}-${i}`}
+            aria-hidden={i >= ALL_PRODUCTS.length || undefined}
             className="flex items-center gap-3 px-5 py-2.5 rounded-full bg-white/[0.04] border border-white/10 hover:border-cyan-400/40 transition-colors shadow-inner"
           >
             <span
@@ -43,10 +44,11 @@ export const ProductMarquee: React.FC = () => {
       </div>
 
       {/* Row 2: Technologies */}
-      <div className="flex w-max animate-marquee-reverse space-x-6 select-none opacity-80">
+      <div className="marquee-row flex w-max animate-marquee-reverse space-x-6 select-none opacity-80">
         {[...TECH_STACK_TAGS, ...TECH_STACK_TAGS, ...TECH_STACK_TAGS].map((tech, i) => (
           <div
             key={`${tech}-${i}`}
+            aria-hidden={i >= TECH_STACK_TAGS.length || undefined}
             className="flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-950/20 border border-cyan-500/20 text-xs font-mono text-cyan-200"
           >
             <Sparkles className="w-3 h-3 text-cyan-400" />

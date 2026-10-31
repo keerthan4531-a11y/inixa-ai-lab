@@ -644,6 +644,59 @@ export const SCREENSHOT_MAP: Record<string, Record<string, ScreenshotMeta>> = {
       "whatItShows": "Player Engine Options",
       "altText": "Configure default playback speed, HDR color mapping, and VP9 video codec."
     }
+  },
+  // Infopedia Alpha (id "wikipedia-app") had 8 real captures in
+  // public/shots/wikipedia-app but NO registry entry, so its hardware
+  // showcase rendered a "No Preview" box and its lab card had no image.
+  "wikipedia-app": {
+    "sc_cite": {
+      "product": "wikipedia-app",
+      "featureId": "sc_cite",
+      "originalFile": "1_en-US.png",
+      "assetPath": "/shots/wikipedia-app/1_en-US.png",
+      "whatItShows": "Save Articles to Reading Lists",
+      "altText": "Save your favorite articles to personal reading lists for later study."
+    },
+    "sc_offline": {
+      "product": "wikipedia-app",
+      "featureId": "sc_offline",
+      "originalFile": "2_en-US.png",
+      "assetPath": "/shots/wikipedia-app/2_en-US.png",
+      "whatItShows": "Read Wikipedia Offline",
+      "altText": "Downloaded Space reading list: five articles available fully offline."
+    },
+    "sc_model": {
+      "product": "wikipedia-app",
+      "featureId": "sc_model",
+      "originalFile": "3_en-US.png",
+      "assetPath": "/shots/wikipedia-app/3_en-US.png",
+      "whatItShows": "Explore Feed & Discovery",
+      "altText": "Daily explore feed with featured articles, images and trending topics."
+    },
+    "sc_stream": {
+      "product": "wikipedia-app",
+      "featureId": "sc_stream",
+      "originalFile": "4_en-US.png",
+      "assetPath": "/shots/wikipedia-app/4_en-US.png",
+      "whatItShows": "Multilingual Search",
+      "altText": "Search millions of articles across 300+ Wikipedia language editions."
+    },
+    "sc_rag": {
+      "product": "wikipedia-app",
+      "featureId": "sc_rag",
+      "originalFile": "5_en-US.png",
+      "assetPath": "/shots/wikipedia-app/5_en-US.png",
+      "whatItShows": "AI Research Assistant",
+      "altText": "Inixa AI answers grounded in the article you are reading, with citations."
+    },
+    "sc_follow": {
+      "product": "wikipedia-app",
+      "featureId": "sc_follow",
+      "originalFile": "6_en-US.png",
+      "assetPath": "/shots/wikipedia-app/6_en-US.png",
+      "whatItShows": "Reading Lists & Bookmarks",
+      "altText": "Organize saved research into themed lists, synced to your account."
+    }
   }
 }
 

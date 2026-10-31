@@ -4,6 +4,7 @@ import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { GlassCard } from '../../components/common/GlassCard'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
+import { SafeImage } from '../../components/common/SafeImage'
 import { copyToClipboard } from '../../utils/clipboard'
 import {
   Download,
@@ -173,11 +174,11 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                 {shot && (
                   <div className="w-full sm:w-[240px] md:w-[260px] shrink-0">
                     <div className="relative aspect-[9/18] overflow-hidden rounded-2xl border border-white/15 bg-black/80 shadow-2xl">
-                      <img
+                      <SafeImage
                         src={shot.assetPath}
                         alt={shot.altText}
+                        fallbackLabel={shot.whatItShows}
                         className="h-full w-full object-cover object-top"
-                        loading="lazy"
                       />
                     </div>
                     <div className="text-[11px] text-white/40 text-center mt-2 truncate">
