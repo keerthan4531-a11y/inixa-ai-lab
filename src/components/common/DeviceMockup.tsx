@@ -1,6 +1,5 @@
 import React, { useRef, useState } from 'react'
 import { cn } from '../../utils/cn'
-import { SafeImage } from './SafeImage'
 
 export interface DeviceMockupProps {
   src?: string
@@ -16,9 +15,13 @@ export interface DeviceMockupProps {
   interactiveTilt?: boolean
 }
 
+const DEFAULT_FALLBACK_SHOT = '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg'
+
 /**
  * Ultra-high-end physical device chassis with React Bits tactile 3D tilt.
  * Displays genuine on-device captures edge-to-edge with pure OLED optics.
+ * Directly mounts <img> with absolute inset-0 and object-cover object-top
+ * to guarantee 100% full-screen display without black bars or letterboxing.
  */
 export const DeviceMockup: React.FC<DeviceMockupProps> = ({
   src,
@@ -29,7 +32,7 @@ export const DeviceMockup: React.FC<DeviceMockupProps> = ({
   glowColor = '#00f2fe',
   interactiveTilt = true,
 }) => {
-  const resolvedSrc = src || assetPath || '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg'
+  const resolvedSrc = src || assetPath || DEFAULT_FALLBACK_SHOT
   const resolvedAlt = alt || altText || 'Flagship Android Device Capture'
 
   const cardRef = useRef<HTMLDivElement>(null)
@@ -91,18 +94,30 @@ export const DeviceMockup: React.FC<DeviceMockupProps> = ({
           <div className="h-1.5 w-1.5 rounded-full bg-[#1e293b]" />
         </div>
 
-        {/* Inner Glass Display Area */}
+        {/* Inner Glass Display Area: Strict 9/19.5 aspect ratio matching modern Android phones */}
         <div className="relative aspect-[9/19.5] w-[260px] sm:w-[280px] md:w-[300px] overflow-hidden rounded-[34px] bg-[#020408]">
-          <div className="absolute inset-0 h-full w-full">
-            <SafeImage
-              src={resolvedSrc}
-              alt={resolvedAlt}
-              fallbackLabel={resolvedAlt}
-              accentColor={glowColor}
-              className="h-full w-full object-cover object-top"
-              wrapperClassName="h-full w-full"
-            />
-          </div>
+          <img
+            src={encodeURI(resolvedSrc)}
+            alt={resolvedAlt}
+            loading="eager"
+            decoding="sync"
+            draggable={false}
+            style={{
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              objectPosition: 'top center',
+              display: 'block',
+            }}
+            onError={(e) => {
+              if (e.currentTarget.src !== DEFAULT_FALLBACK_SHOT) {
+                e.currentTarget.src = DEFAULT_FALLBACK_SHOT
+              }
+            }}
+          />
 
           {/* Diagonal Glass Reflection Sheen */}
           <div

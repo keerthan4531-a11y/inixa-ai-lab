@@ -32,16 +32,16 @@ export const bearboxUltra: Product = {
   features: [
     {
         "id": "feature-1",
-        "title": "Artist Page & Top Tracks",
-        "description": "Full bleed portrait photography with discography, albums, and curated top hits.",
+        "title": "Ambient Glass Now Playing",
+        "description": "Player interface dynamically saturated with the album's warm tones and waveform seekbar.",
         "icon": "Smartphone",
         "screenshotKey": "shot-1",
         "badge": "VERIFIED HARDWARE"
     },
     {
         "id": "feature-2",
-        "title": "Ambient Glass Now Playing",
-        "description": "Player interface dynamically saturated with the album's warm tones and waveform seekbar.",
+        "title": "Artist Page & Top Tracks",
+        "description": "Full bleed portrait photography with discography, albums, and curated top hits.",
         "icon": "Smartphone",
         "screenshotKey": "shot-2",
         "badge": "VERIFIED HARDWARE"
