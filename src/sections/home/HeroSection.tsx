@@ -1,6 +1,7 @@
 import React from 'react'
 import { GlassHeroScene } from '../../components/3d/GlassHeroScene'
 import { GlassButton } from '../../components/common/GlassButton'
+import TechText from '../../components/TechText'
 import { Sparkles, Download, ArrowRight, ShieldCheck, Cpu } from 'lucide-react'
 
 interface HeroSectionProps {
@@ -18,20 +19,55 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
         <div className="h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-cyan-500/30 via-blue-600/20 to-purple-600/20 blur-[120px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center">
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 text-center w-full">
         {/* Top Innovation Pill */}
-        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-6">
+        <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-4">
           <Sparkles className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
           <span>INIXA AI LABS 2026 SHOWCASE</span>
         </div>
 
-        {/* Hero Headline */}
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white mb-6 leading-[1.08]">
-          Frontiers of AI &amp; <br />
+        {/* React Bits TechText — INIXA LAB */}
+        <div 
+          style={{ width: '100%', position: 'relative' }} 
+          className="h-[240px] sm:h-[360px] md:h-[480px] mx-auto text-white mb-2"
+        >
+          <TechText
+            text="INIXA LAB"
+            fontWeight={600}
+            fontSize={150}
+            reveal="letter"
+            dashLength={4}
+            dashGap={2}
+            specks={15}
+            intro="none"
+            introDuration={2}
+            clickKick
+            guides={false}
+            fontFamily=""
+            letterSpacing={-0.05}
+            accentColor="#22d3ee"
+            reach={200}
+            softness={0.7}
+            lineStyle="dashed"
+            strokeWidth={1.5}
+            speed={1}
+            bounce={0.4}
+            selection
+            labels
+            color="currentColor"
+            align="center"
+            draggable
+            sweep
+          />
+        </div>
+
+        {/* Sub-Headline */}
+        <h2 className="text-2xl sm:text-4xl font-bold tracking-tight text-white mb-4 leading-[1.15]">
+          Frontiers of AI &{' '}
           <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
             Liquid Glass Flagships
           </span>
-        </h1>
+        </h2>
 
         {/* Lede Summary */}
         <p className="mx-auto max-w-2xl text-base sm:text-lg text-white/70 mb-10 leading-relaxed">
