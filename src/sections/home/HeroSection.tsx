@@ -3,6 +3,7 @@ import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { ShinyText } from '../../components/react-bits/ShinyText'
 import { Magnet } from '../../components/react-bits/Magnet'
+import DecryptedText from '../../components/react-bits/DecryptedText'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -34,10 +35,17 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
           {/* Left Column: Headlines & Action CTAs */}
           <div className="text-center lg:col-span-7 lg:text-left">
-            {/* Elegant Brand Pill Badge */}
+            {/* Elegant Brand Pill Badge with React Bits DecryptedText */}
             <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-6">
               <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
-              <span className="tracking-widest uppercase font-mono">INIXA AI LABS • 2026 SHOWCASE</span>
+              <DecryptedText
+                text="INIXA AI LABS • 2026 SHOWCASE"
+                animateOn="view"
+                speed={40}
+                maxIterations={10}
+                revealDirection="start"
+                className="tracking-widest uppercase font-mono text-cyan-300"
+              />
             </div>
 
             <h1 className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl">
