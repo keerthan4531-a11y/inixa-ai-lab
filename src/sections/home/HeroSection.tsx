@@ -1,8 +1,6 @@
 import React from 'react'
-import { GlassHeroScene } from '../../components/3d/GlassHeroScene'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
-import TechText from '../../components/TechText'
 import { SCREENSHOT_MAP, ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Sparkles, Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -11,10 +9,8 @@ interface HeroSectionProps {
 }
 
 /**
- * The hero now opens with an OBJECT (a real phone running a real capture)
- * instead of a headline floating over abstract WebGL — which is the rule
- * styles.css states for this site. The 3D field stays, as atmosphere
- * behind the device, at reduced opacity.
+ * Clean, high-end hero showcasing physical flagship Android hardware
+ * with pure dark optics and zero distracting looping animations.
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
   const heroShot =
@@ -29,131 +25,99 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
   ]
 
   return (
-    <section className="relative overflow-hidden pt-32 pb-16 sm:pt-36 lg:min-h-[92vh] lg:flex lg:items-center">
-      {/* 3D WebGL Liquid Glass Canvas (atmosphere, not the message) */}
-      <GlassHeroScene className="opacity-60" />
-
-      {/* Ambient gradient caustics */}
+    <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[88vh] lg:flex lg:items-center">
+      {/* Calm, static ambient gradient caustics — no moving orbs */}
       <div className="pointer-events-none absolute inset-0 z-0 flex items-center justify-center opacity-30" aria-hidden="true">
-        <div className="h-[500px] w-[500px] rounded-full bg-gradient-to-tr from-cyan-500/30 via-blue-600/20 to-purple-600/20 blur-[120px]" />
+        <div className="h-[600px] w-[600px] rounded-full bg-gradient-to-tr from-cyan-500/20 via-blue-600/15 to-purple-600/15 blur-[140px]" />
       </div>
-      {/* Readability scrim so copy never sits directly on bright 3D geometry */}
-      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/60 via-transparent to-black" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
-        {/* Brand band: main's interactive TechText wordmark, kept — but at a
-            height that leaves room for the actual product in the same hero
-            (main used up to 480px, which pushed every CTA below the fold). */}
-        <div className="mb-2 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl">
-            <Sparkles className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
-            <span>INIXA AI LABS 2026 SHOWCASE</span>
-          </div>
-          <div className="mx-auto h-[130px] w-full max-w-4xl text-white sm:h-[190px] md:h-[240px]" style={{ position: 'relative' }}>
-            <TechText
-              text="INIXA LAB"
-              fontWeight={600}
-              fontSize={150}
-              reveal="letter"
-              dashLength={4}
-              dashGap={2}
-              specks={15}
-              intro="none"
-              introDuration={2}
-              clickKick
-              guides={false}
-              fontFamily=""
-              letterSpacing={-0.05}
-              accentColor="#22d3ee"
-              reach={200}
-              softness={0.7}
-              lineStyle="dashed"
-              strokeWidth={1.5}
-              speed={1}
-              bounce={0.4}
-              selection
-              labels
-              color="currentColor"
-              align="center"
-              draggable
-              sweep
-            />
-          </div>
-        </div>
-
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-        {/* Copy */}
-        <div className="text-center lg:col-span-7 lg:text-left">
+          {/* Left Column: Headlines & Action CTAs */}
+          <div className="text-center lg:col-span-7 lg:text-left">
+            {/* Elegant Brand Pill Badge */}
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-6">
+              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+              <span className="tracking-widest uppercase font-mono">INIXA AI LABS • 2026 SHOWCASE</span>
+            </div>
 
-          <h1 className="mb-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-6xl">
-            Frontiers of AI &amp;{' '}
-            <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
-              Liquid Glass Flagships
-            </span>
-          </h1>
+            <h1 className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl">
+              Frontiers of AI &amp;{' '}
+              <span className="bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500 bg-clip-text text-transparent">
+                Liquid Glass Flagships
+              </span>
+            </h1>
 
-          <p className="mx-auto mb-9 max-w-2xl text-base leading-relaxed text-white/65 sm:text-lg lg:mx-0">
-            Nine native applications — audiophile players, an autonomous AI sandbox, a hardened
-            privacy browser and zero-ad stream tools. Real software, captured on real phones,
-            with zero telemetry.
-          </p>
+            <p className="mx-auto mb-9 max-w-2xl text-base leading-relaxed text-white/70 sm:text-lg lg:mx-0">
+              Nine native applications — audiophile bit-perfect players, an autonomous AI sandbox, a hardened
+              privacy browser, and zero-ad stream extractors. Real software captured on real hardware,
+              with zero telemetry.
+            </p>
 
-          <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-            <GlassButton
-              href="/products"
-              variant="primary"
-              className="!px-6 !py-3 !text-sm"
-              icon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
-            >
-              Explore 9 Products
-            </GlassButton>
-            <GlassButton
-              href="/downloads"
-              variant="secondary"
-              className="!px-6 !py-3 !text-sm"
-              icon={<Download className="h-4 w-4 text-cyan-400" aria-hidden="true" />}
-            >
-              Download APKs
-            </GlassButton>
-            {/* Only render search when it is actually wired up — a dead ⌘K
-                button shipped here before because the prop was never passed. */}
-            {onOpenSearch && (
+            <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
+              <GlassButton
+                href="/products"
+                variant="primary"
+                className="!px-6 !py-3 !text-sm shadow-lg shadow-cyan-500/20"
+                icon={<ArrowRight className="h-4 w-4" aria-hidden="true" />}
+              >
+                Explore 9 Products
+              </GlassButton>
+              <GlassButton
+                href="/downloads"
+                className="!px-6 !py-3 !text-sm"
+                icon={<Download className="h-4 w-4 text-cyan-400" aria-hidden="true" />}
+              >
+                Download APKs
+              </GlassButton>
               <GlassButton
                 onClick={onOpenSearch}
                 variant="ghost"
-                className="!px-5 !py-3 !text-sm text-white/70"
-                icon={<Search className="h-4 w-4" aria-hidden="true" />}
+                className="!px-5 !py-3 !text-sm text-white/70 hover:text-white"
+                icon={<Search className="h-4 w-4 text-white/50" aria-hidden="true" />}
               >
-                Search <kbd className="ml-1 rounded bg-white/10 px-1.5 py-0.5 font-mono text-[10px] text-white/50">⌘K</kbd>
+                Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
               </GlassButton>
-            )}
+            </div>
+
+            {/* Verified Metrics Strip */}
+            <div className="mt-12 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:grid-cols-4 max-w-2xl mx-auto lg:mx-0">
+              {stats.map((s) => (
+                <div key={s.label} className="text-center lg:text-left">
+                  <div className="font-mono text-2xl sm:text-3xl font-black text-white">{s.value}</div>
+                  <div className="mt-1 text-xs text-white/50">{s.label}</div>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <dl className="mx-auto mt-11 grid max-w-2xl grid-cols-2 gap-5 border-t border-white/10 pt-6 text-left sm:grid-cols-4 lg:mx-0">
-            {stats.map((s) => (
-              <div key={s.label} className="flex flex-col">
-                <dt className="order-2 mt-0.5 text-xs text-white/50">{s.label}</dt>
-                <dd className="order-1 text-2xl font-extrabold text-white">{s.value}</dd>
+          {/* Right Column: Physical Device Showcase with Glass Reflection */}
+          <div className="flex justify-center lg:col-span-5">
+            <div className="relative w-full max-w-[340px] sm:max-w-[380px]">
+              {/* Soft ambient back-glow */}
+              <div className="pointer-events-none absolute -inset-4 rounded-[48px] bg-gradient-to-tr from-cyan-500/20 via-blue-500/10 to-transparent blur-2xl" />
+
+              <DeviceMockup
+                assetPath={heroShot?.assetPath || '/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg'}
+                altText={heroShot?.altText || 'BeatBox Pro live player capture'}
+                frame="titanium"
+                notch="island"
+                shadow
+                className="relative z-10 w-full"
+              />
+
+              {/* Floating feature pills - static and crisp */}
+              <div className="absolute -left-6 top-1/4 z-20 hidden rounded-full border border-white/15 bg-black/85 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5">
+                <Music2 className="h-3.5 w-3.5 text-amber-400" />
+                <span className="font-medium">Synced lyrics, live</span>
               </div>
-            ))}
-          </dl>
-        </div>
-
-        {/* The object: a phone running an unedited capture */}
-        <div className="relative lg:col-span-5">
-          {heroShot && (
-            <DeviceMockup src={heroShot.assetPath} alt={heroShot.altText} glowColor="#FFBA4A" />
-          )}
-          <div className="pointer-events-none absolute -right-1 top-10 hidden items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-xs font-semibold text-white/85 backdrop-blur-md sm:inline-flex lg:right-2">
-            <Music2 className="h-3.5 w-3.5 text-amber-400" aria-hidden="true" /> Synced lyrics, live
+              <div className="absolute -right-6 bottom-1/4 z-20 hidden rounded-full border border-white/15 bg-black/85 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                <span className="font-medium">0 telemetry</span>
+              </div>
+            </div>
           </div>
-          <div className="pointer-events-none absolute -left-1 bottom-16 hidden items-center gap-2 rounded-full border border-white/15 bg-black/55 px-3 py-1.5 text-xs font-semibold text-white/85 backdrop-blur-md sm:inline-flex lg:left-2">
-            <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" aria-hidden="true" /> 0 telemetry
-          </div>
-          <p className="mt-5 text-center text-xs text-white/45">
-            BearBox Ultra — unedited capture from physical hardware
-          </p>
-        </div>
         </div>
       </div>
     </section>

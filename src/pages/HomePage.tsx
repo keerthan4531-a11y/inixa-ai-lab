@@ -143,7 +143,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
             turn={-9}
             perspective={1200}
             depth={70}
-            speed={30}
+            speed={0}
             direction="up"
             variance={0.35}
             parallax={0.45}

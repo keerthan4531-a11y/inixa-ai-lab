@@ -94,7 +94,7 @@ export const GallerySection: React.FC = () => {
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-cyan-400 inline-flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400 animate-pulse" />
+            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
             <span>WebGL Liquid Glass Refraction Stream</span>
           </p>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
