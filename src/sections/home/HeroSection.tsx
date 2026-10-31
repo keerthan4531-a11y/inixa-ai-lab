@@ -2,6 +2,7 @@ import React from 'react'
 import { GlassHeroScene } from '../../components/3d/GlassHeroScene'
 import { GlassButton } from '../../components/common/GlassButton'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
+import TechText from '../../components/TechText'
 import { SCREENSHOT_MAP, ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { Sparkles, Download, ArrowRight, Search, ShieldCheck, Music2 } from 'lucide-react'
 
@@ -39,13 +40,50 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
       {/* Readability scrim so copy never sits directly on bright 3D geometry */}
       <div className="pointer-events-none absolute inset-0 z-0 bg-gradient-to-b from-black/40 via-transparent to-black/70" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-12 px-4 sm:px-6 lg:grid-cols-12">
-        {/* Copy */}
-        <div className="text-center lg:col-span-7 lg:text-left">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl">
+      <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
+        {/* Brand band: main's interactive TechText wordmark, kept — but at a
+            height that leaves room for the actual product in the same hero
+            (main used up to 480px, which pushed every CTA below the fold). */}
+        <div className="mb-2 text-center">
+          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-cyan-950/40 px-3.5 py-1 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl">
             <Sparkles className="h-3.5 w-3.5 text-cyan-400" aria-hidden="true" />
             <span>INIXA AI LABS 2026 SHOWCASE</span>
           </div>
+          <div className="mx-auto h-[130px] w-full max-w-4xl text-white sm:h-[190px] md:h-[240px]" style={{ position: 'relative' }}>
+            <TechText
+              text="INIXA LAB"
+              fontWeight={600}
+              fontSize={150}
+              reveal="letter"
+              dashLength={4}
+              dashGap={2}
+              specks={15}
+              intro="none"
+              introDuration={2}
+              clickKick
+              guides={false}
+              fontFamily=""
+              letterSpacing={-0.05}
+              accentColor="#22d3ee"
+              reach={200}
+              softness={0.7}
+              lineStyle="dashed"
+              strokeWidth={1.5}
+              speed={1}
+              bounce={0.4}
+              selection
+              labels
+              color="currentColor"
+              align="center"
+              draggable
+              sweep
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        {/* Copy */}
+        <div className="text-center lg:col-span-7 lg:text-left">
 
           <h1 className="mb-6 text-4xl font-extrabold leading-[1.08] tracking-tight text-white sm:text-6xl">
             Frontiers of AI &amp;{' '}
@@ -115,6 +153,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           <p className="mt-5 text-center text-xs text-white/45">
             BearBox Ultra — unedited capture from physical hardware
           </p>
+        </div>
         </div>
       </div>
     </section>
