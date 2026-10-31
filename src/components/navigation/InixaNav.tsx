@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Link, useRoute } from '../../router'
 import { MAIN_NAV_ITEMS } from '../../types/route'
 import { GlassButton } from '../common/GlassButton'
+import ElectricLogo from '../ElectricLogo'
 import { Search, Download, Sparkles, Menu, X } from 'lucide-react'
 
 interface InixaNavProps {
@@ -54,10 +55,19 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
       >
         {/* Brand Mark */}
         <Link to="/" className="group flex shrink-0 items-center gap-2.5 no-underline">
-          <div className="relative flex h-8 w-8 items-center justify-center rounded-xl bg-gradient-to-tr from-cyan-400 to-blue-600 p-0.5 shadow-md shadow-cyan-500/20">
-            <div className="flex h-full w-full items-center justify-center rounded-[10px] bg-[#060a12]">
-              <Sparkles className="h-4 w-4 text-cyan-400 transition-transform group-hover:rotate-12" aria-hidden="true" />
-            </div>
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#060a12] border border-cyan-400/40 p-0.5 shadow-md shadow-cyan-500/25 overflow-hidden group-hover:border-cyan-300 transition-colors">
+            <ElectricLogo
+              src="/inixa-brand-electric.svg"
+              color="#38bdf8"
+              glowColor="#0284c7"
+              scale={0.82}
+              strands={3}
+              bend={0.5}
+              crackle={1.2}
+              arcs={1}
+              speed={2.2}
+              interactive
+            />
           </div>
           <span className="flex items-center gap-1.5 text-sm font-extrabold tracking-tight text-white">
             INIXA <span className="text-xs font-semibold tracking-wider text-cyan-400">LABS</span>
