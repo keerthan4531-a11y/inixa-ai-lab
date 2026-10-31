@@ -5,7 +5,7 @@ export interface CursorGridProps {
   color?: string;
   gridColor?: string;
   radius?: number;
-  falloff?: 'smooth' | 'linear' | 'sharp';
+  falloff?: 'linear' | 'smooth' | 'sharp';
   highlight?: 'area' | 'cell';
   holdTime?: number;
   fadeDuration?: number;
@@ -31,4 +31,3 @@ export interface CursorGridProps {
 
 declare const CursorGrid: React.FC<CursorGridProps>;
 export default CursorGrid;
-

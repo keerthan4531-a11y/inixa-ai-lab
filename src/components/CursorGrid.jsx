@@ -139,7 +139,7 @@ void main() {
   float cellAlpha = clamp(max(litAlpha, fillAlpha), 0.0, 1.0);
   float alpha = cellAlpha + gridAlpha * (1.0 - cellAlpha);
   vec3 premul = uColor * cellAlpha + uGridColor * gridAlpha * (1.0 - cellAlpha);
-  outColor = vec4(0.0, 0.0, 0.0, 0.0);
+  outColor = vec4(premul, alpha);
 }`;
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
@@ -554,7 +554,7 @@ const CursorGrid = ({
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
     document.addEventListener('visibilitychange', onVisibility);
     rebuild();
-    if (settingsRef.current.intro && introClock < 1) pulses.push({ x: view.width / 2, y: view.height / 2, t0: 0.15, strength: 0.6 });
+    if (introClock < 1) pulses.push({ x: view.width / 2, y: view.height / 2, t0: 0.15, strength: 0.6 });
     draw();
     wake();
     wakeRef.current = () => {
