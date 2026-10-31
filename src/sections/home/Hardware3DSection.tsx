@@ -4,18 +4,43 @@ import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { GlassCard } from '../../components/common/GlassCard'
 import { GlassButton } from '../../components/common/GlassButton'
-import { Download, ArrowRight, Smartphone, Sparkles, Check } from 'lucide-react'
+import { Download, ArrowRight, Smartphone, Check } from 'lucide-react'
 import { navigate } from '../../router'
+import { cn } from '../../utils/cn'
+
+/**
+ * Curated map of the richest, most vivid and populated showcase screenshot
+ * for each product to guarantee no dark/blank screens are shown by default.
+ */
+const BEST_SHOWCASE_SHOT: Record<string, string> = {
+  'bearbox-ultra': 'shot-2', // Ambient Glass Now Playing (warm album tones + waveform)
+  'beatbox-pro': 'shot-2',   // Hi-Res Now Playing (full playback UI, bitrate, album art)
+  'beatbox-lite': 'shot-2',  // Streamlined Player Card (vibrant contrast)
+  'inixa-ai': 'shot-1',      // AI Chat Interface
+  'liquid-stream': 'shot-1', // Gesture 4K Video Engine
+  'mytube': 'shot-1',        // Decentralized Player
+  'lumina': 'shot-1',        // Fire Wipe Engine & Sandbox
+  'clipster': 'shot-1',      // Multi-thread Transcoder
+  'wikipedia-infopedia': 'shot-1',
+}
 
 export const Hardware3DSection: React.FC = () => {
   const [selectedProductId, setSelectedProductId] = useState<string>('beatbox-pro')
+  const [selectedShotKey, setSelectedShotKey] = useState<string | null>(null)
 
   const selectedProduct = ALL_PRODUCTS.find((p) => p.id === selectedProductId) || ALL_PRODUCTS[0]
   const prodScreenshots = SCREENSHOT_MAP[selectedProduct.id] || {}
-  const firstScreenshotKey = Object.keys(prodScreenshots)[0]
-  const activeScreenshot = prodScreenshots[firstScreenshotKey]
+
+  const defaultKey = BEST_SHOWCASE_SHOT[selectedProduct.id] || Object.keys(prodScreenshots)[0] || 'shot-1'
+  const activeKey = selectedShotKey && prodScreenshots[selectedShotKey] ? selectedShotKey : defaultKey
+  const activeScreenshot = prodScreenshots[activeKey] || prodScreenshots[Object.keys(prodScreenshots)[0]]
 
   const latestApk = selectedProduct.apks?.[selectedProduct.apks.length - 1]
+
+  const handleSelectProduct = (id: string) => {
+    setSelectedProductId(id)
+    setSelectedShotKey(null) // reset to preferred showcase shot
+  }
 
   return (
     <section className="relative py-24 px-4 sm:px-6 max-w-7xl mx-auto" id="showcase">
@@ -45,9 +70,9 @@ export const Hardware3DSection: React.FC = () => {
             <button
               type="button"
               key={prod.id}
-              onClick={() => setSelectedProductId(prod.id)}
+              onClick={() => handleSelectProduct(prod.id)}
               aria-pressed={selectedProductId === prod.id}
-              className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 ${
+              className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-all duration-300 cursor-pointer ${
                 selectedProductId === prod.id
                   ? 'bg-white text-black font-bold shadow-lg shadow-white/20'
                   : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white border border-white/5'
@@ -61,14 +86,37 @@ export const Hardware3DSection: React.FC = () => {
 
       {/* Side-by-Side Phone Mockup & Specs Card */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-        {/* Left Column: Realistic Phone Mockup */}
-        <div className="lg:col-span-5 flex justify-center">
+        {/* Left Column: Realistic Phone Mockup with Screen Pills */}
+        <div className="lg:col-span-5 flex flex-col items-center">
           {activeScreenshot ? (
-            <DeviceMockup
-              src={activeScreenshot.assetPath}
-              alt={activeScreenshot.altText}
-              glowColor={selectedProduct.accentColor}
-            />
+            <div className="w-full flex flex-col items-center">
+              <DeviceMockup
+                src={activeScreenshot.assetPath}
+                alt={activeScreenshot.altText}
+                glowColor={selectedProduct.accentColor}
+              />
+              
+              {/* Screen switcher pills */}
+              {Object.keys(prodScreenshots).length > 1 && (
+                <div className="flex items-center justify-center gap-1.5 mt-5 flex-wrap max-w-[340px]">
+                  {Object.entries(prodScreenshots).slice(0, 4).map(([key, shot]) => (
+                    <button
+                      key={key}
+                      type="button"
+                      onClick={() => setSelectedShotKey(key)}
+                      className={cn(
+                        'px-3 py-1 rounded-full text-[11px] font-medium transition-all border cursor-pointer',
+                        activeKey === key
+                          ? 'bg-cyan-400 text-black border-cyan-400 font-bold shadow-md shadow-cyan-400/20'
+                          : 'bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
+                      )}
+                    >
+                      {shot.whatItShows}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           ) : (
             <div className="h-[480px] w-[260px] rounded-[36px] border border-white/20 bg-black/60 flex items-center justify-center text-white/40">
               No Preview
