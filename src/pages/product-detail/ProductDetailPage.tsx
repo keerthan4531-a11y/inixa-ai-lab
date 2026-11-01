@@ -16,6 +16,7 @@ import {
 } from 'lucide-react'
 import { navigate } from '../../router'
 import { StrokeText } from '../../components/react-bits/StrokeText'
+import { ScrambledText } from '../../components/react-bits/ScrambledText'
 
 interface ProductDetailPageProps {
   productId: string
@@ -85,13 +86,13 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             <h1 className="sr-only">
               {product.name}
             </h1>
-            <div className="mb-4">
+            <div className="mb-6">
               <StrokeText
                 key={product.id}
                 text={product.name}
                 strokeColor={product.accentColor || '#00ff87'}
                 fillColor="#ffffff"
-                strokeWidth={1.8}
+                strokeWidth={2.4}
                 drawDuration={1.3}
                 fillDelay={0.2}
                 stagger={0.04}
@@ -99,9 +100,9 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                 trigger="mount"
                 fillMode="wipe"
                 wipeFrom="left"
-                fontSize={64}
+                fontSize={86}
                 fontWeight={900}
-                letterSpacing={-2}
+                letterSpacing={-3}
                 marching={false}
                 hoverRedraw={true}
                 shadow={true}
@@ -115,9 +116,26 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             <p className="text-lg font-medium text-emerald-300 mb-6">
               {product.tagline}
             </p>
-            <p className="text-base text-white/70 leading-relaxed mb-8">
-              {product.longDescription}
-            </p>
+            <div className="mb-8">
+              <ScrambledText
+                key={product.id}
+                className="text-base sm:text-lg text-white/75 leading-relaxed"
+                effect="scramble"
+                radius={110}
+                strength={1}
+                trail={0.6}
+                duration={1.2}
+                speed={0.5}
+                scrambleChars=".:*#_~[]<>"
+                scrambleColor={product.accentColor || '#00ff87'}
+                clickBurst
+                intro
+              >
+                {product.detailedSummary
+                  ? `${product.longDescription} ${product.detailedSummary}`
+                  : product.longDescription}
+              </ScrambledText>
+            </div>
 
             {/* Quick Actions */}
             <div className="flex flex-wrap items-center gap-4 mb-8">

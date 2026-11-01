@@ -11,7 +11,7 @@
 .stroke-text__svg {
   display: block;
   width: 100%;
-  max-width: var(--stroke-text-width, 600px);
+  max-width: var(--stroke-text-width, 850px);
   height: auto;
   margin: var(--stroke-text-margin, 0);
   overflow: visible;
@@ -21,3 +21,4 @@
 .stroke-text__fill {
   user-select: none;
 }
+
