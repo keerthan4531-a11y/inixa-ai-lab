@@ -76,7 +76,7 @@ const DEFAULT_LABELS: PictureRailGalleryLabels = {
 };
 
 const PERSPECTIVE = 1200;
-const GAP = 0.32;
+const GAP = 0.24;
 const BREATH = 0.08;
 const EDGE = 36;
 const SUPERSAMPLE = 2;
@@ -988,9 +988,6 @@ export function PictureRailGallery({
                         shape={shape}
                         unit={U}
                         lit={lit ? 1 : 0}
-                        lightRef={(node) => {
-                          lights.current[i] = node;
-                        }}
                         glareRef={(node) => {
                           glares.current[i] = node;
                         }}
@@ -1187,8 +1184,6 @@ function PhoneChassis({
   shape,
   unit,
   lit = 0,
-  showLamp = true,
-  lightRef,
   glareRef,
   dimRef
 }: {
@@ -1196,34 +1191,20 @@ function PhoneChassis({
   shape: Shape;
   unit: number;
   lit?: number;
-  showLamp?: boolean;
-  lightRef?: (node: HTMLSpanElement | null) => void;
   glareRef?: (node: HTMLSpanElement | null) => void;
   dimRef?: (node: HTMLSpanElement | null) => void;
 }) {
-  const fixtureW = clamp(shape.w * unit * 0.52, 40, 160);
-  const hood = clamp(unit * 0.045, 5, 11);
-  const arm = clamp(unit * 0.065, 6, 18);
-  const above = arm + hood;
-
   return (
     <>
-      {/* Overhead Lamp Fixture */}
-      {showLamp && <Fixture width={fixtureW} hood={hood} arm={arm} />}
-
       {/* Top Titanium Wire Eyelets */}
-      {showLamp && (
-        <>
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[22%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
-          />
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute left-[78%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
-          />
-        </>
-      )}
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[22%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
+      />
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute left-[78%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
+      />
 
       {/* Physical Smartphone Outer Chassis */}
       <span
@@ -1232,7 +1213,7 @@ function PhoneChassis({
           background: "linear-gradient(155deg, #1e293b 0%, #0d1522 35%, #050a14 70%, #020612 100%)",
           boxShadow:
             lit > 0
-              ? "0 0 0 1px rgba(255,255,255,0.22), 0 0 0 3px #0b111a, 0 0 40px -5px rgba(0,255,135,0.35), 0 25px 50px -10px rgba(0,0,0,0.95)"
+              ? "0 0 0 1px rgba(255,255,255,0.22), 0 0 0 3px #0b111a, 0 0 35px -5px rgba(0,255,135,0.3), 0 25px 50px -10px rgba(0,0,0,0.95)"
               : "0 0 0 1px rgba(255,255,255,0.12), 0 0 0 3px #070c14, 0 18px 40px -10px rgba(0,0,0,0.85)"
         }}
       >
@@ -1276,7 +1257,7 @@ function PhoneChassis({
             className="pointer-events-none absolute inset-0 size-full select-none object-cover object-top opacity-0 transition-opacity duration-500 data-[failed]:hidden data-[loaded]:opacity-100"
           />
 
-          {/* Top Dynamic Island Notch (Screenshot 3 pill) */}
+          {/* Top Dynamic Island Notch (Clean, NO light overlay) */}
           <span
             aria-hidden="true"
             className="pointer-events-none absolute left-1/2 top-2 z-30 flex h-[20px] w-[74px] -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-black px-2 shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
@@ -1320,7 +1301,7 @@ function PhoneChassis({
             <span
               className="absolute inset-0 block"
               style={{
-                background: "linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 28%)"
+                background: "linear-gradient(to bottom, rgba(255,255,255,0.08) 0%, transparent 25%)"
               }}
             />
             <span
@@ -1329,54 +1310,11 @@ function PhoneChassis({
               className="absolute inset-y-0 -left-1/2 block w-[200%]"
               style={{
                 background:
-                  "linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.02) 50%, transparent 56%)"
+                  "linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.06) 44%, rgba(255,255,255,0.015) 50%, transparent 56%)"
               }}
             />
           </span>
         </span>
-
-        {/* Overhead Gallery Lamp Light Beam (illuminates the phone when active) */}
-        {showLamp && (
-          <span
-            ref={lightRef}
-            data-light
-            aria-hidden="true"
-            className="pointer-events-none absolute block opacity-0 mix-blend-screen"
-            style={{
-              left: 0,
-              right: 0,
-              top: -above,
-              bottom: 0,
-              opacity: lit
-            }}
-          >
-            <span
-              className="absolute left-1/2 block -translate-x-1/2 rounded-full"
-              style={{ top: 0, width: fixtureW, height: hood, background: BRASS, opacity: 0.6 }}
-            />
-            <span
-              className="absolute left-1/2 block -translate-x-1/2 rounded-full"
-              style={{
-                top: hood * 0.6,
-                width: fixtureW * 0.85,
-                height: Math.max(2, hood * 0.45),
-                background: WARM,
-                boxShadow: `0 0 16px 4px rgba(0,255,135,0.4)`
-              }}
-            />
-            <span
-              className="absolute block"
-              style={{
-                left: 10,
-                right: 10,
-                top: above + 2,
-                bottom: 10,
-                background:
-                  "radial-gradient(95% 75% at 50% 0%, rgba(0,255,135,0.25) 0%, rgba(236,72,153,0.1) 45%, transparent 80%)"
-              }}
-            />
-          </span>
-        )}
 
         <span
           ref={dimRef}
@@ -1731,7 +1669,7 @@ function Detail({
             <div ref={spinRef} className="absolute inset-0 [transform-style:preserve-3d]">
               {/* FRONT: High-Res Physical Smartphone Screen */}
               <div data-face="front" className="absolute inset-0 [backface-visibility:hidden]">
-                <PhoneChassis item={item} shape={shape} unit={unit} lit={0} showLamp={false} />
+                <PhoneChassis item={item} shape={shape} unit={unit} lit={0} />
               </div>
 
               {/* BACK: Physical Chassis Rear with Specs & APK Download */}

@@ -286,16 +286,16 @@ export const LabsGridSection: React.FC = () => {
         </div>
       </div>
 
-      {/* VIEW 1: PictureRailGallery — Interactive Hanging Picture Wall with Brass Rail, 3D Swing & Flip */}
+      {/* VIEW 1: PictureRailGallery — Full-Screen Edge-to-Edge Hanging Smartphone Wall */}
       {viewMode === 'gallery' && (
-        <div className="relative z-10 w-full overflow-hidden rounded-[32px] border border-white/12 bg-[#040a18]/70 backdrop-blur-2xl shadow-2xl p-2 sm:p-6 my-4 transition-all duration-500">
+        <div className="relative z-10 w-screen left-1/2 -translate-x-1/2 overflow-hidden my-4 py-4 transition-all duration-500">
           <PictureRailGallery
             items={FLAGSHIP_RAIL_ITEMS}
             eyebrow="Physical Software Gallery • 9 Hanging Flagships"
             heading="Handcrafted Physical Software Framed &amp; Verified"
-            caption="Slide or brush the rail to swing the frames. Click or lift any frame to flip its 3D architecture label."
+            caption="Slide or brush the rail to swing the phones. Click or lift any phone to flip its 3D architecture specs."
             autoplay={true}
-            interval={3000}
+            interval={3500}
             action={
               <div className="flex flex-wrap items-center justify-center gap-3 mt-2">
                 <button
