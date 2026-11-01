@@ -24,6 +24,11 @@ const pagesFallback = () => ({
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), pagesFallback()],
+  resolve: {
+    alias: {
+      '@': resolve(import.meta.dirname, 'src'),
+    },
+  },
   // Dev only: reachable from LAN / cloud preview hosts, not just localhost.
   server: {
     host: '0.0.0.0',
