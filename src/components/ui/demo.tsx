@@ -126,3 +126,4 @@ export default function PictureRailGalleryDemo({ autoplay = true }: { autoplay?:
     </div>
   );
 }
+

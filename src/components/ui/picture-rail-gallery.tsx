@@ -2,6 +2,18 @@
 
 import * as React from "react";
 import { createPortal } from "react-dom";
+import {
+  Download,
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  ShieldCheck,
+  Cpu,
+  Volume2,
+  Zap,
+  CheckCircle2,
+  ExternalLink
+} from "lucide-react";
 
 export type PictureFrameStyle = "black" | "oak" | "white";
 
@@ -11,20 +23,22 @@ export interface PictureRailItem {
   title: string;
   artist?: string;
   year?: string;
-  /** Artwork shown behind the glass. */
+  /** Screenshot shown on the physical phone screen. */
   image: string;
-  /** Width ÷ height of the artwork. Defaults to 0.8 (a 4:5 portrait). */
+  /** Width ÷ height of the phone. Defaults to 0.48 (approx 9:18.75 smartphone aspect). */
   aspect?: number;
-  /** Frame moulding. Defaults to "black". */
+  /** Frame moulding style (kept for compatibility). */
   frame?: PictureFrameStyle;
-  /** Adds a bevel-cut mat board around the artwork. */
+  /** Adds a bevel-cut mat board (kept for compatibility). */
   mat?: boolean;
-  /** Extra wire length in frame units (about -0.1 to 0.3). At 0 every frame hangs on one centre line. */
+  /** Extra wire length in frame units (about -0.05 to 0.05). */
   drop?: number;
   /** Short wall-label text such as a price or version. */
   tag?: string;
-  /** Lines printed on the gallery label on the back: edition, size, medium… */
+  /** Technical specifications printed on the back of the physical device. */
   details?: string[];
+  /** Optional direct APK download path */
+  apkUrl?: string;
 }
 
 export interface PictureRailGalleryLabels {
@@ -54,53 +68,36 @@ export interface PictureRailGalleryProps extends React.ComponentProps<"section">
   labels?: PictureRailGalleryLabels;
 }
 
-const DEFAULT_LABELS: PictureRailGalleryLabels = { front: "Front", back: "Back", close: "Close", open: "Lift to view" };
+const DEFAULT_LABELS: PictureRailGalleryLabels = {
+  front: "Device Front",
+  back: "Device Chassis & Specs",
+  close: "Close",
+  open: "Lift to Inspect 3D"
+};
+
 const PERSPECTIVE = 1200;
-const GAP = 0.3;
-const BREATH = 0.1;
-const MARGIN = 0.05;
+const GAP = 0.32;
+const BREATH = 0.08;
 const EDGE = 36;
-const RAIL_MIN_UNIT = 90;
-const RAIL_MAX_UNIT = 150;
-const CAROUSEL_MAX_UNIT = 128;
-const LIFT_SCALE = 0.06;
-/**
- * Chromium rasterizes a layer under a rotated perspective transform at about 1 CSS px, so a lifted print went soft on
- * retina screens. Each frame is laid out at twice its size (CSS zoom) and scaled back inside the same 3D transform:
- * identical geometry, a sharp photo while it tilts.
- */
 const SUPERSAMPLE = 2;
-const LIFT_GROW = 1.12;
-const LIFT_Z = 26;
-const TILT_X = -6;
-const TILT_Y = 4;
-const SWING_MAX = 14;
-const SWING_DAMP = 2.2;
-const SWING_G = 3900;
+const LIFT_GROW = 1.08;
+const LIFT_SCALE = 0.05;
+const LIFT_Z = 24;
+const TILT_X = -5;
+const TILT_Y = 3.5;
+const SWING_MAX = 13;
+const SWING_DAMP = 2.4;
+const SWING_G = 3800;
 const SWING_COUPLING = 0.08;
-/** The hand drives the dragged hook directly, so its wire answers about twice as strongly as a nudged neighbour. */
 const DRAG_COUPLING = 0.16;
-const NEIGHBOUR_KICK = 12;
+const NEIGHBOUR_KICK = 10;
 const DEG = 180 / Math.PI;
 
-const FRAME_BASE = {
-  black: "color-mix(in oklab, black 82%, white)",
-  oak: "color-mix(in oklab, burlywood 62%, peru)",
-  white: "color-mix(in oklab, white 96%, wheat)",
-} as const;
-const FRAME_RELIEF = {
-  black: [-0.45, 0.22, 0.06, -0.14, -0.5, 1],
-  oak: [-0.36, 0.18, 0.05, -0.12, -0.42, 1],
-  white: [-0.15, 0.05, 0.02, -0.05, -0.2, 0.55],
-} as const;
-const BRASS = "linear-gradient(to bottom, color-mix(in oklab, gold 35%, white) 0%, color-mix(in oklab, goldenrod 80%, white) 32%, color-mix(in oklab, darkgoldenrod 85%, black) 72%, color-mix(in oklab, darkgoldenrod 55%, black) 100%)";
-const BRASS_DIM = "linear-gradient(to bottom, color-mix(in oklab, goldenrod 50%, white) 0%, color-mix(in oklab, darkgoldenrod 78%, black) 38%, color-mix(in oklab, darkgoldenrod 48%, black) 100%)";
-const BRASS_SIDE = "linear-gradient(to right, color-mix(in oklab, goldenrod 70%, white), color-mix(in oklab, darkgoldenrod 80%, black) 70%, color-mix(in oklab, darkgoldenrod 50%, black))";
-const WARM = "color-mix(in oklab, white 55%, gold)";
-const PAPER = "color-mix(in oklab, white 95%, wheat)";
-const INK = "color-mix(in oklab, black 84%, white)";
+const BRASS = "linear-gradient(to bottom, #fef08a 0%, #eab308 32%, #854d0e 72%, #422006 100%)";
+const BRASS_DIM = "linear-gradient(to bottom, #eab308 0%, #a16207 38%, #422006 100%)";
+const BRASS_SIDE = "linear-gradient(to right, #fde047, #a16207 70%, #422006)";
+const WARM = "color-mix(in oklab, white 55%, #00ff87)";
 
-/** When the input happened, not when a busy main thread got to it (falls back to now for epoch-style stamps). */
 function stamp(event: { timeStamp: number }) {
   const now = performance.now();
   return event.timeStamp > 0 && event.timeStamp <= now + 1 ? event.timeStamp : now;
@@ -110,73 +107,103 @@ function clamp(value: number, min: number, max: number) {
   return Math.max(min, Math.min(max, value));
 }
 
-function mix(color: string, amount: number) {
-  if (amount === 0) return color;
-  const keep = Math.round((1 - Math.min(1, Math.abs(amount))) * 1000) / 10;
-  return `color-mix(in oklab, ${color} ${keep}%, ${amount > 0 ? "white" : "black"})`;
-}
-
-function tone(amount: number) {
-  const c = `color-mix(in oklab, ${amount > 0 ? "white" : "black"} ${Math.round(Math.abs(amount) * 100)}%, transparent)`;
-  return `linear-gradient(${c}, ${c})`;
-}
-
-/** Real walls are never perfect: each frame rests a little crooked (±1.5°). */
+/** Real hanging devices have subtle organic resting variations (±1.2°). */
 function restTilt(i: number) {
-  return ((((i * 37 + 11) % 7) - 3) * 0.5);
+  return (((i * 37 + 11) % 7) - 3) * 0.35;
 }
 
 type Shape = { frame: PictureFrameStyle; mold: number; mat: number; matB: number; w: number; h: number };
 
 function shapeOf(item: PictureRailItem): Shape {
-  const aspect = clamp(item.aspect ?? 0.8, 0.4, 2.5);
-  const frame = item.frame ?? "black";
-  const mold = frame === "oak" ? 0.068 : frame === "white" ? 0.058 : 0.046;
-  const mat = item.mat ? 0.11 : 0;
-  const matB = item.mat ? 0.022 : 0;
+  // Realistic smartphone aspect ratio (9:18.75 ~ 0.48)
+  const aspect = clamp(item.aspect ?? 0.48, 0.42, 0.55);
   const iw = Math.sqrt(aspect);
-  return { frame, mold, mat, matB, w: iw + 2 * (mold + mat), h: 1 / iw + 2 * (mold + mat) + matB };
+  return { frame: item.frame ?? "black", mold: 0.03, mat: 0, matB: 0, w: iw, h: 1 / iw };
 }
 
-type Layout = { width: number; unit: number; carousel: boolean; railTop: number; railT: number; pivotY: number; tops: number[]; stageH: number };
+type Layout = {
+  width: number;
+  unit: number;
+  carousel: boolean;
+  railTop: number;
+  railT: number;
+  pivotY: number;
+  tops: number[];
+  stageH: number;
+};
 
 function layoutFor(shapes: Shape[], drops: number[], width: number): Layout {
-  const n = shapes.length;
-  const sumW = shapes.reduce((sum, s) => sum + s.w, 0);
-  const maxW = shapes.reduce((m, s) => Math.max(m, s.w), 0);
-  const fit = n ? (width - 2 * EDGE) / (sumW + Math.max(0, n - 1) * GAP + 2 * BREATH + maxW * (LIFT_GROW - 1)) : RAIL_MAX_UNIT;
-  const carousel = fit < RAIL_MIN_UNIT;
-  const unit = carousel ? clamp(width * 0.2, 92, CAROUSEL_MAX_UNIT) : Math.min(RAIL_MAX_UNIT, fit);
-  const railTop = 6;
-  const railT = Math.round(clamp(unit * 0.11, 9, 16));
-  const pivotY = railTop + railT + Math.round(unit * 0.045) + 2;
-  const maxH = shapes.reduce((m, s) => Math.max(m, s.h), 0) * unit;
-  const centre = pivotY + unit * 0.22 + maxH / 2;
-  const tops = shapes.map((s, i) => Math.round(Math.max(pivotY + unit * 0.08, centre - (s.h * unit) / 2 + clamp(drops[i] ?? 0, -0.15, 0.6) * unit)));
-  const bottom = shapes.reduce((m, s, i) => Math.max(m, (tops[i] ?? 0) + s.h * unit), pivotY);
-  return { width, unit, carousel, railTop, railT, pivotY, tops, stageH: Math.round(bottom + 34) };
+  // ALWAYS run in carousel mode so smartphones keep true physical dimensions (~270px width)
+  const carousel = true;
+
+  // On desktop: target phone width ~265px. On mobile: ~215px.
+  const targetW = width < 500 ? 215 : width < 768 ? 245 : 272;
+  const avgW = shapes.length ? shapes.reduce((sum, s) => sum + s.w, 0) / shapes.length : 0.6928;
+  const unit = Math.round(targetW / (avgW || 0.6928));
+
+  const railTop = 14;
+  const railT = 16;
+  const pivotY = railTop + railT + 12; // ~42px
+  const wireLength = Math.round(unit * 0.16); // ~62px drop from hook to phone top loops
+
+  const tops = shapes.map((s, i) =>
+    Math.round(pivotY + wireLength + clamp(drops[i] ?? 0, -0.05, 0.05) * unit)
+  );
+
+  const bottom = shapes.reduce((m, s, i) => Math.max(m, (tops[i] ?? 0) + s.h * unit), 0);
+  const stageH = Math.round(bottom + 48);
+
+  return { width, unit, carousel, railTop, railT, pivotY, tops, stageH };
 }
 
 type Sim = {
-  x: number[]; vx: number[]; tx: number[];
-  sw: number[]; vsw: number[];
-  e: number[]; ve: number[]; te: number[];
-  ty: number[]; vty: number[]; tty: number[];
-  drag: number; grab: number; free: number; last: number; raf: number;
-  /** Each hook's position at the last frame and its smoothed real velocity (px/s): what the wire feels. */
-  hx: number[]; hv: number[];
+  x: number[];
+  vx: number[];
+  tx: number[];
+  sw: number[];
+  vsw: number[];
+  e: number[];
+  ve: number[];
+  te: number[];
+  ty: number[];
+  vty: number[];
+  tty: number[];
+  drag: number;
+  grab: number;
+  free: number;
+  last: number;
+  raf: number;
+  hx: number[];
+  hv: number[];
 };
 
 function emptySim(): Sim {
-  return { x: [], vx: [], tx: [], sw: [], vsw: [], e: [], ve: [], te: [], ty: [], vty: [], tty: [], drag: -1, grab: 0, free: 0, last: 0, raf: 0, hx: [], hv: [] };
+  return {
+    x: [],
+    vx: [],
+    tx: [],
+    sw: [],
+    vsw: [],
+    e: [],
+    ve: [],
+    te: [],
+    ty: [],
+    vty: [],
+    tty: [],
+    drag: -1,
+    grab: 0,
+    free: 0,
+    last: 0,
+    raf: 0,
+    hx: [],
+    hv: []
+  };
 }
 
-/** Pivot (the rail hook) to the frame's centre, in px. Longer wires swing slower. */
 function pendulum(lay: Layout, shape: Shape, i: number) {
   return Math.max(30, (lay.tops[i] ?? 0) - lay.pivotY + (shape.h * lay.unit) / 2);
 }
 
-/** Horizontal reach of a hanging frame from its hook, swing and lift included: [left, right]. */
 function reach(s: Sim, lay: Layout, shape: Shape, i: number) {
   const e = clamp(s.e[i] ?? 0, 0, 1);
   const half = (shape.w * lay.unit * (1 + (LIFT_GROW - 1) * e)) / 2;
@@ -188,7 +215,6 @@ function reach(s: Sim, lay: Layout, shape: Shape, i: number) {
   return [Math.min(-half * c - top * sn, -half * c - bottom * sn), Math.max(half * c - top * sn, half * c - bottom * sn)] as const;
 }
 
-/** Frames can't pass through each other or the rail ends: push apart and share momentum (the step turns the resulting hook motion into swing). */
 function resolveContacts(s: Sim, lay: Layout, list: Shape[], margin: number) {
   const n = list.length;
   for (let pass = 0; pass < 3; pass++) {
@@ -200,7 +226,10 @@ function resolveContacts(s: Sim, lay: Layout, list: Shape[], margin: number) {
       if (overlap <= 0) continue;
       if (i === s.drag) s.x[i + 1] = (s.x[i + 1] ?? 0) + overlap;
       else if (i + 1 === s.drag) s.x[i] = (s.x[i] ?? 0) - overlap;
-      else { s.x[i] = (s.x[i] ?? 0) - overlap / 2; s.x[i + 1] = (s.x[i + 1] ?? 0) + overlap / 2; }
+      else {
+        s.x[i] = (s.x[i] ?? 0) - overlap / 2;
+        s.x[i + 1] = (s.x[i + 1] ?? 0) + overlap / 2;
+      }
       const va = s.vx[i] ?? 0;
       const vb = s.vx[i + 1] ?? 0;
       if (va > vb) {
@@ -208,34 +237,6 @@ function resolveContacts(s: Sim, lay: Layout, list: Shape[], margin: number) {
         if (i !== s.drag) s.vx[i] = shared;
         if (i + 1 !== s.drag) s.vx[i + 1] = shared;
       }
-    }
-  }
-  if (!lay.carousel && n > 0) {
-    const lo = 6;
-    const hi = lay.width - 6;
-    const first = list[0];
-    const last = list[n - 1];
-    if (first) {
-      const l0 = reach(s, lay, first, 0)[0];
-      if ((s.x[0] ?? 0) + l0 < lo) { s.x[0] = lo - l0; s.vx[0] = Math.abs(s.vx[0] ?? 0) * 0.3; }
-    }
-    for (let i = 0; i < n - 1; i++) {
-      const a = list[i];
-      const b = list[i + 1];
-      if (!a || !b) continue;
-      const min = (s.x[i] ?? 0) + reach(s, lay, a, i)[1] - reach(s, lay, b, i + 1)[0] + margin;
-      if ((s.x[i + 1] ?? 0) < min) s.x[i + 1] = min;
-    }
-    if (last) {
-      const rn = reach(s, lay, last, n - 1)[1];
-      if ((s.x[n - 1] ?? 0) + rn > hi) { s.x[n - 1] = hi - rn; s.vx[n - 1] = -Math.abs(s.vx[n - 1] ?? 0) * 0.3; }
-    }
-    for (let i = n - 2; i >= 0; i--) {
-      const a = list[i];
-      const b = list[i + 1];
-      if (!a || !b) continue;
-      const max = (s.x[i + 1] ?? 0) + reach(s, lay, b, i + 1)[0] - reach(s, lay, a, i)[1] - margin;
-      if ((s.x[i] ?? 0) > max) s.x[i] = max;
     }
   }
 }
@@ -247,7 +248,7 @@ export function PictureRailGallery({
   caption,
   action,
   autoplay = false,
-  interval = 2600,
+  interval = 3200,
   active: activeProp,
   onActiveChange,
   onOpenChange,
@@ -286,13 +287,21 @@ export function PictureRailGallery({
   const returnFocus = React.useRef(null as number | null);
   const pendingOpen = React.useRef(-1);
   const pointer = React.useRef({ id: -1, index: -1, x: 0, y: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 });
-  const live = React.useRef({ active: null as number | null, layout, shapes, reduced, count, openIndex: null as number | null, carouselIndex: Math.min(1, Math.max(0, count - 1)) });
+  const live = React.useRef({
+    active: null as number | null,
+    layout,
+    shapes,
+    reduced,
+    count,
+    openIndex: null as number | null,
+    carouselIndex: 0
+  });
   live.current = { ...live.current, active: current, layout, shapes, reduced, count, openIndex };
-  // Latest host props for stable callbacks: an inline onActiveChange must not restart the autoplay timer on every parent render.
+
   const host = React.useRef({ controlled, onActiveChange, onOpenChange });
   host.current = { controlled, onActiveChange, onOpenChange };
 
-  const carouselIndex = layout.carousel ? (current ?? live.current.carouselIndex) : null;
+  const carouselIndex = current ?? live.current.carouselIndex;
 
   React.useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -302,36 +311,39 @@ export function PictureRailGallery({
     return () => media.removeEventListener("change", update);
   }, []);
 
-  React.useEffect(() => { setPlaying(autoplay); }, [autoplay]);
+  React.useEffect(() => {
+    setPlaying(autoplay);
+  }, [autoplay]);
 
   React.useLayoutEffect(() => {
     const stage = stageRef.current;
     if (!stage) return;
     const measure = (next: number) => setWidth((old) => (Math.abs(old - next) < 0.5 ? old : Math.round(next * 100) / 100));
     measure(stage.clientWidth);
-    const observer = new ResizeObserver((entries) => { const box = entries[0]; if (box) measure(box.contentRect.width); });
+    const observer = new ResizeObserver((entries) => {
+      const box = entries[0];
+      if (box) measure(box.contentRect.width);
+    });
     observer.observe(stage);
     return () => observer.disconnect();
   }, []);
 
-  const targetsFor = React.useCallback((lay: Layout, front: number | null, centreIndex: number) => {
-    const n = shapes.length;
-    const feet = shapes.map((s, i) => s.w * lay.unit * (i === front ? LIFT_GROW : 1));
-    const gapAfter = (a: number) => lay.unit * (GAP + (front !== null && (a === front || a + 1 === front) ? BREATH : 0));
-    const xs = feet.map(() => 0);
-    if (lay.carousel) {
+  const targetsFor = React.useCallback(
+    (lay: Layout, front: number | null, centreIndex: number) => {
+      const n = shapes.length;
+      const feet = shapes.map((s, i) => s.w * lay.unit * (i === front ? LIFT_GROW : 1));
+      const gapAfter = (a: number) => lay.unit * (GAP + (front !== null && (a === front || a + 1 === front) ? BREATH : 0));
+      const xs = feet.map(() => 0);
+
+      // Centered carousel gliding
       const c = clamp(front ?? centreIndex, 0, Math.max(0, n - 1));
       xs[c] = lay.width / 2;
       for (let i = c + 1; i < n; i++) xs[i] = (xs[i - 1] ?? 0) + ((feet[i - 1] ?? 0) + (feet[i] ?? 0)) / 2 + gapAfter(i - 1);
       for (let i = c - 1; i >= 0; i--) xs[i] = (xs[i + 1] ?? 0) - ((feet[i + 1] ?? 0) + (feet[i] ?? 0)) / 2 - gapAfter(i);
       return xs;
-    }
-    let total = 0;
-    for (let i = 0; i < n; i++) total += (feet[i] ?? 0) + (i < n - 1 ? gapAfter(i) : 0);
-    let cursor = (lay.width - total) / 2;
-    for (let i = 0; i < n; i++) { xs[i] = cursor + (feet[i] ?? 0) / 2; cursor += (feet[i] ?? 0) + gapAfter(i); }
-    return xs;
-  }, [shapes]);
+    },
+    [shapes]
+  );
 
   const paint = React.useCallback((i: number) => {
     const s = sim.current;
@@ -343,9 +355,9 @@ export function PictureRailGallery({
     const theta = s.sw[i] ?? 0;
     const e = clamp(s.e[i] ?? 0, 0, 1.2);
     const lit = clamp(e, 0, 1);
-    // Flat against the wall a frame can't turn; it faces the pointer only as far as it has lifted off.
     const ty = (s.ty[i] ?? 0) * lit;
     const left = `translate3d(${(x - w / 2).toFixed(2)}px,0,0)`;
+
     const hang = hangs.current[i];
     if (hang) hang.style.transform = left;
     const back = backs.current[i];
@@ -353,7 +365,9 @@ export function PictureRailGallery({
     const swing = swings.current[i];
     if (swing) swing.style.transform = `rotate(${theta.toFixed(3)}deg)`;
     const tilt = tilts.current[i];
-    if (tilt) tilt.style.transform = `perspective(${PERSPECTIVE}px) translateZ(${(LIFT_Z * e).toFixed(2)}px) rotateX(${(TILT_X * e).toFixed(3)}deg) rotateY(${ty.toFixed(3)}deg) scale(${((1 + LIFT_SCALE * e) / SUPERSAMPLE).toFixed(4)})`;
+    if (tilt) {
+      tilt.style.transform = `perspective(${PERSPECTIVE}px) translateZ(${(LIFT_Z * e).toFixed(2)}px) rotateX(${(TILT_X * e).toFixed(3)}deg) rotateY(${ty.toFixed(3)}deg) scale(${((1 + LIFT_SCALE * e) / SUPERSAMPLE).toFixed(4)})`;
+    }
     const light = lights.current[i];
     if (light) light.style.opacity = lit.toFixed(3);
     const wash = washes.current[i];
@@ -368,98 +382,131 @@ export function PictureRailGallery({
     let others = 0;
     for (let k = 0; k < n; k++) if (k !== i) others = Math.max(others, s.e[k] ?? 0);
     const dim = dims.current[i];
-    if (dim) dim.style.opacity = (0.08 * clamp(others, 0, 1) * (1 - lit)).toFixed(4);
+    if (dim) dim.style.opacity = (0.12 * clamp(others, 0, 1) * (1 - lit)).toFixed(4);
   }, []);
 
-  const step = React.useCallback((now: number) => {
-    const s = sim.current;
-    const { layout: lay, shapes: list, count: n } = live.current;
-    // Keep real time when frames come slowly (a busy screen recorder, a slow phone): up to 100 ms a frame, in sub-steps of at most 11.5 ms.
-    const dt = s.last ? Math.min(0.1, (now - s.last) / 1000) : 1 / 60;
-    s.last = now;
-    const sub = Math.max(3, Math.ceil(dt / 0.0115));
-    const h = dt / sub;
-    const margin = MARGIN * lay.unit;
-    const restoring = now > s.free;
-    for (let k = 0; k < sub; k++) {
+  const step = React.useCallback(
+    (now: number) => {
+      const s = sim.current;
+      const { layout: lay, shapes: list, count: n } = live.current;
+      const dt = s.last ? Math.min(0.1, (now - s.last) / 1000) : 1 / 60;
+      s.last = now;
+      const sub = Math.max(3, Math.ceil(dt / 0.0115));
+      const h = dt / sub;
+      const margin = 0.05 * lay.unit;
+      const restoring = now > s.free;
+
+      for (let k = 0; k < sub; k++) {
+        for (let i = 0; i < n; i++) {
+          const shape = list[i];
+          if (!shape) continue;
+          const len = pendulum(lay, shape, i);
+          if (i !== s.drag) {
+            const before = s.vx[i] ?? 0;
+            const stiff = restoring ? 130 : 0;
+            const damp = restoring ? 2 * Math.sqrt(130) * 0.86 : 3.2;
+            const ax = -stiff * ((s.x[i] ?? 0) - (s.tx[i] ?? 0)) - damp * before;
+            s.vx[i] = before + ax * h;
+            s.x[i] = (s.x[i] ?? 0) + (s.vx[i] ?? 0) * h;
+          }
+          const ae = -150 * ((s.e[i] ?? 0) - (s.te[i] ?? 0)) - 2 * Math.sqrt(150) * 0.78 * (s.ve[i] ?? 0);
+          s.ve[i] = (s.ve[i] ?? 0) + ae * h;
+          s.e[i] = (s.e[i] ?? 0) + (s.ve[i] ?? 0) * h;
+          const at = -110 * ((s.ty[i] ?? 0) - (s.tty[i] ?? 0)) - 2 * Math.sqrt(110) * 0.72 * (s.vty[i] ?? 0);
+          s.vty[i] = (s.vty[i] ?? 0) + at * h;
+          s.ty[i] = (s.ty[i] ?? 0) + (s.vty[i] ?? 0) * h;
+          const rest = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
+          const as = -(SWING_G / len) * ((s.sw[i] ?? 0) - rest) - SWING_DAMP * (s.vsw[i] ?? 0);
+          s.vsw[i] = (s.vsw[i] ?? 0) + as * h;
+          s.sw[i] = clamp((s.sw[i] ?? 0) + (s.vsw[i] ?? 0) * h, -SWING_MAX, SWING_MAX);
+        }
+        resolveContacts(s, lay, list, margin);
+      }
+
+      const follow = 1 - Math.exp(-dt / 0.035);
       for (let i = 0; i < n; i++) {
         const shape = list[i];
-        if (!shape) continue;
-        const len = pendulum(lay, shape, i);
-        if (i !== s.drag) {
-          const before = s.vx[i] ?? 0;
-          const stiff = restoring ? 130 : 0;
-          const damp = restoring ? 2 * Math.sqrt(130) * 0.86 : 3.2;
-          const ax = -stiff * ((s.x[i] ?? 0) - (s.tx[i] ?? 0)) - damp * before;
-          s.vx[i] = before + ax * h;
-          s.x[i] = (s.x[i] ?? 0) + (s.vx[i] ?? 0) * h;
-        }
-        const ae = -150 * ((s.e[i] ?? 0) - (s.te[i] ?? 0)) - 2 * Math.sqrt(150) * 0.78 * (s.ve[i] ?? 0);
-        s.ve[i] = (s.ve[i] ?? 0) + ae * h;
-        s.e[i] = (s.e[i] ?? 0) + (s.ve[i] ?? 0) * h;
-        const at = -110 * ((s.ty[i] ?? 0) - (s.tty[i] ?? 0)) - 2 * Math.sqrt(110) * 0.72 * (s.vty[i] ?? 0);
-        s.vty[i] = (s.vty[i] ?? 0) + at * h;
-        s.ty[i] = (s.ty[i] ?? 0) + (s.vty[i] ?? 0) * h;
-        const rest = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
-        const as = -(SWING_G / len) * ((s.sw[i] ?? 0) - rest) - SWING_DAMP * (s.vsw[i] ?? 0);
-        s.vsw[i] = (s.vsw[i] ?? 0) + as * h;
-        s.sw[i] = clamp((s.sw[i] ?? 0) + (s.vsw[i] ?? 0) * h, -SWING_MAX, SWING_MAX);
+        const x = s.x[i] ?? 0;
+        const was = s.hv[i] ?? 0;
+        const hv = was + ((x - (s.hx[i] ?? x)) / dt - was) * follow;
+        s.hx[i] = x;
+        s.hv[i] = hv;
+        if (shape) s.vsw[i] = (s.vsw[i] ?? 0) + clamp((hv - was) * (DEG / pendulum(lay, shape, i)) * (i === s.drag ? DRAG_COUPLING : SWING_COUPLING), -40, 40);
       }
-      resolveContacts(s, lay, list, margin);
-    }
-    // Every hook's real motion this frame (the hand, a shove from a neighbour, a rail-end stop, the spring home) swings its wire when it speeds up, slows or stops.
-    const follow = 1 - Math.exp(-dt / 0.035);
-    for (let i = 0; i < n; i++) {
-      const shape = list[i];
-      const x = s.x[i] ?? 0;
-      const was = s.hv[i] ?? 0;
-      const hv = was + ((x - (s.hx[i] ?? x)) / dt - was) * follow;
-      s.hx[i] = x;
-      s.hv[i] = hv;
-      if (shape) s.vsw[i] = (s.vsw[i] ?? 0) + clamp((hv - was) * (DEG / pendulum(lay, shape, i)) * (i === s.drag ? DRAG_COUPLING : SWING_COUPLING), -40, 40);
-    }
-    if (s.drag >= 0) s.vx[s.drag] = s.hv[s.drag] ?? 0;
-    let busy = s.drag >= 0 || now < s.free;
-    for (let i = 0; i < n; i++) {
-      paint(i);
-      const rest = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
-      if (Math.abs(s.vx[i] ?? 0) > 0.4 || (restoring && Math.abs((s.x[i] ?? 0) - (s.tx[i] ?? 0)) > 0.25) || Math.abs((s.e[i] ?? 0) - (s.te[i] ?? 0)) > 0.002 || Math.abs(s.ve[i] ?? 0) > 0.01 || Math.abs((s.ty[i] ?? 0) - (s.tty[i] ?? 0)) > 0.02 || Math.abs(s.vty[i] ?? 0) > 0.05 || Math.abs((s.sw[i] ?? 0) - rest) > 0.02 || Math.abs(s.vsw[i] ?? 0) > 0.05) busy = true;
-    }
-    if (busy) s.raf = requestAnimationFrame(step);
-    else {
-      s.raf = 0;
-      s.last = 0;
+      if (s.drag >= 0) s.vx[s.drag] = s.hv[s.drag] ?? 0;
+
+      let busy = s.drag >= 0 || now < s.free;
       for (let i = 0; i < n; i++) {
-        if (restoring) s.x[i] = s.tx[i] ?? 0;
-        s.hx[i] = s.x[i] ?? 0; s.hv[i] = 0;
-        s.vx[i] = 0; s.e[i] = s.te[i] ?? 0; s.ve[i] = 0; s.ty[i] = s.tty[i] ?? 0; s.vty[i] = 0;
-        s.sw[i] = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1)); s.vsw[i] = 0;
         paint(i);
+        const rest = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
+        if (
+          Math.abs(s.vx[i] ?? 0) > 0.4 ||
+          (restoring && Math.abs((s.x[i] ?? 0) - (s.tx[i] ?? 0)) > 0.25) ||
+          Math.abs((s.e[i] ?? 0) - (s.te[i] ?? 0)) > 0.002 ||
+          Math.abs(s.ve[i] ?? 0) > 0.01 ||
+          Math.abs((s.ty[i] ?? 0) - (s.tty[i] ?? 0)) > 0.02 ||
+          Math.abs(s.vty[i] ?? 0) > 0.05 ||
+          Math.abs((s.sw[i] ?? 0) - rest) > 0.02 ||
+          Math.abs(s.vsw[i] ?? 0) > 0.05
+        ) {
+          busy = true;
+        }
       }
-    }
-  }, [paint]);
+      if (busy) s.raf = requestAnimationFrame(step);
+      else {
+        s.raf = 0;
+        s.last = 0;
+        for (let i = 0; i < n; i++) {
+          if (restoring) s.x[i] = s.tx[i] ?? 0;
+          s.hx[i] = s.x[i] ?? 0;
+          s.hv[i] = 0;
+          s.vx[i] = 0;
+          s.e[i] = s.te[i] ?? 0;
+          s.ve[i] = 0;
+          s.ty[i] = s.tty[i] ?? 0;
+          s.vty[i] = 0;
+          s.sw[i] = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
+          s.vsw[i] = 0;
+          paint(i);
+        }
+      }
+    },
+    [paint]
+  );
 
   const kick = React.useCallback(() => {
     const s = sim.current;
     if (live.current.reduced) {
       for (let i = 0; i < live.current.count; i++) {
-        s.x[i] = s.tx[i] ?? 0; s.vx[i] = 0; s.hx[i] = s.x[i] ?? 0; s.hv[i] = 0;
-        s.e[i] = s.te[i] ?? 0; s.ve[i] = 0;
-        s.ty[i] = s.tty[i] ?? 0; s.vty[i] = 0;
-        s.sw[i] = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1)); s.vsw[i] = 0;
+        s.x[i] = s.tx[i] ?? 0;
+        s.vx[i] = 0;
+        s.hx[i] = s.x[i] ?? 0;
+        s.hv[i] = 0;
+        s.e[i] = s.te[i] ?? 0;
+        s.ve[i] = 0;
+        s.ty[i] = s.tty[i] ?? 0;
+        s.vty[i] = 0;
+        s.sw[i] = restTilt(i) * (1 - clamp(s.e[i] ?? 0, 0, 1));
+        s.vsw[i] = 0;
         paint(i);
       }
       return;
     }
-    if (!s.raf) { s.last = 0; s.raf = requestAnimationFrame(step); }
+    if (!s.raf) {
+      s.last = 0;
+      s.raf = requestAnimationFrame(step);
+    }
   }, [paint, step]);
 
-  const impulse = React.useCallback((i: number, amount: number) => {
-    const s = sim.current;
-    if (live.current.reduced || i < 0 || i >= live.current.count) return;
-    s.vsw[i] = (s.vsw[i] ?? 0) + amount;
-    kick();
-  }, [kick]);
+  const impulse = React.useCallback(
+    (i: number, amount: number) => {
+      const s = sim.current;
+      if (live.current.reduced || i < 0 || i >= live.current.count) return;
+      s.vsw[i] = (s.vsw[i] ?? 0) + amount;
+      kick();
+    },
+    [kick]
+  );
 
   React.useLayoutEffect(() => {
     if (!layout.width) return;
@@ -467,18 +514,26 @@ export function PictureRailGallery({
     const xs = targetsFor(layout, current, live.current.carouselIndex);
     const fresh = s.x.length !== count;
     for (let i = 0; i < count; i++) {
-      s.tx[i] = (xs[i] ?? 0) + (layout.carousel ? pointer.current.swipe : 0);
+      s.tx[i] = (xs[i] ?? 0) + pointer.current.swipe;
       s.te[i] = i === current ? 1 : 0;
       if (i !== current) s.tty[i] = 0;
       if (fresh || reduced) {
-        s.x[i] = s.tx[i] ?? 0; s.vx[i] = 0; s.hx[i] = s.x[i] ?? 0; s.hv[i] = 0;
-        s.e[i] = s.te[i] ?? 0; s.ve[i] = 0;
-        s.ty[i] = s.tty[i] ?? 0; s.vty[i] = 0;
-        s.sw[i] = restTilt(i) * (1 - (s.e[i] ?? 0)); s.vsw[i] = 0;
+        s.x[i] = s.tx[i] ?? 0;
+        s.vx[i] = 0;
+        s.hx[i] = s.x[i] ?? 0;
+        s.hv[i] = 0;
+        s.e[i] = s.te[i] ?? 0;
+        s.ve[i] = 0;
+        s.ty[i] = s.tty[i] ?? 0;
+        s.vty[i] = 0;
+        s.sw[i] = restTilt(i) * (1 - (s.e[i] ?? 0));
+        s.vsw[i] = 0;
       }
     }
     if (fresh) {
-      for (const list of [s.x, s.vx, s.tx, s.sw, s.vsw, s.e, s.ve, s.te, s.ty, s.vty, s.tty, s.hx, s.hv]) list.length = count;
+      for (const list of [s.x, s.vx, s.tx, s.sw, s.vsw, s.e, s.ve, s.te, s.ty, s.vty, s.tty, s.hx, s.hv]) {
+        list.length = count;
+      }
     }
     for (let i = 0; i < count; i++) paint(i);
     kick();
@@ -495,25 +550,36 @@ export function PictureRailGallery({
       impulse(current - 1, NEIGHBOUR_KICK);
       impulse(current + 1, -NEIGHBOUR_KICK);
     }
-    if (old !== null) { impulse(old - 1, -NEIGHBOUR_KICK * 0.5); impulse(old + 1, NEIGHBOUR_KICK * 0.5); }
+    if (old !== null) {
+      impulse(old - 1, -NEIGHBOUR_KICK * 0.5);
+      impulse(old + 1, NEIGHBOUR_KICK * 0.5);
+    }
   }, [current, impulse]);
 
-  // First scene: a light brush along the rail. A re-measure (resize) must not cancel the remaining impulses, so the timers live in a ref and stop only on unmount.
   const brushed = React.useRef({ done: false, timers: [] as number[] });
   React.useEffect(() => {
     const b = brushed.current;
     if (!layout.width || b.done || reduced) return;
     b.done = true;
-    for (let i = 0; i < count; i++) b.timers.push(window.setTimeout(() => impulse(i, 18 - i * 1.2), 140 + i * 60));
+    for (let i = 0; i < count; i++) {
+      b.timers.push(window.setTimeout(() => impulse(i, 16 - i * 1.2), 120 + i * 50));
+    }
   }, [layout.width, reduced, count, impulse]);
-  React.useEffect(() => () => {
-    const b = brushed.current;
-    b.timers.forEach((t) => window.clearTimeout(t));
-    b.timers = [];
-    b.done = false;
-  }, []);
 
-  React.useEffect(() => () => { cancelAnimationFrame(sim.current.raf); sim.current.raf = 0; }, []);
+  React.useEffect(
+    () => () => {
+      const b = brushed.current;
+      b.timers.forEach((t) => window.clearTimeout(t));
+      b.timers = [];
+      b.done = false;
+    },
+    []
+  );
+
+  React.useEffect(() => () => {
+    cancelAnimationFrame(sim.current.raf);
+    sim.current.raf = 0;
+  }, []);
 
   React.useLayoutEffect(() => {
     if (openIndex !== null || lifted !== null || returnFocus.current === null) return;
@@ -531,16 +597,18 @@ export function PictureRailGallery({
 
   const stop = React.useCallback(() => setPlaying(false), []);
 
-  // Autoplay keeps a fixed beat (first print at 1.1 s, then every interval) so a busy main thread can't stretch the cycle.
   const beat = React.useRef(0);
   React.useEffect(() => {
-    if (!playing || reduced || openIndex !== null || count === 0 || !layout.width) { beat.current = 0; return; }
+    if (!playing || reduced || openIndex !== null || count === 0 || !layout.width) {
+      beat.current = 0;
+      return;
+    }
     const start = performance.now();
-    if (!beat.current || beat.current < start - interval) beat.current = start + (current === null ? 1100 : interval);
+    if (!beat.current || beat.current < start - interval) beat.current = start + (current === null ? 1200 : interval);
     let timer = window.setTimeout(function advance() {
       const now = live.current.active;
       beat.current += interval;
-      choose(now === null ? (live.current.layout.carousel ? live.current.carouselIndex : 0) : (now + 1) % live.current.count);
+      choose(now === null ? live.current.carouselIndex : (now + 1) % live.current.count);
       timer = window.setTimeout(advance, Math.max(0, beat.current - performance.now()));
     }, Math.max(0, beat.current - start));
     return () => window.clearTimeout(timer);
@@ -548,210 +616,180 @@ export function PictureRailGallery({
 
   const open = React.useCallback((index: number) => {
     stop();
-    choose(index);
+    returnFocus.current = index;
     setOpenIndex(index);
     host.current.onOpenChange?.(index);
-  }, [choose, stop]);
+  }, [stop]);
 
-  const sourceRect = React.useCallback(() => (openIndex === null ? null : tilts.current[openIndex]?.getBoundingClientRect() ?? null), [openIndex]);
-  const onLift = React.useCallback((lift: boolean) => setLifted(lift ? openIndex : null), [openIndex]);
+  const sourceRect = React.useCallback(() => {
+    if (openIndex === null) return null;
+    const node = slots.current[openIndex];
+    return node ? node.getBoundingClientRect() : null;
+  }, [openIndex]);
+
+  const onLift = React.useCallback((next: boolean) => {
+    setLifted(next ? openIndex : null);
+  }, [openIndex]);
+
   const onDetailClose = React.useCallback(() => {
-    const index = openIndex;
-    if (index === null) return;
-    returnFocus.current = index;
     setOpenIndex(null);
     host.current.onOpenChange?.(null);
-    impulse(index, index % 2 ? 22 : -22);
-  }, [openIndex, impulse]);
+  }, []);
 
-  function nearest(clientX: number, clientY: number) {
-    const stage = stageRef.current;
-    if (!stage) return null;
-    const box = stage.getBoundingClientRect();
-    const x = clientX - box.left;
-    const y = clientY - box.top;
-    const { layout: lay, shapes: list, count: n } = live.current;
-    const s = sim.current;
-    let best = null as number | null;
-    let distance = Infinity;
-    for (let i = 0; i < n; i++) {
-      const shape = list[i];
-      if (!shape) continue;
-      const [l, r] = reach(s, lay, shape, i);
-      const cx = s.x[i] ?? 0;
-      const bottom = (lay.tops[i] ?? 0) + shape.h * lay.unit + 30;
-      if (x < cx + l - 4 || x > cx + r + 4 || y < lay.railTop - 4 || y > bottom) continue;
-      const d = Math.abs(x - cx);
-      if (d < distance) { best = i; distance = d; }
-    }
-    return best;
-  }
-
-  function aim(index: number, clientX: number) {
-    const stage = stageRef.current;
-    const shape = live.current.shapes[index];
-    if (!stage || !shape) return;
-    const s = sim.current;
-    const local = clientX - stage.getBoundingClientRect().left;
-    const half = (shape.w * live.current.layout.unit) / 2;
-    for (let i = 0; i < live.current.count; i++) s.tty[i] = i === index ? clamp((local - (s.x[index] ?? 0)) / half, -1, 1) * TILT_Y : 0;
-    kick();
-  }
-
-  const onPointerMove = (event: React.PointerEvent) => {
-    const p = pointer.current;
-    const s = sim.current;
-    const stage = stageRef.current;
-    const lay = live.current.layout;
-    if (p.id === event.pointerId && stage) {
-      const dx = event.clientX - p.x;
-      const now = stamp(event);
-      if (!p.moved && Math.abs(dx) > 6 && Math.abs(dx) > Math.abs(event.clientY - p.y)) {
-        p.moved = true;
-        stop();
-        if (stage.isConnected) stage.setPointerCapture(event.pointerId);
-        if (!lay.carousel && p.index >= 0) {
-          s.drag = p.index;
-          s.grab = event.clientX - stage.getBoundingClientRect().left - (s.x[p.index] ?? 0);
-        }
-      }
-      if (p.moved) {
-        const v = (event.clientX - p.lastX) / Math.max(1, now - p.lastT);
-        p.v = p.v * 0.6 + v * 0.4;
-        p.lastX = event.clientX;
-        p.lastT = now;
-        if (s.drag >= 0) {
-          s.x[s.drag] = event.clientX - stage.getBoundingClientRect().left - s.grab;
-          s.free = now + 900;
-          kick();
-        } else if (lay.carousel) {
-          p.swipe = dx;
-          const xs = targetsFor(lay, live.current.active, live.current.carouselIndex);
-          for (let i = 0; i < live.current.count; i++) s.tx[i] = (xs[i] ?? 0) + dx;
-          kick();
-        }
-      }
-      return;
-    }
-    if (event.pointerType !== "mouse" || lay.carousel || live.current.openIndex !== null) return;
-    const hit = nearest(event.clientX, event.clientY);
-    const now = live.current.active;
-    if (now !== null && hit !== now && stage) {
-      const shape = live.current.shapes[now];
-      const box = stage.getBoundingClientRect();
-      const local = event.clientX - box.left;
-      const keep = shape ? Math.abs(local - (s.x[now] ?? 0)) < (shape.w * lay.unit * LIFT_GROW) / 2 + 10 : false;
-      if (keep && event.clientY - box.top < lay.stageH) { aim(now, event.clientX); return; }
-    }
-    if (hit !== null) { stop(); choose(hit); aim(hit, event.clientX); }
+  // Pointer swipe / drag handlers
+  const onPointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (event.button !== 0 && event.pointerType === "mouse") return;
+    const target = (event.target as HTMLElement).closest("[data-frame]") as HTMLElement | null;
+    const index = target ? Number(target.dataset.frame) : -1;
+    pointer.current = {
+      id: event.pointerId,
+      index,
+      x: event.clientX,
+      y: event.clientY,
+      moved: false,
+      kind: "",
+      swipe: 0,
+      lastX: event.clientX,
+      lastT: stamp(event),
+      v: 0
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
   };
 
-  const onPointerDown = (event: React.PointerEvent) => {
-    if (event.button !== 0) return;
-    const hit = nearest(event.clientX, event.clientY);
-    const now = stamp(event);
-    pendingOpen.current = -1;
-    pointer.current = { id: event.pointerId, index: hit ?? -1, x: event.clientX, y: event.clientY, moved: false, kind: event.pointerType, swipe: 0, lastX: event.clientX, lastT: now, v: 0 };
-  };
-
-  const finishPointer = (event: React.PointerEvent, cancelled: boolean) => {
+  const onPointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     const p = pointer.current;
     if (p.id !== event.pointerId) return;
-    const s = sim.current;
-    const stage = stageRef.current;
-    if (stage?.hasPointerCapture(event.pointerId)) stage.releasePointerCapture(event.pointerId);
-    pointer.current = { ...p, id: -1 };
-    if (s.drag >= 0) {
-      // Let go mid-motion and the print slides on; stop first and it stays where the hand left it.
-      const idle = stamp(event) - p.lastT;
-      s.vx[s.drag] = idle < 140 ? p.v * 1000 * (1 - idle / 140) : 0;
-      s.drag = -1;
-      s.free = performance.now() + 700;
-      kick();
-      return;
+    const dx = event.clientX - p.x;
+    const dy = event.clientY - p.y;
+    const now = stamp(event);
+    const dt = Math.max(1, now - p.lastT);
+    p.v = ((event.clientX - p.lastX) / dt) * 1000;
+    p.lastX = event.clientX;
+    p.lastT = now;
+
+    if (!p.kind && (Math.abs(dx) > 4 || Math.abs(dy) > 4)) {
+      p.kind = "swipe";
+      p.moved = true;
+      stop();
     }
-    const lay = live.current.layout;
-    if (p.moved && lay.carousel) {
-      const dx = event.clientX - p.x;
-      const from = live.current.active ?? live.current.carouselIndex;
-      const step = Math.abs(dx) > 40 || Math.abs(p.v) > 0.45 ? (dx < 0 ? 1 : -1) : 0;
-      pointer.current.swipe = 0;
-      const next = clamp(from + step, 0, live.current.count - 1);
-      live.current.carouselIndex = next;
-      if (next === live.current.active || controlled) {
-        const xs = targetsFor(lay, controlled ? live.current.active : next, next);
-        for (let i = 0; i < live.current.count; i++) s.tx[i] = xs[i] ?? 0;
-        kick();
+
+    if (p.kind === "swipe") {
+      p.swipe = dx;
+      const s = sim.current;
+      const xs = targetsFor(layout, current, live.current.carouselIndex);
+      for (let i = 0; i < count; i++) {
+        s.tx[i] = (xs[i] ?? 0) + dx;
       }
-      choose(next);
-      return;
+      kick();
     }
-    if (cancelled || p.moved || p.index < 0) return;
-    stop();
-    if ((p.kind !== "mouse" || lay.carousel) && live.current.active !== p.index) choose(p.index);
-    else pendingOpen.current = p.index;
   };
 
-  const onKeyDown = (event: React.KeyboardEvent) => {
-    const keys = ["ArrowRight", "ArrowLeft", "Home", "End"];
-    if (!keys.includes(event.key)) return;
-    event.preventDefault();
-    stop();
-    const from = current ?? focusIndex;
-    const next = event.key === "Home" ? 0 : event.key === "End" ? count - 1 : clamp(from + (event.key === "ArrowRight" ? 1 : -1), 0, count - 1);
-    setFocusIndex(next);
-    choose(next);
-    slots.current[next]?.focus({ preventScroll: true });
+  const onPointerUp = (event: React.PointerEvent<HTMLDivElement>) => {
+    const p = pointer.current;
+    if (p.id !== event.pointerId) return;
+    pointer.current = { id: -1, index: -1, x: 0, y: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 };
+
+    if (p.moved) {
+      const stepDist = layout.unit * (0.8 + GAP);
+      const shift = -Math.round((p.swipe + p.v * 0.18) / stepDist);
+      const next = clamp(live.current.carouselIndex + shift, 0, count - 1);
+      choose(next);
+      const s = sim.current;
+      const xs = targetsFor(layout, next, next);
+      for (let i = 0; i < count; i++) s.tx[i] = xs[i] ?? 0;
+      kick();
+    } else if (p.index >= 0) {
+      if (p.index === current) {
+        open(p.index);
+      } else {
+        choose(p.index);
+      }
+    }
   };
 
-  const currentItem = current === null ? null : items[current];
-  const byline = currentItem ? [[currentItem.artist, currentItem.year].filter(Boolean).join(", "), currentItem.tag].filter(Boolean).join(" · ") : "";
+  const onPointerCancel = () => {
+    pointer.current = { id: -1, index: -1, x: 0, y: 0, moved: false, kind: "", swipe: 0, lastX: 0, lastT: 0, v: 0 };
+    const s = sim.current;
+    const xs = targetsFor(layout, current, live.current.carouselIndex);
+    for (let i = 0; i < count; i++) s.tx[i] = xs[i] ?? 0;
+    kick();
+  };
+
+  const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      stop();
+      choose(Math.max(0, (current ?? focusIndex) - 1));
+    } else if (event.key === "ArrowRight") {
+      event.preventDefault();
+      stop();
+      choose(Math.min(count - 1, (current ?? focusIndex) + 1));
+    } else if (event.key === "Enter" || event.key === " ") {
+      if (current !== null) {
+        event.preventDefault();
+        open(current);
+      }
+    }
+  };
+
+  const currentItem = current !== null ? items[current] : null;
   const U = layout.unit;
-  const blur = Math.max(3, U * 0.05);
 
   return (
     <section
+      className={`relative select-none text-white ${className ?? ""}`}
+      style={{ minHeight: layout.stageH + 160 }}
       {...rest}
-      data-slot="picture-rail-gallery"
-      data-mode={layout.carousel ? "carousel" : "rail"}
-      data-active={current ?? ""}
-      aria-roledescription="picture rail gallery"
-      className={`relative isolate w-full overflow-hidden bg-transparent text-foreground ${className ?? ""}`}
     >
-      <div aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10" style={{ background: "radial-gradient(72% 58% at 50% 44%, color-mix(in oklab, #00ff87 4%, transparent), transparent 78%)" }} />
+      {/* Eyebrow & Main Section Title */}
       {(eyebrow || heading) && (
-        <header className="relative z-10 flex flex-col items-center gap-2 px-6 pt-7 text-center">
-          {eyebrow && <p className="text-[11px] font-medium uppercase tracking-[0.28em] text-emerald-400">{eyebrow}</p>}
-          {heading && <h2 className="text-balance text-2xl font-black tracking-tight sm:text-4xl text-white">{heading}</h2>}
-        </header>
+        <div className="relative z-10 px-6 pt-2 pb-5 text-center">
+          {eyebrow && (
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#00ff87]">
+              {eyebrow}
+            </p>
+          )}
+          {heading && (
+            <h3 className="mt-2 text-2xl font-black tracking-tight sm:text-3xl text-white">
+              {heading}
+            </h3>
+          )}
+        </div>
       )}
 
+      {/* Main Hanging Rail Stage */}
       <div
         ref={stageRef}
         data-stage
-        role="group"
-        aria-label={heading ?? "Picture rail"}
-        className="relative mt-5 w-full touch-pan-y select-none"
-        style={{ height: layout.stageH, overflowX: "clip" }}
-        onPointerMove={onPointerMove}
+        className="relative mx-auto w-full touch-pan-y overflow-hidden cursor-grab active:cursor-grabbing"
+        style={{ height: layout.stageH, perspective: `${PERSPECTIVE}px` }}
         onPointerDown={onPointerDown}
-        onPointerUp={(event) => finishPointer(event, false)}
-        onPointerCancel={(event) => finishPointer(event, true)}
-        onPointerLeave={(event) => {
-          if (event.pointerType !== "mouse" || pointer.current.id >= 0 || layout.carousel) return;
-          for (let i = 0; i < count; i++) sim.current.tty[i] = 0;
-          if (!document.activeElement?.matches("[data-frame]:focus-visible")) choose(null);
-          kick();
-        }}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerCancel={onPointerCancel}
         onKeyDown={onKeyDown}
       >
-        <div aria-hidden="true" data-rail className="pointer-events-none absolute inset-x-0 z-[1]" style={{ top: layout.railTop, height: layout.railT }}>
-          <div className="absolute inset-x-0 top-full h-3 bg-black opacity-30 blur-[5px]" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, #1e293b 0%, #0f172a 16%, #020612 30%, #1e293b 46%, #0f172a 62%, #020612 86%, #000000 100%)", boxShadow: "0 1px 0 rgba(0,255,135,0.2), 0 -1px 0 rgba(255,255,255,0.1)" }} />
-          <div className="absolute inset-x-0 top-[30%] h-px bg-black opacity-40" />
-          <div className="absolute inset-x-0 top-0 h-px bg-white/20" />
+        {/* Top Heavy Steel / Titanium Picture Rail Bar */}
+        <div
+          aria-hidden="true"
+          data-rail
+          className="pointer-events-none absolute inset-x-0 z-[1]"
+          style={{ top: layout.railTop, height: layout.railT }}
+        >
+          <div className="absolute inset-x-0 top-full h-4 bg-black/60 blur-[6px]" />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "linear-gradient(to bottom, #334155 0%, #1e293b 22%, #020612 40%, #1e293b 55%, #0f172a 75%, #000000 100%)",
+              boxShadow: "0 1px 0 rgba(0,255,135,0.3), 0 -1px 0 rgba(255,255,255,0.15)"
+            }}
+          />
+          <div className="absolute inset-x-0 top-[30%] h-px bg-black opacity-60" />
+          <div className="absolute inset-x-0 top-0 h-px bg-white/25" />
         </div>
 
+        {/* Ambient Backlight Washes & Drop Shadows */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2]">
           {items.map((item, i) => {
             const shape = shapes[i];
@@ -760,16 +798,52 @@ export function PictureRailGallery({
             const h = shape.h * U;
             const top = layout.tops[i] ?? 0;
             return (
-              <div key={item.id} ref={(node) => { backs.current[i] = node; }} className="absolute left-0 top-0" style={{ width: w, height: 0, transformOrigin: `${w / 2}px ${layout.pivotY + 1}px`, visibility: lifted === i ? "hidden" : undefined }}>
-                <span ref={(node) => { washes.current[i] = node; }} data-wash className="absolute opacity-0 [--wash:color-mix(in_oklab,#00ff87_28%,transparent)]" style={{ left: -w * 0.5, width: w * 2, top: top - h * 0.5, height: h * 1.75, background: "radial-gradient(closest-side, var(--wash), transparent)" }} />
-                <span className="absolute opacity-70" style={{ left: 0, top, width: w, height: h, filter: `blur(${blur.toFixed(1)}px)` }}>
-                  <span ref={(node) => { shadows.current[i] = node; }} className="absolute inset-0 rounded-[2px] bg-black" />
+              <div
+                key={item.id}
+                ref={(node) => {
+                  backs.current[i] = node;
+                }}
+                className="absolute left-0 top-0"
+                style={{
+                  width: w,
+                  height: 0,
+                  transformOrigin: `${w / 2}px ${layout.pivotY + 1}px`,
+                  visibility: lifted === i ? "hidden" : undefined
+                }}
+              >
+                {/* Neon Backdrop Glow when illuminated */}
+                <span
+                  ref={(node) => {
+                    washes.current[i] = node;
+                  }}
+                  data-wash
+                  className="absolute opacity-0 transition-opacity duration-300"
+                  style={{
+                    left: -w * 0.4,
+                    width: w * 1.8,
+                    top: top - h * 0.2,
+                    height: h * 1.4,
+                    background:
+                      "radial-gradient(ellipse at center, rgba(0,255,135,0.22) 0%, rgba(236,72,153,0.12) 40%, transparent 70%)"
+                  }}
+                />
+                <span
+                  className="absolute opacity-80"
+                  style={{ left: 0, top, width: w, height: h, filter: "blur(14px)" }}
+                >
+                  <span
+                    ref={(node) => {
+                      shadows.current[i] = node;
+                    }}
+                    className="absolute inset-0 rounded-[38px] bg-black/90 shadow-[0_25px_50px_rgba(0,0,0,0.9)]"
+                  />
                 </span>
               </div>
             );
           })}
         </div>
 
+        {/* Hanging Smartphone Units */}
         {items.map((item, i) => {
           const shape = shapes[i];
           if (!shape) return null;
@@ -777,28 +851,101 @@ export function PictureRailGallery({
           const h = shape.h * U;
           const top = layout.tops[i] ?? 0;
           const lit = current === i;
-          const ringY = top + h * 0.07;
+          const eyeletY = top + 2; // Sleek metallic mounting eyelet right at top rim
+
           return (
-            <div key={item.id} ref={(node) => { hangs.current[i] = node; }} data-hang={i} className="pointer-events-none absolute left-0 top-0" style={{ width: w, height: 0, zIndex: lit ? 30 : 10 + i }}>
+            <div
+              key={item.id}
+              ref={(node) => {
+                hangs.current[i] = node;
+              }}
+              data-hang={i}
+              className="pointer-events-none absolute left-0 top-0"
+              style={{ width: w, height: 0, zIndex: lit ? 30 : 10 + i }}
+            >
+              {/* Rail Hook Clamped Over Steel Picture Rail */}
               <Hook x={w / 2} railTop={layout.railTop} railT={layout.railT} pivotY={layout.pivotY} />
+
+              {/* Version & Size Tag Badge */}
               {item.tag && (
-                <span data-label className={`absolute whitespace-nowrap rounded-[4px] border border-white/15 bg-[#040a18]/90 px-2 py-[3px] text-[10px] font-mono font-bold leading-none tabular-nums shadow-lg backdrop-blur-md ${lit ? "text-[#00ff87] border-emerald-500/50" : "text-white/60"}`} style={{ top: top + h + 10, right: 0 }}>
-                  {lit && <span aria-hidden="true" className="mr-1 inline-block size-1.5 rounded-full bg-[#00ff87] align-middle shadow-[0_0_6px_#00ff87]" />}
+                <span
+                  data-label
+                  className={`absolute whitespace-nowrap rounded-full border px-3 py-1 text-[10px] font-mono font-bold leading-none tabular-nums shadow-xl backdrop-blur-xl transition-all duration-300 ${
+                    lit
+                      ? "text-[#00ff87] border-emerald-400/50 bg-[#040a18]/95 shadow-[0_0_15px_rgba(0,255,135,0.25)] scale-105"
+                      : "text-white/60 border-white/10 bg-[#040a18]/80"
+                  }`}
+                  style={{ top: top + h + 12, left: "50%", transform: "translateX(-50%)" }}
+                >
+                  {lit && (
+                    <span
+                      aria-hidden="true"
+                      className="mr-1.5 inline-block size-1.5 rounded-full bg-[#00ff87] align-middle shadow-[0_0_8px_#00ff87] animate-pulse"
+                    />
+                  )}
                   {item.tag}
                 </span>
               )}
-              <span ref={(node) => { swings.current[i] = node; }} data-swing className="absolute left-0 top-0" style={{ width: w, height: 0, transformOrigin: `${w / 2}px ${layout.pivotY + 1}px`, visibility: lifted === i ? "hidden" : undefined }}>
-                <svg aria-hidden="true" className="pointer-events-none absolute left-0 top-0 overflow-visible text-white/80" width={Math.max(1, w)} height={Math.max(1, ringY)}>
-                  {[w * 0.2, w * 0.8].map((rx) => (
+
+              {/* Swinging Mechanism: Wires & Physical Smartphone Body */}
+              <span
+                ref={(node) => {
+                  swings.current[i] = node;
+                }}
+                data-swing
+                className="absolute left-0 top-0"
+                style={{
+                  width: w,
+                  height: 0,
+                  transformOrigin: `${w / 2}px ${layout.pivotY + 1}px`,
+                  visibility: lifted === i ? "hidden" : undefined
+                }}
+              >
+                {/* Hanging Steel Wire Cables */}
+                <svg
+                  aria-hidden="true"
+                  className="pointer-events-none absolute left-0 top-0 overflow-visible text-white/80"
+                  width={Math.max(1, w)}
+                  height={Math.max(1, eyeletY)}
+                >
+                  {[w * 0.22, w * 0.78].map((rx) => (
                     <g key={rx}>
-                      <line x1={w / 2 + 0.7} y1={layout.pivotY + 1.8} x2={rx + 0.7} y2={ringY + 0.8} stroke="black" strokeOpacity="0.25" strokeWidth="1.4" />
-                      <line x1={w / 2} y1={layout.pivotY + 1} x2={rx} y2={ringY} stroke="currentColor" strokeOpacity="0.75" strokeWidth="1" />
-                      <line x1={w / 2 - 0.3} y1={layout.pivotY + 1} x2={rx - 0.3} y2={ringY} stroke="#00ff87" strokeOpacity="0.35" strokeWidth="0.5" />
+                      <line
+                        x1={w / 2 + 0.6}
+                        y1={layout.pivotY + 1.8}
+                        x2={rx + 0.6}
+                        y2={eyeletY + 0.8}
+                        stroke="black"
+                        strokeOpacity="0.4"
+                        strokeWidth="1.8"
+                      />
+                      <line
+                        x1={w / 2}
+                        y1={layout.pivotY + 1}
+                        x2={rx}
+                        y2={eyeletY}
+                        stroke="#cbd5e1"
+                        strokeOpacity="0.8"
+                        strokeWidth="1.2"
+                      />
+                      <line
+                        x1={w / 2 - 0.3}
+                        y1={layout.pivotY + 1}
+                        x2={rx - 0.3}
+                        y2={eyeletY}
+                        stroke="#00ff87"
+                        strokeOpacity="0.4"
+                        strokeWidth="0.6"
+                      />
                     </g>
                   ))}
                 </svg>
+
+                {/* Interactive Phone Button Target */}
                 <button
-                  ref={(node) => { slots.current[i] = node; }}
+                  ref={(node) => {
+                    slots.current[i] = node;
+                  }}
                   type="button"
                   data-frame={i}
                   data-lit={lit || undefined}
@@ -806,20 +953,50 @@ export function PictureRailGallery({
                   aria-label={item.title}
                   aria-describedby={`${uid}-caption`}
                   aria-pressed={lit}
-                  className="pointer-events-auto absolute cursor-pointer rounded-[2px] outline-none bg-transparent border-0 p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[6px] focus-visible:outline-emerald-400"
+                  className="pointer-events-auto absolute cursor-pointer rounded-[38px] outline-none bg-transparent border-0 p-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[6px] focus-visible:outline-emerald-400"
                   style={{ left: 0, top, width: w, height: h }}
-                  onFocus={() => { setFocusIndex(i); if (pointer.current.id < 0) { stop(); choose(i); } }}
-                  onClick={(event) => { const pending = pendingOpen.current; pendingOpen.current = -1; if (event.detail === 0 || pending === i) open(i); }}
+                  onFocus={() => {
+                    setFocusIndex(i);
+                    if (pointer.current.id < 0) {
+                      stop();
+                      choose(i);
+                    }
+                  }}
+                  onClick={(event) => {
+                    const pending = pendingOpen.current;
+                    pendingOpen.current = -1;
+                    if (event.detail === 0 || pending === i) open(i);
+                  }}
                 >
-                  <span ref={(node) => { tilts.current[i] = node; }} data-tilt className="absolute block" style={{ left: (-(SUPERSAMPLE - 1) * w) / 2, top: (-(SUPERSAMPLE - 1) * h) / 2, width: w * SUPERSAMPLE, height: h * SUPERSAMPLE, transform: `scale(${1 / SUPERSAMPLE})` }}>
+                  <span
+                    ref={(node) => {
+                      tilts.current[i] = node;
+                    }}
+                    data-tilt
+                    className="absolute block"
+                    style={{
+                      left: (-(SUPERSAMPLE - 1) * w) / 2,
+                      top: (-(SUPERSAMPLE - 1) * h) / 2,
+                      width: w * SUPERSAMPLE,
+                      height: h * SUPERSAMPLE,
+                      transform: `scale(${1 / SUPERSAMPLE})`
+                    }}
+                  >
                     <span className="absolute inset-0 block" style={{ zoom: SUPERSAMPLE }}>
-                      <FrameArt
+                      <PhoneChassis
                         item={item}
                         shape={shape}
                         unit={U}
-                        lightRef={(node) => { lights.current[i] = node; }}
-                        glareRef={(node) => { glares.current[i] = node; }}
-                        dimRef={(node) => { dims.current[i] = node; }}
+                        lit={lit ? 1 : 0}
+                        lightRef={(node) => {
+                          lights.current[i] = node;
+                        }}
+                        glareRef={(node) => {
+                          glares.current[i] = node;
+                        }}
+                        dimRef={(node) => {
+                          dims.current[i] = node;
+                        }}
                       />
                     </span>
                   </span>
@@ -828,29 +1005,86 @@ export function PictureRailGallery({
             </div>
           );
         })}
+
+        {/* Carousel Floating Nav Arrows */}
+        <button
+          type="button"
+          aria-label="Previous flagship phone"
+          onClick={(e) => {
+            e.stopPropagation();
+            stop();
+            choose((carouselIndex - 1 + count) % count);
+          }}
+          className="pointer-events-auto absolute left-4 top-1/2 -translate-y-1/2 z-40 flex size-12 items-center justify-center rounded-full border border-white/15 bg-[#040a18]/85 text-white/80 shadow-2xl backdrop-blur-xl transition-all hover:bg-emerald-500/20 hover:border-emerald-400 hover:text-white hover:scale-110 active:scale-95 cursor-pointer"
+        >
+          <ChevronLeft className="size-6 text-[#00ff87]" />
+        </button>
+
+        <button
+          type="button"
+          aria-label="Next flagship phone"
+          onClick={(e) => {
+            e.stopPropagation();
+            stop();
+            choose((carouselIndex + 1) % count);
+          }}
+          className="pointer-events-auto absolute right-4 top-1/2 -translate-y-1/2 z-40 flex size-12 items-center justify-center rounded-full border border-white/15 bg-[#040a18]/85 text-white/80 shadow-2xl backdrop-blur-xl transition-all hover:bg-emerald-500/20 hover:border-emerald-400 hover:text-white hover:scale-110 active:scale-95 cursor-pointer"
+        >
+          <ChevronRight className="size-6 text-[#00ff87]" />
+        </button>
       </div>
 
-      {layout.carousel && count > 1 && (
-        <div className="relative z-10 mt-3 flex justify-center gap-1.5" role="group" aria-label={heading ?? "Prints"}>
+      {/* Pagination Pill Dots */}
+      {count > 1 && (
+        <div
+          className="relative z-10 mt-2 flex items-center justify-center gap-2"
+          role="group"
+          aria-label={heading ?? "Flagships"}
+        >
           {items.map((item, i) => (
-            <button key={item.id} type="button" aria-label={item.title} aria-current={carouselIndex === i} onClick={() => { stop(); choose(i); }} className={`h-1.5 rounded-full outline-none transition-[width,background-color] duration-300 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer ${carouselIndex === i ? "w-6 bg-[#00ff87]" : "w-1.5 bg-white/25 hover:bg-white/45"}`} />
+            <button
+              key={item.id}
+              type="button"
+              aria-label={item.title}
+              aria-current={carouselIndex === i}
+              onClick={() => {
+                stop();
+                choose(i);
+              }}
+              className={`h-2 rounded-full outline-none transition-all duration-300 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer ${
+                carouselIndex === i
+                  ? "w-8 bg-gradient-to-r from-[#00ff87] to-emerald-400 shadow-[0_0_12px_#00ff87]"
+                  : "w-2 bg-white/20 hover:bg-white/45"
+              }`}
+            />
           ))}
         </div>
       )}
 
-      <div className="relative z-10 flex flex-col items-center gap-3 px-6 pb-7 pt-4 text-center">
-        <div id={`${uid}-caption`} aria-live="polite" className="min-h-[2.75rem]">
-          <p className="text-base font-bold text-white">{currentItem ? currentItem.title : caption}</p>
+      {/* Active Device Caption & 1-Click Action */}
+      <div className="relative z-10 flex flex-col items-center gap-3 px-6 pb-6 pt-5 text-center">
+        <div id={`${uid}-caption`} aria-live="polite" className="min-h-[3.25rem]">
+          <p className="text-xl font-black text-white sm:text-2xl">
+            {currentItem ? currentItem.title : caption}
+          </p>
           {currentItem && (
-            <p className="mt-1 text-xs text-white/60">
-              {byline}{byline ? " · " : ""}
-              <span className="text-[#00ff87] font-semibold">{labels.open}</span>
+            <p className="mt-1 text-xs text-white/70">
+              <span className="text-pink-400 font-semibold">{currentItem.artist}</span>
+              {" · "}
+              <button
+                type="button"
+                onClick={() => open(carouselIndex)}
+                className="font-bold text-[#00ff87] underline decoration-emerald-500/40 underline-offset-4 hover:decoration-emerald-400 cursor-pointer"
+              >
+                {labels.open}
+              </button>
             </p>
           )}
         </div>
         {action}
       </div>
 
+      {/* 3D Inspect & Specs Flip Modal */}
       {openIndex !== null && items[openIndex] && shapes[openIndex] && (
         <Detail
           uid={uid}
@@ -869,168 +1103,402 @@ export function PictureRailGallery({
   );
 }
 
+/** Hanging Rail Hook */
 function Hook({ x, railTop, railT, pivotY }: { x: number; railTop: number; railT: number; pivotY: number }) {
-  const plate = clamp(railT * 0.36, 3, 6);
+  const plate = clamp(railT * 0.4, 4, 7);
   const height = pivotY - railTop + 6;
   return (
-    <span aria-hidden="true" className="absolute" style={{ left: x - plate, top: railTop - 3, width: plate * 2, height }}>
-      <span className="absolute inset-x-0 top-0 rounded-full" style={{ height: 4, background: BRASS, boxShadow: "0 1px 1px color-mix(in oklab, black 30%, transparent)" }} />
-      <span className="absolute top-[3px] rounded-b-[1px]" style={{ left: plate * 0.5, width: plate, bottom: 5, background: BRASS_SIDE, boxShadow: "1px 1px 1.5px color-mix(in oklab, black 28%, transparent)" }} />
-      <svg aria-hidden="true" className="absolute bottom-0 left-0 overflow-visible" width={plate * 2} height={7} style={{ color: "color-mix(in oklab, darkgoldenrod 80%, black)" }}>
-        <path d={`M${plate * 0.62},0 Q${plate * 0.62},6.2 ${plate},6.2 Q${plate * 1.38},6.2 ${plate * 1.38},2.4`} fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    <span
+      aria-hidden="true"
+      className="absolute"
+      style={{ left: x - plate, top: railTop - 3, width: plate * 2, height }}
+    >
+      <span
+        className="absolute inset-x-0 top-0 rounded-full"
+        style={{ height: 4, background: BRASS, boxShadow: "0 1px 2px rgba(0,0,0,0.5)" }}
+      />
+      <span
+        className="absolute top-[3px] rounded-b-[1px]"
+        style={{
+          left: plate * 0.5,
+          width: plate,
+          bottom: 5,
+          background: BRASS_SIDE,
+          boxShadow: "1px 1px 2px rgba(0,0,0,0.4)"
+        }}
+      />
+      <svg
+        aria-hidden="true"
+        className="absolute bottom-0 left-0 overflow-visible text-[#854d0e]"
+        width={plate * 2}
+        height={7}
+      >
+        <path
+          d={`M${plate * 0.62},0 Q${plate * 0.62},6.2 ${plate},6.2 Q${plate * 1.38},6.2 ${plate * 1.38},2.4`}
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+        />
       </svg>
     </span>
   );
 }
 
-function Moulding({ frame, m }: { frame: PictureFrameStyle; m: number }) {
-  const base = FRAME_BASE[frame];
-  const [outer, crest, shoulder, cove, lip, light] = FRAME_RELIEF[frame];
-  const sides = [
-    { key: "t", style: { left: 0, right: 0, top: 0, height: m, clipPath: `polygon(0 0, 100% 0, calc(100% - ${m}px) 100%, ${m}px 100%)` }, dir: "to bottom", along: "178.6deg", light: 0.16 },
-    { key: "l", style: { left: 0, top: 0, bottom: 0, width: m, clipPath: `polygon(0 0, 100% ${m}px, 100% calc(100% - ${m}px), 0 100%)` }, dir: "to right", along: "91.2deg", light: 0.04 },
-    { key: "r", style: { right: 0, top: 0, bottom: 0, width: m, clipPath: `polygon(0 ${m}px, 100% 0, 100% 100%, 0 calc(100% - ${m}px))` }, dir: "to left", along: "88.9deg", light: -0.14 },
-    { key: "b", style: { left: 0, right: 0, bottom: 0, height: m, clipPath: `polygon(${m}px 0, calc(100% - ${m}px) 0, 100% 100%, 0 100%)` }, dir: "to top", along: "1.3deg", light: -0.24 },
-  ];
-  return (
-    <>
-      {sides.map((side) => {
-        const layers = [tone(side.light * light)];
-        if (frame === "oak") layers.push(`repeating-linear-gradient(${side.along}, transparent 0 1.7px, color-mix(in oklab, sienna 26%, transparent) 1.7px 2.3px, transparent 2.3px 4.4px, color-mix(in oklab, saddlebrown 16%, transparent) 4.4px 4.9px, transparent 4.9px 7.6px)`);
-        layers.push(`linear-gradient(${side.dir}, ${mix(base, outer)} 0%, ${mix(base, crest)} 16%, ${mix(base, shoulder)} 32%, ${base} 56%, ${mix(base, cove)} 82%, ${mix(base, lip)} 100%)`);
-        return <span key={side.key} aria-hidden="true" className="absolute" style={{ ...side.style, background: layers.join(", ") }} />;
-      })}
-    </>
-  );
-}
-
+/** Overhead Brass / Titanium Picture Light Fixture */
 function Fixture({ width, hood, arm }: { width: number; hood: number; arm: number }) {
   return (
-    <span aria-hidden="true" className="pointer-events-none absolute left-1/2 -translate-x-1/2" style={{ bottom: "100%", width, height: arm + hood }}>
-      {[0.26, 0.74].map((p) => (
-        <span key={p} className="absolute bottom-0" style={{ left: `calc(${p * 100}% - 0.75px)`, width: 1.5, height: arm + hood * 0.5, background: "linear-gradient(to right, color-mix(in oklab, goldenrod 60%, white), color-mix(in oklab, darkgoldenrod 70%, black))" }} />
+    <span
+      aria-hidden="true"
+      className="pointer-events-none absolute left-1/2 -translate-x-1/2"
+      style={{ bottom: "100%", width, height: arm + hood }}
+    >
+      {[0.24, 0.76].map((p) => (
+        <span
+          key={p}
+          className="absolute bottom-0"
+          style={{
+            left: `calc(${p * 100}% - 0.75px)`,
+            width: 1.5,
+            height: arm + hood * 0.5,
+            background: "linear-gradient(to right, #fde047, #a16207 70%, #422006)"
+          }}
+        />
       ))}
-      <span className="absolute inset-x-0 top-0 rounded-full" style={{ height: hood, background: BRASS_DIM, boxShadow: "0 1px 2px color-mix(in oklab, black 35%, transparent)" }} />
-      <span className="absolute top-0 rounded-full bg-white opacity-30" style={{ left: "8%", right: "8%", height: Math.max(1, hood * 0.22), marginTop: hood * 0.12 }} />
+      <span
+        className="absolute inset-x-0 top-0 rounded-full"
+        style={{ height: hood, background: BRASS_DIM, boxShadow: "0 2px 4px rgba(0,0,0,0.6)" }}
+      />
+      <span
+        className="absolute top-0 rounded-full bg-white opacity-40"
+        style={{ left: "10%", right: "10%", height: Math.max(1, hood * 0.25), marginTop: hood * 0.12 }}
+      />
     </span>
   );
 }
 
-function FrameArt({ item, shape, unit, lit, lightRef, glareRef, dimRef }: {
+/**
+ * Realistic Smartphone Device Component (Screenshot 3 anatomy)
+ * Rendered with Dynamic Island, metallic rim bevel, side physical buttons,
+ * edge-to-edge app UI screen, glass gloss, and overhead gallery lamp.
+ */
+function PhoneChassis({
+  item,
+  shape,
+  unit,
+  lit = 0,
+  showLamp = true,
+  lightRef,
+  glareRef,
+  dimRef
+}: {
   item: PictureRailItem;
   shape: Shape;
   unit: number;
   lit?: number;
+  showLamp?: boolean;
   lightRef?: (node: HTMLSpanElement | null) => void;
   glareRef?: (node: HTMLSpanElement | null) => void;
   dimRef?: (node: HTMLSpanElement | null) => void;
 }) {
-  const m = Math.max(2, shape.mold * unit);
-  const mat = shape.mat * unit;
-  const matB = shape.matB * unit;
-  const fixture = clamp(shape.w * unit * 0.46, 30, 190);
-  const hood = clamp(unit * 0.05, 4, 12);
-  const arm = clamp(unit * 0.07, 5, 20);
+  const fixtureW = clamp(shape.w * unit * 0.52, 40, 160);
+  const hood = clamp(unit * 0.045, 5, 11);
+  const arm = clamp(unit * 0.065, 6, 18);
   const above = arm + hood;
-  const bevel = clamp(unit * 0.012, 1, 3);
+
   return (
     <>
-      <Fixture width={fixture} hood={hood} arm={arm} />
-      <span className="absolute inset-0 block rounded-[1.5px]" style={{ boxShadow: "0 0 0 0.6px color-mix(in oklab, black 45%, transparent)" }}>
-        <Moulding frame={shape.frame} m={m} />
-        <span className="absolute block overflow-hidden" style={{ inset: m, background: mat ? `linear-gradient(to bottom, ${PAPER}, color-mix(in oklab, white 89%, wheat))` : "#020612" }}>
-          <span className="absolute block overflow-hidden bg-black" style={{ backgroundImage: "radial-gradient(120% 90% at 28% 18%, color-mix(in oklab, #00ff87 9%, transparent), transparent 70%)", left: mat, right: mat, top: mat, bottom: mat + matB, boxShadow: mat ? `0 0 0 ${bevel}px color-mix(in oklab, white 97%, wheat), 0 0 0 ${bevel + 0.6}px color-mix(in oklab, black 16%, transparent), ${bevel * 0.6}px ${bevel}px ${bevel * 1.6}px ${bevel}px color-mix(in oklab, black 9%, transparent)` : undefined }}>
-            <img
-              src={item.image}
-              alt={item.title}
-              draggable={false}
-              decoding="async"
-              ref={(node) => { if (node?.complete && node.naturalWidth > 0) node.dataset.loaded = "true"; }}
-              onLoad={(event) => { event.currentTarget.dataset.loaded = "true"; }}
-              onError={(event) => { event.currentTarget.dataset.failed = "true"; }}
-              className="pointer-events-none absolute inset-0 size-full select-none object-cover opacity-0 transition-opacity duration-500 data-[failed]:hidden data-[loaded]:opacity-100 motion-reduce:transition-none"
+      {/* Overhead Lamp Fixture */}
+      {showLamp && <Fixture width={fixtureW} hood={hood} arm={arm} />}
+
+      {/* Top Titanium Wire Eyelets */}
+      {showLamp && (
+        <>
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[22%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
+          />
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-[78%] top-0 -translate-x-1/2 -translate-y-full size-2.5 rounded-full border border-slate-400 bg-slate-800 shadow-sm"
+          />
+        </>
+      )}
+
+      {/* Physical Smartphone Outer Chassis */}
+      <span
+        className="absolute inset-0 block rounded-[36px] sm:rounded-[40px] transition-all duration-300"
+        style={{
+          background: "linear-gradient(155deg, #1e293b 0%, #0d1522 35%, #050a14 70%, #020612 100%)",
+          boxShadow:
+            lit > 0
+              ? "0 0 0 1px rgba(255,255,255,0.22), 0 0 0 3px #0b111a, 0 0 40px -5px rgba(0,255,135,0.35), 0 25px 50px -10px rgba(0,0,0,0.95)"
+              : "0 0 0 1px rgba(255,255,255,0.12), 0 0 0 3px #070c14, 0 18px 40px -10px rgba(0,0,0,0.85)"
+        }}
+      >
+        {/* Left Physical Buttons (Action button, Volume Up, Volume Down) */}
+        <span
+          aria-hidden="true"
+          className="absolute -left-[3px] top-[48px] w-[3px] h-[20px] rounded-l-[2px] bg-slate-600/90 shadow-sm"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute -left-[3px] top-[80px] w-[3px] h-[34px] rounded-l-[2px] bg-slate-600/90 shadow-sm"
+        />
+        <span
+          aria-hidden="true"
+          className="absolute -left-[3px] top-[124px] w-[3px] h-[34px] rounded-l-[2px] bg-slate-600/90 shadow-sm"
+        />
+
+        {/* Right Physical Button (Power / Lock) */}
+        <span
+          aria-hidden="true"
+          className="absolute -right-[3px] top-[90px] w-[3px] h-[48px] rounded-r-[2px] bg-slate-600/90 shadow-sm"
+        />
+
+        {/* Inner Uniform Screen Bezel */}
+        <span className="absolute inset-[6px] sm:inset-[7px] block overflow-hidden rounded-[30px] sm:rounded-[34px] bg-black">
+          {/* Real On-Device App Screenshot */}
+          <img
+            src={item.image}
+            alt={item.title}
+            draggable={false}
+            decoding="async"
+            ref={(node) => {
+              if (node?.complete && node.naturalWidth > 0) node.dataset.loaded = "true";
+            }}
+            onLoad={(event) => {
+              event.currentTarget.dataset.loaded = "true";
+            }}
+            onError={(event) => {
+              event.currentTarget.dataset.failed = "true";
+            }}
+            className="pointer-events-none absolute inset-0 size-full select-none object-cover object-top opacity-0 transition-opacity duration-500 data-[failed]:hidden data-[loaded]:opacity-100"
+          />
+
+          {/* Top Dynamic Island Notch (Screenshot 3 pill) */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute left-1/2 top-2 z-30 flex h-[20px] w-[74px] -translate-x-1/2 items-center justify-between rounded-full border border-white/10 bg-black px-2 shadow-[0_2px_8px_rgba(0,0,0,0.85)]"
+          >
+            {/* Front Camera Lens with Blue AR coating reflection */}
+            <span className="flex size-2.5 items-center justify-center rounded-full bg-[#050811] ring-1 ring-white/20">
+              <span className="size-1 rounded-full bg-indigo-500/70" />
+            </span>
+
+            {/* Live Status indicator in Dynamic Island */}
+            {lit > 0 ? (
+              <span className="flex items-center gap-0.5">
+                <span className="size-1 rounded-full bg-[#00ff87] shadow-[0_0_6px_#00ff87] animate-pulse" />
+                <span className="text-[7px] font-mono font-bold text-[#00ff87] uppercase tracking-tighter">
+                  AIR
+                </span>
+              </span>
+            ) : (
+              <span className="size-1 rounded-full bg-white/25" />
+            )}
+          </span>
+
+          {/* Bottom Home Indicator Bar */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute bottom-1.5 left-1/2 z-20 h-1 w-24 -translate-x-1/2 rounded-full bg-white/40 backdrop-blur-sm"
+          />
+
+          {/* Realistic Curved OLED Edge Shading */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 block rounded-[30px] sm:rounded-[34px]"
+            style={{
+              boxShadow:
+                "inset 0 2px 4px rgba(255,255,255,0.1), inset 0 -2px 4px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(0,0,0,0.8)"
+            }}
+          />
+
+          {/* OLED Glass Reflection Sheen */}
+          <span aria-hidden="true" className="pointer-events-none absolute inset-0 block overflow-hidden">
+            <span
+              className="absolute inset-0 block"
+              style={{
+                background: "linear-gradient(to bottom, rgba(255,255,255,0.12) 0%, transparent 28%)"
+              }}
+            />
+            <span
+              ref={glareRef}
+              data-glare
+              className="absolute inset-y-0 -left-1/2 block w-[200%]"
+              style={{
+                background:
+                  "linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.08) 44%, rgba(255,255,255,0.02) 50%, transparent 56%)"
+              }}
             />
           </span>
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 block" style={{ boxShadow: `inset 0 ${(m * 0.45).toFixed(1)}px ${(m * 0.9).toFixed(1)}px color-mix(in oklab, black 30%, transparent), inset ${(m * 0.2).toFixed(1)}px 0 ${(m * 0.5).toFixed(1)}px color-mix(in oklab, black 12%, transparent), inset 0 0 0 0.5px color-mix(in oklab, black 45%, transparent)` }} />
-          <span aria-hidden="true" className="pointer-events-none absolute inset-0 block overflow-hidden">
-            <span className="absolute inset-0 block" style={{ background: "linear-gradient(to bottom, color-mix(in oklab, white 9%, transparent), transparent 30%)" }} />
-            <span ref={glareRef} data-glare className="absolute inset-y-0 -left-1/2 block w-[200%]" style={{ background: "linear-gradient(112deg, transparent 37%, color-mix(in oklab, white 10%, transparent) 43.5%, color-mix(in oklab, white 4%, transparent) 50%, transparent 56%)" }} />
+        </span>
+
+        {/* Overhead Gallery Lamp Light Beam (illuminates the phone when active) */}
+        {showLamp && (
+          <span
+            ref={lightRef}
+            data-light
+            aria-hidden="true"
+            className="pointer-events-none absolute block opacity-0 mix-blend-screen"
+            style={{
+              left: 0,
+              right: 0,
+              top: -above,
+              bottom: 0,
+              opacity: lit
+            }}
+          >
+            <span
+              className="absolute left-1/2 block -translate-x-1/2 rounded-full"
+              style={{ top: 0, width: fixtureW, height: hood, background: BRASS, opacity: 0.6 }}
+            />
+            <span
+              className="absolute left-1/2 block -translate-x-1/2 rounded-full"
+              style={{
+                top: hood * 0.6,
+                width: fixtureW * 0.85,
+                height: Math.max(2, hood * 0.45),
+                background: WARM,
+                boxShadow: `0 0 16px 4px rgba(0,255,135,0.4)`
+              }}
+            />
+            <span
+              className="absolute block"
+              style={{
+                left: 10,
+                right: 10,
+                top: above + 2,
+                bottom: 10,
+                background:
+                  "radial-gradient(95% 75% at 50% 0%, rgba(0,255,135,0.25) 0%, rgba(236,72,153,0.1) 45%, transparent 80%)"
+              }}
+            />
           </span>
-        </span>
-        <span ref={lightRef} data-light aria-hidden="true" className="pointer-events-none absolute block opacity-0 mix-blend-screen" style={{ left: 0, right: 0, top: -above, bottom: 0, ...(lit === undefined ? null : { opacity: lit }) }}>
-          <span className="absolute left-1/2 block -translate-x-1/2 rounded-full" style={{ top: 0, width: fixture, height: hood, background: BRASS, opacity: 0.55 }} />
-          <span className="absolute left-1/2 block -translate-x-1/2 rounded-full" style={{ top: hood * 0.6, width: fixture * 0.86, height: Math.max(2, hood * 0.45), background: WARM, boxShadow: `0 0 ${(hood * 1.8).toFixed(1)}px ${(hood * 0.6).toFixed(1)}px color-mix(in oklab, gold 55%, transparent)` }} />
-          <span className="absolute block" style={{ left: m * 0.4, right: m * 0.4, top: above - 1, height: m * 1.8, background: `radial-gradient(55% 100% at 50% 0%, color-mix(in oklab, ${WARM} 75%, transparent), transparent)` }} />
-          <span className="absolute block" style={{ left: m, right: m, top: above + m * 0.2, bottom: m, background: `radial-gradient(95% 78% at 50% 0%, color-mix(in oklab, ${WARM} 50%, transparent) 0%, color-mix(in oklab, ${WARM} 18%, transparent) 46%, transparent 80%)` }} />
-        </span>
-        <span ref={dimRef} data-dim aria-hidden="true" className="pointer-events-none absolute inset-0 block bg-black opacity-0" />
+        )}
+
+        <span
+          ref={dimRef}
+          data-dim
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 block rounded-[36px] sm:rounded-[40px] bg-black opacity-0"
+        />
       </span>
     </>
   );
 }
 
-function FrameBack({ item, shape, unit }: { item: PictureRailItem; shape: Shape; unit: number }) {
+/**
+ * Realistic Smartphone Rear Chassis Component
+ * Shown when flipped in 3D modal: frosted matte glass finish, triple sapphire camera bump,
+ * laser-etched INIXA Labs logo, and verified architecture specs plate with 1-click APK download.
+ */
+function PhoneBack({ item, shape, unit }: { item: PictureRailItem; shape: Shape; unit: number }) {
   const w = shape.w * unit;
   const h = shape.h * unit;
-  const edge = Math.max(4, shape.mold * unit * 0.85);
-  const cw = w - edge * 2;
-  const ch = h - edge * 2;
-  const tape = clamp(unit * 0.035, 4, 12);
-  const ringY = ch * 0.24;
-  const rings = [cw * 0.16, cw * 0.84];
-  const sag = ringY + ch * 0.13;
-  const font = clamp(unit * 0.034, 8.5, 13);
+
   return (
-    <div className="absolute inset-0 overflow-hidden rounded-[2px]" style={{ background: `repeating-linear-gradient(90.6deg, transparent 0 3px, color-mix(in oklab, sienna 12%, transparent) 3px 3.6px, transparent 3.6px 8px), linear-gradient(to bottom, color-mix(in oklab, burlywood 70%, white), color-mix(in oklab, burlywood 85%, sienna))`, boxShadow: "inset 0 0 0 0.6px color-mix(in oklab, black 40%, transparent)" }}>
-      <div className="absolute" style={{ inset: edge, background: "repeating-linear-gradient(33deg, transparent 0 2.6px, color-mix(in oklab, sienna 7%, transparent) 2.6px 3.4px), repeating-linear-gradient(-61deg, transparent 0 4px, color-mix(in oklab, white 6%, transparent) 4px 4.8px), linear-gradient(160deg, color-mix(in oklab, tan 82%, white), color-mix(in oklab, tan 70%, sienna))", boxShadow: `inset 0 0 0 ${tape}px color-mix(in oklab, peru 52%, tan), inset 0 0 0 ${tape + 0.6}px color-mix(in oklab, sienna 30%, transparent), 0 0 0 0.5px color-mix(in oklab, black 30%, transparent)` }}>
-        <svg aria-hidden="true" className="absolute inset-0 overflow-visible" width={cw} height={ch}>
-          <path d={`M${rings[0]},${ringY + 5} Q${cw / 2},${sag + 10} ${rings[1]},${ringY + 5}`} fill="none" stroke="color-mix(in oklab, black 30%, transparent)" strokeWidth="2.2" transform="translate(0.8 1.4)" />
-          <path d={`M${rings[0]},${ringY + 5} Q${cw / 2},${sag + 10} ${rings[1]},${ringY + 5}`} fill="none" stroke="color-mix(in oklab, gray 70%, white)" strokeWidth="1.6" />
-          <path d={`M${rings[0]},${ringY + 5} Q${cw / 2},${sag + 10} ${rings[1]},${ringY + 5}`} fill="none" stroke="white" strokeOpacity="0.55" strokeWidth="0.5" strokeDasharray="1.2 1.6" />
-          {rings.map((rx, k) => (
-            <g key={rx}>
-              <path d={`M${rx + (k ? -4 : 4)},${ringY + 5} l${k ? -9 : 9},2.2 l${k ? 1.6 : -1.6},1.4 l${k ? -8 : 8},1.6`} fill="none" stroke="color-mix(in oklab, gray 60%, white)" strokeWidth="1.1" strokeLinecap="round" />
-              <rect x={rx - 5} y={ringY - 9} width="10" height="13" rx="2" fill="color-mix(in oklab, gray 55%, white)" stroke="color-mix(in oklab, black 35%, transparent)" strokeWidth="0.6" />
-              <circle cx={rx} cy={ringY - 5} r="1.5" fill="color-mix(in oklab, gray 70%, black)" />
-              <circle cx={rx} cy={ringY + 0.4} r="1.5" fill="color-mix(in oklab, gray 70%, black)" />
-              <path d={`M${rx - 4.5},${ringY + 3} Q${rx - 4.5},${ringY + 10} ${rx},${ringY + 10} Q${rx + 4.5},${ringY + 10} ${rx + 4.5},${ringY + 3}`} fill="none" stroke="color-mix(in oklab, gray 45%, white)" strokeWidth="2" />
-              <path d={`M${rx - 4.5},${ringY + 3} Q${rx - 4.5},${ringY + 10} ${rx},${ringY + 10}`} fill="none" stroke="white" strokeOpacity="0.6" strokeWidth="0.6" />
-            </g>
-          ))}
-          {[[tape * 2.2, ch - tape * 2.2], [cw - tape * 2.2, ch - tape * 2.2]].map(([bx, by]) => (
-            <g key={`${bx}`}>
-              <circle cx={bx} cy={by} r={clamp(unit * 0.03, 3, 7)} fill="color-mix(in oklab, black 70%, white)" />
-              <circle cx={(bx ?? 0) - 0.8} cy={(by ?? 0) - 0.9} r={clamp(unit * 0.012, 1, 2.6)} fill="white" fillOpacity="0.35" />
-            </g>
-          ))}
-        </svg>
-        <div data-back-label className="absolute left-1/2 -translate-x-1/2 rounded-[2px] text-left" style={{ bottom: ch * 0.14, width: clamp(cw * 0.66, 120, 300), padding: `${font * 0.8}px ${font}px`, fontSize: font, lineHeight: 1.35, background: PAPER, color: INK, boxShadow: "0 1px 2px color-mix(in oklab, black 25%, transparent), inset 0 0 0 0.5px color-mix(in oklab, black 12%, transparent)" }}>
-          <p className="uppercase" style={{ fontSize: "0.7em", letterSpacing: "0.2em", opacity: 0.6 }}>Verified Architecture</p>
-          <p className="font-bold" style={{ fontSize: "1.18em", marginTop: "0.25em" }}>{item.title}</p>
-          {(item.artist || item.year) && <p>{[item.artist, item.year].filter(Boolean).join(", ")}</p>}
-          {item.details && item.details.length > 0 && (
-            <ul className="mt-[0.35em] border-t pt-[0.35em]" style={{ borderColor: "color-mix(in oklab, black 14%, transparent)" }}>
-              {item.details.map((line) => <li key={line}>{line}</li>)}
-            </ul>
-          )}
-          <svg aria-hidden="true" viewBox="0 0 120 26" className="mt-[0.3em] block h-[1.9em] w-auto" fill="none" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M3,18 C10,4 14,4 13,14 C12,22 18,20 22,12 C25,6 27,8 26,15 C30,10 34,9 35,15 C37,21 43,6 48,9 C52,12 47,20 54,17 C60,14 63,7 66,12 C69,18 74,14 79,11 C84,8 88,16 94,13 C100,10 106,11 116,8" />
-          </svg>
+    <div
+      className="absolute inset-0 overflow-hidden rounded-[36px] sm:rounded-[40px] p-6 text-white"
+      style={{
+        background: "linear-gradient(160deg, #172033 0%, #0a0f18 45%, #03060d 100%)",
+        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.15), 0 20px 45px rgba(0,0,0,0.8)"
+      }}
+    >
+      {/* Top-Left Triple Sapphire Camera Module Bump */}
+      <div className="absolute left-5 top-5 w-24 h-24 rounded-[22px] bg-black/60 border border-white/10 p-2 shadow-2xl flex flex-col justify-between backdrop-blur-md">
+        <div className="flex justify-between items-center px-1">
+          <span className="size-7 rounded-full bg-[#050811] ring-2 ring-slate-700/80 flex items-center justify-center">
+            <span className="size-3.5 rounded-full bg-slate-900 ring-1 ring-emerald-400/40" />
+          </span>
+          <span className="size-7 rounded-full bg-[#050811] ring-2 ring-slate-700/80 flex items-center justify-center">
+            <span className="size-3.5 rounded-full bg-slate-900 ring-1 ring-pink-400/40" />
+          </span>
         </div>
+        <div className="flex justify-between items-center px-1">
+          <span className="size-7 rounded-full bg-[#050811] ring-2 ring-slate-700/80 flex items-center justify-center">
+            <span className="size-3.5 rounded-full bg-slate-900 ring-1 ring-sky-400/40" />
+          </span>
+          <div className="flex flex-col items-center justify-center size-7">
+            <span className="size-2 rounded-full bg-amber-200/90 shadow-[0_0_6px_#fef08a]" />
+            <span className="text-[6px] font-mono text-white/40 mt-0.5">LED</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Laser-Etched INIXA Labs Emblem */}
+      <div className="absolute right-6 top-7 text-right">
+        <p className="font-mono text-[9px] font-bold uppercase tracking-[0.2em] text-[#00ff87]">
+          INIXA ARCHITECTURE
+        </p>
+        <p className="text-sm font-black tracking-tight text-white/80">KOTLIN 2.1 • NATIVE</p>
+      </div>
+
+      {/* Center Laser-Etched Watermark */}
+      <div className="absolute inset-x-0 top-[38%] text-center pointer-events-none opacity-20">
+        <span className="text-6xl font-black tracking-tighter text-white">IX</span>
+      </div>
+
+      {/* Technical Specification Plate */}
+      <div className="absolute inset-x-5 bottom-5 rounded-2xl border border-white/10 bg-white/[0.04] p-4 backdrop-blur-xl">
+        <div className="flex items-center justify-between mb-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-950/70 border border-emerald-500/40 px-2.5 py-0.5 text-[10px] font-mono font-bold text-[#00ff87]">
+            <CheckCircle2 className="size-3" /> VERIFIED BINARY
+          </span>
+          <span className="text-[10px] font-mono text-white/50">{item.tag}</span>
+        </div>
+
+        <p className="font-bold text-base text-white">{item.title}</p>
+        <p className="text-xs text-white/60 mb-3">{item.artist}</p>
+
+        {item.details && item.details.length > 0 && (
+          <ul className="mb-4 space-y-1 border-t border-white/10 pt-2.5 text-[11px] font-mono text-white/75">
+            {item.details.map((line) => (
+              <li key={line} className="flex items-center gap-1.5 truncate">
+                <span className="size-1 rounded-full bg-[#00ff87]" />
+                <span className="truncate">{line}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {/* 1-Click APK Download Button */}
+        <a
+          href={item.apkUrl || "/downloads"}
+          download
+          onClick={(e) => e.stopPropagation()}
+          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#00ff87] to-emerald-400 py-2.5 text-xs font-black uppercase tracking-wider text-black shadow-lg shadow-emerald-500/20 transition-transform hover:scale-[1.02] active:scale-95 cursor-pointer"
+        >
+          <Download className="size-3.5" />
+          <span>Download Verified APK</span>
+        </a>
       </div>
     </div>
   );
 }
 
 function fitUnit(shape: Shape) {
-  if (typeof window === "undefined") return 280;
+  if (typeof window === "undefined") return 360;
   const wide = window.innerWidth >= 768;
-  const maxW = wide ? Math.min(520, window.innerWidth * 0.46) : window.innerWidth * 0.78;
-  const maxH = wide ? Math.min(500, window.innerHeight * 0.64) : window.innerHeight * 0.4;
-  return Math.max(80, Math.min(maxW / shape.w, maxH / shape.h));
+  const maxW = wide ? Math.min(480, window.innerWidth * 0.42) : window.innerWidth * 0.78;
+  const maxH = wide ? Math.min(580, window.innerHeight * 0.7) : window.innerHeight * 0.55;
+  return Math.max(120, Math.min(maxW / shape.w, maxH / shape.h));
 }
 
-function Detail({ uid, item, shape, index, total, labels, reduced, source, onLift, onClose }: {
+/** 3D Interactive Detail Modal with Device Rotation */
+function Detail({
+  uid,
+  item,
+  shape,
+  index,
+  total,
+  labels,
+  reduced,
+  source,
+  onLift,
+  onClose
+}: {
   uid: string;
   item: PictureRailItem;
   shape: Shape;
@@ -1049,7 +1517,16 @@ function Detail({ uid, item, shape, index, total, labels, reduced, source, onLif
   const [side, setSide] = React.useState("front" as "front" | "back");
   const [shown, setShown] = React.useState(false);
   const [unit, setUnit] = React.useState(() => fitUnit(shape));
-  const angle = React.useRef({ value: 0, target: 0, velocity: 0, raf: 0, last: 0, dragging: false, startX: 0, startAngle: 0 });
+  const angle = React.useRef({
+    value: 0,
+    target: 0,
+    velocity: 0,
+    raf: 0,
+    last: 0,
+    dragging: false,
+    startX: 0,
+    startAngle: 0
+  });
   const closing = React.useRef(false);
   const titleId = `${uid}-detail-title`;
 
@@ -1072,21 +1549,34 @@ function Detail({ uid, item, shape, index, total, labels, reduced, source, onLif
         a.value += (a.velocity * dt) / sub;
       }
       if (node) node.style.transform = `rotateY(${a.value.toFixed(2)}deg)`;
-      if (Math.abs(a.value - a.target) < 0.05 && Math.abs(a.velocity) < 0.05) { a.value = a.target; if (node) node.style.transform = `rotateY(${a.value}deg)`; a.raf = 0; a.last = 0; return; }
+      if (Math.abs(a.value - a.target) < 0.05 && Math.abs(a.velocity) < 0.05) {
+        a.value = a.target;
+        if (node) node.style.transform = `rotateY(${a.value}deg)`;
+        a.raf = 0;
+        a.last = 0;
+        return;
+      }
       a.raf = requestAnimationFrame(loop);
     };
-    if (reduced) { a.value = a.target; if (node) node.style.transform = `rotateY(${a.value}deg)`; return; }
+    if (reduced) {
+      a.value = a.target;
+      if (node) node.style.transform = `rotateY(${a.value}deg)`;
+      return;
+    }
     if (!a.raf) a.raf = requestAnimationFrame(loop);
   }, [reduced]);
 
-  const turnTo = React.useCallback((next: "front" | "back") => {
-    const a = angle.current;
-    const base = Math.round(a.value / 360) * 360;
-    a.target = base + (next === "back" ? 180 : 0);
-    if (Math.abs(a.target - a.value) > 180) a.target -= 360 * Math.sign(a.target - a.value);
-    setSide(next);
-    spin();
-  }, [spin]);
+  const turnTo = React.useCallback(
+    (next: "front" | "back") => {
+      const a = angle.current;
+      const base = Math.round(a.value / 360) * 360;
+      a.target = base + (next === "back" ? 180 : 0);
+      if (Math.abs(a.target - a.value) > 180) a.target -= 360 * Math.sign(a.target - a.value);
+      setSide(next);
+      spin();
+    },
+    [spin]
+  );
 
   React.useLayoutEffect(() => {
     const figure = figureRef.current;
@@ -1102,15 +1592,30 @@ function Detail({ uid, item, shape, index, total, labels, reduced, source, onLif
       const dy = from.top + from.height / 2 - (to.top + to.height / 2);
       const lift = Math.min(90, Math.abs(dy) * 0.25 + 30);
       onLift(true);
-      animation = figure.animate([
-        { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
-        { transform: `translate(${dx * 0.4}px, ${dy * 0.4 - lift}px) scale(${((scale + 1) / 2) * 1.03}) rotate(${dx > 0 ? -2.5 : 2.5}deg)`, offset: 0.5 },
-        { transform: "none" },
-      ], { duration: 680, easing: "cubic-bezier(.22,.85,.3,1)" });
+      animation = figure.animate(
+        [
+          { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
+          {
+            transform: `translate(${dx * 0.4}px, ${dy * 0.4 - lift}px) scale(${((scale + 1) / 2) * 1.03}) rotate(${
+              dx > 0 ? -2.5 : 2.5
+            }deg)`,
+            offset: 0.5
+          },
+          { transform: "none" }
+        ],
+        { duration: 680, easing: "cubic-bezier(.22,.85,.3,1)" }
+      );
     } else onLift(true);
     const raf = requestAnimationFrame(() => setShown(true));
     const spinState = angle.current;
-    return () => { cancelAnimationFrame(raf); animation?.cancel(); document.body.style.overflow = overflow; cancelAnimationFrame(spinState.raf); spinState.raf = 0; onLift(false); };
+    return () => {
+      cancelAnimationFrame(raf);
+      animation?.cancel();
+      document.body.style.overflow = overflow;
+      cancelAnimationFrame(spinState.raf);
+      spinState.raf = 0;
+      onLift(false);
+    };
   }, [source, reduced, onLift]);
 
   const dismiss = React.useCallback(() => {
@@ -1119,98 +1624,208 @@ function Detail({ uid, item, shape, index, total, labels, reduced, source, onLif
     setShown(false);
     const figure = figureRef.current;
     const to = source();
-    if (!figure || !to || reduced || to.width === 0) { onClose(); return; }
+    if (!figure || !to || reduced || to.width === 0) {
+      onClose();
+      return;
+    }
     const from = figure.getBoundingClientRect();
     const scale = to.width / from.width;
     const dx = to.left + to.width / 2 - (from.left + from.width / 2);
     const dy = to.top + to.height / 2 - (from.top + from.height / 2);
-    const animation = figure.animate([
-      { transform: "none" },
-      { transform: `translate(${dx * 0.6}px, ${dy * 0.6 - 30}px) scale(${(scale + 1) / 2})`, offset: 0.55 },
-      { transform: `translate(${dx}px, ${dy}px) scale(${scale})` },
-    ], { duration: 560, easing: "cubic-bezier(.45,0,.55,1)", fill: "forwards" });
+    const animation = figure.animate(
+      [
+        { transform: "none" },
+        { transform: `translate(${dx * 0.6}px, ${dy * 0.6 - 30}px) scale(${(scale + 1) / 2})`, offset: 0.55 },
+        { transform: `translate(${dx}px, ${dy}px) scale(${scale})` }
+      ],
+      { duration: 560, easing: "cubic-bezier(.45,0,.55,1)", fill: "forwards" }
+    );
     animation.onfinish = () => onClose();
   }, [source, reduced, onClose]);
 
-  React.useEffect(() => {
-    const onKey = (event: KeyboardEvent) => {
-      const dialog = dialogRef.current;
-      if (!dialog || dialog.contains(event.target as Node)) return;
-      if (event.key === "Escape") { event.preventDefault(); dismiss(); }
-      else if (event.key === "ArrowLeft" || event.key === "ArrowRight") turnTo(side === "front" ? "back" : "front");
-      else if (event.key === "Tab") { const first = dialog.querySelector("button"); if (first) { event.preventDefault(); first.focus(); } }
-    };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [dismiss, turnTo, side]);
-
   const onKeyDown = (event: React.KeyboardEvent) => {
-    if (event.key === "Escape") { event.preventDefault(); dismiss(); return; }
-    if (event.key === "ArrowLeft" || event.key === "ArrowRight") { event.preventDefault(); turnTo(side === "front" ? "back" : "front"); return; }
-    if (event.key !== "Tab") return;
-    const controls = [...(dialogRef.current?.querySelectorAll("button") ?? [])].filter((node) => !node.disabled);
-    const first = controls[0];
-    const last = controls.at(-1);
-    if (!first || !last) return;
-    if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
-    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    if (event.key === "Escape") {
+      event.preventDefault();
+      dismiss();
+      return;
+    }
+    if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+      event.preventDefault();
+      turnTo(side === "front" ? "back" : "front");
+    }
   };
 
   const w = shape.w * unit;
   const h = shape.h * unit;
-  const byline = [item.artist, item.year].filter(Boolean).join(", ");
 
   return createPortal(
-    <div ref={dialogRef} role="dialog" aria-modal="true" aria-labelledby={titleId} className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-6 text-white" onKeyDown={onKeyDown}>
-      <div aria-hidden="true" className={`absolute inset-0 bg-[#020612]/92 backdrop-blur-2xl transition-opacity duration-300 motion-reduce:transition-none ${shown ? "opacity-100" : "opacity-0"}`} onClick={dismiss} />
-      <button ref={closeRef} type="button" onClick={dismiss} className={`absolute right-5 top-5 z-10 inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#040a18]/80 px-3.5 py-1.5 text-xs font-mono font-medium tracking-wide text-white/80 outline-none backdrop-blur-md transition-all duration-300 hover:text-white hover:border-emerald-400 focus-visible:ring-2 focus-visible:ring-emerald-400 cursor-pointer ${shown ? "opacity-100" : "opacity-0"}`}>
+    <div
+      ref={dialogRef}
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+      className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto p-4 sm:p-6 text-white"
+      onKeyDown={onKeyDown}
+    >
+      <div
+        aria-hidden="true"
+        className={`absolute inset-0 bg-[#020612]/92 backdrop-blur-2xl transition-opacity duration-300 ${
+          shown ? "opacity-100" : "opacity-0"
+        }`}
+        onClick={dismiss}
+      />
+
+      <button
+        ref={closeRef}
+        type="button"
+        onClick={dismiss}
+        className={`absolute right-5 top-5 z-20 inline-flex items-center gap-2 rounded-full border border-white/20 bg-[#040a18]/85 px-4 py-2 text-xs font-mono font-medium text-white/90 outline-none backdrop-blur-md transition-all hover:border-emerald-400 hover:text-white cursor-pointer ${
+          shown ? "opacity-100" : "opacity-0"
+        }`}
+      >
         {labels.close}
-        <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round"><path d="M3 3l10 10M13 3L3 13" /></svg>
+        <svg aria-hidden="true" viewBox="0 0 16 16" className="size-3.5" fill="none" stroke="currentColor" strokeWidth="1.6">
+          <path d="M3 3l10 10M13 3L3 13" />
+        </svg>
       </button>
-      <div className="relative grid w-full max-w-5xl items-center justify-items-center gap-8 pt-12 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:gap-12">
+
+      <div className="relative grid w-full max-w-5xl items-center justify-items-center gap-8 pt-10 md:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] md:gap-12">
+        {/* 3D Physical Phone Flip Container */}
         <div ref={figureRef} data-figure className="relative" style={{ width: w, height: h }}>
-          <div aria-hidden="true" className="absolute inset-x-[10%] -bottom-[7%] h-[16%] rounded-[50%] bg-black opacity-60 blur-xl" />
+          <div
+            aria-hidden="true"
+            className="absolute inset-x-[10%] -bottom-[8%] h-[16%] rounded-[50%] bg-black/80 opacity-70 blur-2xl"
+          />
           <div
             data-spin-area
             className="absolute inset-0 cursor-grab touch-pan-y active:cursor-grabbing"
             style={{ perspective: "1600px" }}
-            onPointerDown={(event) => { const a = angle.current; a.dragging = true; a.startX = event.clientX; a.startAngle = a.value; cancelAnimationFrame(a.raf); a.raf = 0; a.last = 0; event.currentTarget.setPointerCapture(event.pointerId); }}
-            onPointerMove={(event) => { const a = angle.current; if (!a.dragging) return; a.value = clamp(a.startAngle + (event.clientX - a.startX) * 0.45, a.startAngle - 220, a.startAngle + 220); if (spinRef.current) spinRef.current.style.transform = `rotateY(${a.value.toFixed(2)}deg)`; }}
-            onPointerUp={() => { const a = angle.current; if (!a.dragging) return; a.dragging = false; const facing = ((a.value % 360) + 360) % 360; turnTo(facing > 90 && facing < 270 ? "back" : "front"); }}
-            onPointerCancel={() => { angle.current.dragging = false; turnTo(side); }}
+            onPointerDown={(event) => {
+              const a = angle.current;
+              a.dragging = true;
+              a.startX = event.clientX;
+              a.startAngle = a.value;
+              cancelAnimationFrame(a.raf);
+              a.raf = 0;
+              a.last = 0;
+              event.currentTarget.setPointerCapture(event.pointerId);
+            }}
+            onPointerMove={(event) => {
+              const a = angle.current;
+              if (!a.dragging) return;
+              a.value = clamp(a.startAngle + (event.clientX - a.startX) * 0.45, a.startAngle - 220, a.startAngle + 220);
+              if (spinRef.current) spinRef.current.style.transform = `rotateY(${a.value.toFixed(2)}deg)`;
+            }}
+            onPointerUp={() => {
+              const a = angle.current;
+              if (!a.dragging) return;
+              a.dragging = false;
+              const facing = ((a.value % 360) + 360) % 360;
+              turnTo(facing > 90 && facing < 270 ? "back" : "front");
+            }}
+            onPointerCancel={() => {
+              angle.current.dragging = false;
+              turnTo(side);
+            }}
           >
             <div ref={spinRef} className="absolute inset-0 [transform-style:preserve-3d]">
+              {/* FRONT: High-Res Physical Smartphone Screen */}
               <div data-face="front" className="absolute inset-0 [backface-visibility:hidden]">
-                <FrameArt item={item} shape={shape} unit={unit} lit={0.85} />
+                <PhoneChassis item={item} shape={shape} unit={unit} lit={0} showLamp={false} />
               </div>
-              <div data-face="back" className="absolute inset-0 [backface-visibility:hidden]" style={{ transform: "rotateY(180deg)" }}>
-                <FrameBack item={item} shape={shape} unit={unit} />
+
+              {/* BACK: Physical Chassis Rear with Specs & APK Download */}
+              <div
+                data-face="back"
+                className="absolute inset-0 [backface-visibility:hidden]"
+                style={{ transform: "rotateY(180deg)" }}
+              >
+                <PhoneBack item={item} shape={shape} unit={unit} />
               </div>
             </div>
           </div>
         </div>
-        <div className={`flex flex-col gap-3 text-center transition-[opacity,transform] delay-150 duration-500 motion-reduce:transition-none md:text-left ${shown ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"}`}>
-          <p className="font-mono text-[11px] tracking-[0.2em] text-[#00ff87] font-bold">{String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}</p>
-          <h3 id={titleId} className="text-3xl font-black tracking-tight sm:text-4xl text-white">{item.title}</h3>
-          {byline && <p className="text-sm text-pink-400 font-semibold">{byline}</p>}
-          {item.tag && <p className="text-lg font-mono font-bold text-white bg-white/5 border border-white/10 px-3 py-1 rounded-lg inline-block w-fit">{item.tag}</p>}
+
+        {/* Right Info & Actions Panel */}
+        <div
+          className={`flex flex-col gap-3 text-center transition-[opacity,transform] delay-150 duration-500 md:text-left ${
+            shown ? "translate-y-0 opacity-100" : "translate-y-2 opacity-0"
+          }`}
+        >
+          <p className="font-mono text-xs tracking-[0.25em] text-[#00ff87] font-bold">
+            {String(index + 1).padStart(2, "0")} / {String(total).padStart(2, "0")} • PHYSICAL ARCHITECTURE
+          </p>
+
+          <h3 id={titleId} className="text-3xl font-black tracking-tight sm:text-4xl text-white">
+            {item.title}
+          </h3>
+
+          {item.artist && <p className="text-sm font-semibold text-pink-400">{item.artist}</p>}
+
+          {item.tag && (
+            <p className="inline-block w-fit font-mono text-sm font-bold text-white bg-white/5 border border-white/10 px-3 py-1 rounded-xl">
+              {item.tag}
+            </p>
+          )}
+
           {item.details && item.details.length > 0 && (
-            <ul className="flex flex-wrap justify-center gap-2 md:justify-start">
-              {item.details.map((detail) => <li key={detail} className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80 font-mono">{detail}</li>)}
+            <ul className="flex flex-wrap justify-center gap-2 md:justify-start my-2">
+              {item.details.map((detail) => (
+                <li
+                  key={detail}
+                  className="rounded-full border border-white/15 bg-white/5 px-3 py-1 text-xs text-white/80 font-mono"
+                >
+                  {detail}
+                </li>
+              ))}
             </ul>
           )}
-          <div role="group" aria-label={`${labels.front} / ${labels.back}`} className="mt-2 inline-flex justify-center gap-6 md:justify-start">
+
+          {/* Front / Back 3D Rotate Tabs */}
+          <div
+            role="group"
+            aria-label={`${labels.front} / ${labels.back}`}
+            className="mt-3 inline-flex items-center p-1 rounded-full border border-white/15 bg-white/5 backdrop-blur-md self-center md:self-start shadow-inner"
+          >
             {(["front", "back"] as const).map((face) => (
-              <button key={face} type="button" aria-pressed={side === face} onClick={() => turnTo(face)} className={`relative rounded-[3px] pb-1.5 text-sm font-semibold outline-none transition-colors cursor-pointer ${side === face ? "text-[#00ff87]" : "text-white/50 hover:text-white"}`}>
+              <button
+                key={face}
+                type="button"
+                aria-pressed={side === face}
+                onClick={() => turnTo(face)}
+                className={`px-4 py-1.5 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  side === face
+                    ? "bg-[#00ff87] text-black shadow-[0_0_14px_rgba(0,255,135,0.4)] scale-[1.02]"
+                    : "text-white/60 hover:text-white"
+                }`}
+              >
                 {face === "front" ? labels.front : labels.back}
-                <span aria-hidden="true" className={`absolute inset-x-0 bottom-0 h-0.5 origin-left bg-[#00ff87] transition-transform duration-300 motion-reduce:transition-none ${side === face ? "scale-x-100" : "scale-x-0"}`} />
               </button>
             ))}
+          </div>
+
+          {/* Direct Actions */}
+          <div className="mt-5 flex flex-col gap-2.5 sm:flex-row">
+            <a
+              href={item.apkUrl || "/downloads"}
+              download
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#00ff87] to-emerald-400 px-6 py-3 text-xs font-black uppercase tracking-wider text-black shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+            >
+              <Download className="size-4" />
+              <span>Download Verified APK</span>
+            </a>
+            <a
+              href={`/product/${item.id}`}
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-xs font-bold text-white transition-all hover:border-emerald-400 hover:text-[#00ff87] cursor-pointer"
+            >
+              <span>Explore Engine Docs</span>
+              <ArrowRight className="size-4" />
+            </a>
           </div>
         </div>
       </div>
     </div>,
-    document.body,
+    document.body
   );
 }
 
