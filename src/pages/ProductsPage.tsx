@@ -2,6 +2,7 @@ import React, { useState, useMemo } from 'react'
 import { ALL_PRODUCTS, Product } from '../data/products'
 import { GlassCard } from '../components/common/GlassCard'
 import { GlassButton } from '../components/common/GlassButton'
+import { ParticleText } from '../components/react-bits/ParticleText'
 import { navigate } from '../router'
 import {
   Sparkles,
@@ -58,12 +59,30 @@ export const ProductsPage: React.FC = () => {
             <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
             <span>Complete INIXA Software Catalog</span>
           </div>
-          <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
-            Flagship Applications & <br />
-            <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
-              Laboratory Experiments
-            </span>
-          </h1>
+          <div className="w-full h-[180px] sm:h-[220px] max-w-4xl mx-auto flex items-center justify-center -my-2">
+            <ParticleText
+              text={"Flagship Applications &\nLaboratory Experiments"}
+              particleSize={2.5}
+              density={2.5}
+              color="#ffffff"
+              highlightColor="#00ff87"
+              highlightMode="motion"
+              shape="circle"
+              intro="gather"
+              scatter={160}
+              gatherDuration={1400}
+              stagger={360}
+              clickBurst={true}
+              burstStrength={1.2}
+              pointerRepel={50}
+              repelRadius={140}
+              idleDrift={0.6}
+              trigger="hover"
+              fontSize="clamp(2.4rem, 5.5vw, 4.4rem)"
+              fontWeight={900}
+              glow={true}
+            />
+          </div>
           <p className="text-base sm:text-lg text-neutral-400 leading-relaxed">
             Every product engineered at INIXA Labs is built with custom graphics pipelines, real-time hardware audio rendering, and zero-telemetry architectures.
           </p>
