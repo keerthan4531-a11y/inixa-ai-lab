@@ -4,6 +4,7 @@ import { ParticleText } from '../components/react-bits/ParticleText'
 import { CosmicBackground } from '../components/products/CosmicBackground'
 import { ProductIcon } from '../components/products/ProductIcons'
 import { ArcCarousel } from '../components/products/ArcCarousel'
+import { MobileScreenMarquee } from '../components/products/MobileScreenMarquee'
 import { navigate } from '../router'
 import {
   Sparkles,
@@ -58,13 +59,13 @@ export const ProductsPage: React.FC = () => {
   }, [selectedCategory, searchQuery])
 
   return (
-    <div className="relative min-h-screen pt-28 pb-28 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white overflow-hidden">
+    <div className="relative min-h-screen pt-28 pb-16 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white overflow-hidden">
       {/* Immersive Cosmic Space & Glowing Star Particles Background */}
       <CosmicBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header Section */}
-        <div className="text-center max-w-6xl mx-auto mb-12 space-y-4">
+        <div className="text-center max-w-6xl mx-auto mb-10 space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300 backdrop-blur-md">
             <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
             <span>Complete INIXA Software Catalog</span>
@@ -102,7 +103,7 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* Filters, View Switcher & Search Bar */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-8">
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-6">
           {/* Category Tabs */}
           <div className="flex items-center gap-2 overflow-x-auto p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md w-full lg:w-auto">
             {CATEGORIES.map((cat) => (
@@ -301,6 +302,9 @@ export const ProductsPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Verified Mobile Hardware Screens Infinite Marquee Showcase (Screenshot 3 style) */}
+      <MobileScreenMarquee />
     </div>
   )
 }

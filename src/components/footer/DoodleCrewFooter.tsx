@@ -596,7 +596,7 @@ export function DoodleCrewFooter({
   const doodleRefs = React.useRef<(HTMLDivElement | null)[]>([])
 
   const [metrics, setMetrics] = React.useState(() => estimate(word))
-  const [play, setPlay] = React.useState(false)
+  const [play, setPlay] = React.useState(true)
   const [reduced, setReduced] = React.useState(false)
   const [talking, setTalking] = React.useState(-1)
   const [hopping, setHopping] = React.useState(-1)
@@ -778,10 +778,10 @@ export function DoodleCrewFooter({
       (entries) => {
         for (const e of entries) {
           s.visible = e.isIntersecting
-          if (e.isIntersecting && e.intersectionRatio > 0.12) setPlay(true)
+          if (e.isIntersecting) setPlay(true)
         }
       },
-      { threshold: [0, 0.12, 0.3] },
+      { threshold: [0, 0.05, 0.12, 0.3] },
     )
     io.observe(root)
     return () => io.disconnect()
@@ -1312,7 +1312,8 @@ const CSS =
   ".dcf-totop svg{fill:none;stroke:#00ff87;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}" +
   ".dcf-totop:hover{transform:translateY(-2px);border-color:#00ff87;color:#00ff87}" +
   ".dcf-totop:hover svg{animation:dcf-up .6s ease-in-out infinite}" +
-  ".dcf[data-play='0'] .dcf-letter,.dcf[data-play='0'] .dcf-arrive,.dcf[data-play='0'] .dcf-word,.dcf[data-play='0'] .dcf-pop,.dcf[data-play='0'] .dcf-rise,.dcf[data-play='0'] .dcf-fade,.dcf[data-play='0'] .dcf-doodle-in{opacity:0}" +
+  ".dcf-top,.dcf-word,.dcf-letter,.dcf-arrive,.dcf-pop,.dcf-rise,.dcf-fade,.dcf-doodle-in{opacity:1}" +
+  ".dcf .dcf-top{opacity:1}" +
   ".dcf[data-play='0'] .dcf-draw{stroke-dasharray:1;stroke-dashoffset:1}" +
   ".dcf-letter{transform-box:fill-box;transform-origin:50% 100%}" +
   ".dcf[data-play='1'] .dcf-letter{animation:dcf-stamp .62s cubic-bezier(.2,.8,.25,1.15) var(--d) both}" +
