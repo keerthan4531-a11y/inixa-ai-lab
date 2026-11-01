@@ -8,6 +8,7 @@ import { GlassCard } from '../components/common/GlassCard'
 import { GlassButton } from '../components/common/GlassButton'
 import DriftWall from '../components/DriftWall'
 import LogoLoop, { LogoItem } from '../components/LogoLoop'
+import RulerCarousel from '../components/RulerCarousel'
 import { ALL_PRODUCTS } from '../data/products'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
@@ -270,7 +271,12 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
         </div>
       </section>
 
-      {/* 8. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
+      {/* 8. Interactive Precision Engineering Benchmark Ruler Carousel — 10 Native Pillars */}
+      <section className="relative overflow-hidden border-t border-white/10" id="benchmarks">
+        <RulerCarousel />
+      </section>
+
+      {/* 9. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
       <section className="relative py-14 border-t border-white/10 bg-[#020612]/95 backdrop-blur-md overflow-hidden" aria-label="Technology Stack">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-7 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-3.5 py-1 text-[11px] font-mono uppercase tracking-widest text-emerald-300">
