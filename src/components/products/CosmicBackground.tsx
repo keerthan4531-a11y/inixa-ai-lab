@@ -108,3 +108,4 @@ export const CosmicBackground: React.FC = () => {
     </div>
   )
 }
+

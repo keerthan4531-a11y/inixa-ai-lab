@@ -261,3 +261,4 @@ export const ProductIcon: React.FC<ProductIconProps> = ({ productId, color }) =>
       )
   }
 }
+
