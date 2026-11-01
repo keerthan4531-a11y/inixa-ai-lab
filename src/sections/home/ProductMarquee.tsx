@@ -1,5 +1,6 @@
 import React from 'react';
 import ScrollVelocity from '../../components/ScrollVelocity';
+import RulerCarousel from '../../components/RulerCarousel';
 import { ALL_PRODUCTS } from '../../data/products';
 import { Sparkles } from 'lucide-react';
 
@@ -113,19 +114,15 @@ export const ProductMarquee: React.FC = () => {
         />
       </div>
 
-      {/* Technology stack row — Calm, verified badges */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mt-6">
-        <div className="flex flex-wrap items-center justify-center gap-2">
-          {TECH_STACK_TAGS.map((tech) => (
-            <div
-              key={tech}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#040a18]/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300"
-            >
-              <Sparkles className="w-3 h-3 text-pink-400" />
-              <span>{tech}</span>
-            </div>
-          ))}
-        </div>
+      {/* Interactive Precision Ruler Carousel — Auto-scrolling 10 Native Engineering Pillars */}
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
+        <RulerCarousel
+          compact
+          autoScroll
+          autoScrollInterval={2600}
+          showHeader={false}
+          className="!py-1"
+        />
       </div>
     </section>
   );
