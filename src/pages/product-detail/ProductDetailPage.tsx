@@ -15,6 +15,7 @@ import {
   Cpu,
 } from 'lucide-react'
 import { navigate } from '../../router'
+import { StrokeText } from '../../components/react-bits/StrokeText'
 
 interface ProductDetailPageProps {
   productId: string
@@ -81,9 +82,36 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
               <span>{product.version} • Verified Flagship Architecture</span>
             </div>
 
-            <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 leading-tight">
+            <h1 className="sr-only">
               {product.name}
             </h1>
+            <div className="mb-4">
+              <StrokeText
+                key={product.id}
+                text={product.name}
+                strokeColor={product.accentColor || '#00ff87'}
+                fillColor="#ffffff"
+                strokeWidth={1.8}
+                drawDuration={1.3}
+                fillDelay={0.2}
+                stagger={0.04}
+                ease="power2.out"
+                trigger="mount"
+                fillMode="wipe"
+                wipeFrom="left"
+                fontSize={64}
+                fontWeight={900}
+                letterSpacing={-2}
+                marching={false}
+                hoverRedraw={true}
+                shadow={true}
+                shadowColor={product.accentColor ? `${product.accentColor}70` : '#00ff8770'}
+                className="leading-tight"
+                style={{
+                  fontFamily: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
+                }}
+              />
+            </div>
             <p className="text-lg font-medium text-emerald-300 mb-6">
               {product.tagline}
             </p>
