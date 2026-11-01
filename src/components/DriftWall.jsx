@@ -238,7 +238,7 @@ const DriftWall = ({
         <img
           src={item.image ? encodeURI(item.image) : item.image}
           alt=""
-          loading="lazy"
+          loading="eager"
           decoding="async"
           draggable={false}
           onError={e => {

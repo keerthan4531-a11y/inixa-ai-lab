@@ -10,27 +10,18 @@ import { GlassButton } from '../components/common/GlassButton'
 import DriftWall from '../components/DriftWall'
 import LogoLoop, { LogoItem } from '../components/LogoLoop'
 import { ALL_PRODUCTS } from '../data/products'
+import { ALL_AUDITED_SCREENSHOTS } from '../data/screenshotMap'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
 
-const DRIFT_ITEMS = [
-  { image: '/shots/beat-pro/01ee4605-24f3-4202-9a6d-65439547f437.jpg', title: 'BeatBox Pro — Equalizer DSP', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/07f9d788-7d1b-412d-a222-877738707aec.jpg', title: 'BeatBox Ultra — Liquid Glass Player', href: '/product/beatbox-ultra' },
-  { image: '/shots/liquid-streaming/104338c6-3296-46a9-b63f-241c8ddbbda9.jpg', title: 'Liquid Stream — 4K Stream Engine', href: '/product/liquid-stream' },
-  { image: '/shots/my-tube/0dc8c448-f622-445e-9d91-3d369983fe0b.jpg', title: 'MyTube — Decentralized Player', href: '/product/mytube' },
-  { image: '/shots/clipster/089378e2-9f36-4469-9b1f-bb71b23e803d.jpg', title: 'Clipster — Format Transcoder', href: '/product/clipster' },
-  { image: '/shots/inixa-ai/image.png', title: 'INIXA AI — Neural Workspace', href: '/product/inixa-ai' },
-  { image: '/shots/beat-box-lite/2968f3b4-4781-4414-9dba-ebe488859c3d.jpg', title: 'BeatBox Lite — Offline Vault', href: '/product/beatbox-lite' },
-  { image: '/shots/lumina/1dbdeee2-29bd-428c-9a98-2ef080a1a015.jpg', title: 'Lumina Browser — Fire Wipe Engine', href: '/product/lumina' },
-  { image: '/shots/beat-pro/19db6341-8988-4fb8-ba73-41f97dc665ed.jpg', title: 'BeatBox Pro — Dynamic Lyrics', href: '/product/beatbox-pro' },
-  { image: '/shots/beat-box-ultra/2f3b1fcc-0f44-4b3b-8e32-0c567eb5cf0d.jpg', title: 'BeatBox Ultra — Ambient Canvas', href: '/product/beatbox-ultra' },
-  { image: '/shots/liquid-streaming/42ef5c25-7aac-48ce-80d0-606989fba156.jpg', title: 'Liquid Stream — Gesture ExoPlayer', href: '/product/liquid-stream' },
-  { image: '/shots/my-tube/7a5397cb-7e56-4576-8b3f-94743ad77412.jpg', title: 'MyTube — SponsorBlock UI', href: '/product/mytube' },
-  { image: '/shots/clipster/19b0165f-2102-4044-b938-cca4d546c829.jpg', title: 'Clipster — Multi-thread Downloader', href: '/product/clipster' },
-  { image: '/shots/inixa-ai/373d0497-e6b1-4e11-aedf-13578c79edb6.jpg', title: 'INIXA AI — Multi-Model Gateway', href: '/product/inixa-ai' },
-  { image: '/shots/beat-box-lite/32a1e6bf-213f-4046-874d-83adda9d3bd0.jpg', title: 'BeatBox Lite — Dynamic Visuals', href: '/product/beatbox-lite' },
-  { image: '/shots/lumina/21e8bad7-558f-4b2e-8922-4d879f811d03.jpg', title: 'Lumina Browser — DuckPlayer Sandbox', href: '/product/lumina' },
-]
+const DRIFT_ITEMS = ALL_AUDITED_SCREENSHOTS.map((shot) => {
+  const prod = ALL_PRODUCTS.find((p) => p.id === shot.product)
+  return {
+    image: shot.assetPath,
+    title: prod ? `${prod.name} — ${shot.whatItShows}` : shot.whatItShows,
+    href: `/product/${shot.product}`,
+  }
+})
 
 interface HomePageProps {
   onOpenSearch?: () => void
@@ -243,7 +234,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       </section>
 
       {/* 7. React Bits 3D DriftWall Showcase — Living Ecosystem Horizon */}
-      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#020612]">
+      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#020612] w-full">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center">
           <div className="inline-flex items-center gap-2 rounded-full border border-pink-500/40 bg-pink-950/60 px-4 py-1.5 text-xs font-semibold text-pink-300 mb-3">
             <Sparkles className="w-3.5 h-3.5 text-pink-400" />
@@ -253,28 +244,29 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
             Infinite Software Horizon
           </h2>
           <p className="text-neutral-400 text-sm sm:text-base max-w-xl mx-auto mt-2">
-            A slow 3D drift of verified production screens from all 9 INIXA Labs flagships, in their real portrait format. Hover a frame to lift it, click to open the product.
+            A continuous 3D stream of verified production screens from all 9 INIXA Labs flagships, in their real portrait smartphone format. Hover a frame to lift it, click to open the product.
           </p>
         </div>
 
-        <div style={{ height: 600, width: '100%', position: 'relative' }}>
+        <div className="w-full relative h-[720px] sm:h-[820px] lg:h-[880px] overflow-hidden">
           <DriftWall
             items={DRIFT_ITEMS}
-            columns={5}
-            tileWidth={168}
-            tileHeight={296}
-            gap={16}
-            tilt={12}
-            turn={-9}
-            perspective={1200}
-            depth={70}
-            speed={0}
+            columns={7}
+            tileWidth={195}
+            tileHeight={375}
+            gap={20}
+            radius={20}
+            tilt={10}
+            turn={-8}
+            perspective={1350}
+            depth={55}
+            speed={38}
             direction="up"
-            variance={0.35}
-            parallax={0.45}
-            lift={56}
-            fade={0.35}
-            dim={0.88}
+            variance={0.3}
+            parallax={0.4}
+            lift={64}
+            fade={0.2}
+            dim={0.94}
             overlayColor="#020612"
           />
         </div>
