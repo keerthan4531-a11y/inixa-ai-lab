@@ -5,7 +5,7 @@ export const beatboxUltra: Product = {
   slug: 'beatbox-ultra',
   name: 'BeatBox Ultra',
   brand: 'INIXA',
-  tagline: 'Brina Glass Elegance & Audiophile Android Experience',
+  tagline: 'Liquid Glass Elegance & Audiophile Android Experience',
   category: 'audio',
   status: 'Flagship',
   platform: 'Android 13+ (API 33+) | Universal & ARM64',

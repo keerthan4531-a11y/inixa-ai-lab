@@ -127,7 +127,7 @@ export const LabsGridSection: React.FC = () => {
                 onClick={() => navigate(`/product/${prod.id}`)}
               >
                 {/* 1. Real Physical Device Mockup Showcase Header */}
-                <div className="relative h-64 sm:h-72 w-full flex items-center justify-center p-4 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#060d22] border-b border-white/10 overflow-hidden">
+                <div className="relative h-72 sm:h-80 w-full flex flex-col items-center justify-end pt-12 pb-3.5 px-4 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#060d22] border-b border-white/10 overflow-hidden">
                   {/* Subtle radial aura behind phone */}
                   <div
                     className="pointer-events-none absolute inset-0 opacity-25 blur-2xl transition-opacity duration-500 group-hover:opacity-40"
@@ -135,7 +135,7 @@ export const LabsGridSection: React.FC = () => {
                   />
 
                   {/* Physical Smartphone Shell with notch and real app screen */}
-                  <div className="relative h-full aspect-[9/19] rounded-[24px] border-[2.5px] border-white/25 bg-black shadow-[0_16px_36px_rgba(0,0,0,0.85)] overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-emerald-400/60 group-hover:-translate-y-1">
+                  <div className="relative h-full max-h-[245px] sm:max-h-[265px] aspect-[9/19] rounded-[22px] border-[2.5px] border-white/30 bg-black shadow-[0_16px_36px_rgba(0,0,0,0.85)] overflow-hidden transition-all duration-500 group-hover:scale-105 group-hover:border-emerald-400/60 group-hover:-translate-y-1">
                     {/* Dynamic Notch / Island */}
                     <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-14 h-3 bg-black rounded-full border border-white/15 z-30 flex items-center justify-center">
                       <div className="w-1.5 h-1.5 rounded-full bg-neutral-800 border border-neutral-600 mr-2" />
@@ -154,8 +154,14 @@ export const LabsGridSection: React.FC = () => {
                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent" />
                   </div>
 
-                  {/* Top Floating Badge Bar with Live Status Indicator */}
-                  <div className="absolute top-3 inset-x-3 flex items-center justify-between gap-2 z-20 pointer-events-none">
+                  {/* Floating "100% Real Device" verified hardware pill */}
+                  <div className="absolute bottom-2.5 right-3 hidden sm:inline-flex items-center gap-1 rounded-full border border-emerald-500/35 bg-black/85 px-2 py-0.5 text-[9px] font-mono text-emerald-300 shadow-md backdrop-blur-md z-20 pointer-events-none">
+                    <ShieldCheck className="h-2.5 w-2.5 text-[#00ff87]" />
+                    <span>Real Device</span>
+                  </div>
+
+                  {/* Top Floating Badge Bar with Live Status Indicator — with clean clearance above phone */}
+                  <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between gap-2 z-20 pointer-events-none">
                     <span
                       className="inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-[10px] font-extrabold uppercase tracking-wider text-white shadow-xl backdrop-blur-xl"
                       style={{

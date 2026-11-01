@@ -407,13 +407,19 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               />
 
               {/* Floating feature pills - dynamic and crisp */}
-              <div className="absolute -left-6 top-1/4 z-30 hidden rounded-full border border-pink-500/30 bg-[#040a18]/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
-                <Music2 className="h-3.5 w-3.5 text-pink-400" />
-                <span className="font-medium">{currentItem.badge || 'Verified Flagship'}</span>
+              <div className="absolute left-1 sm:-left-3 top-1/4 z-30 hidden rounded-full border border-pink-500/35 bg-[#040a18]/95 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
+                {currentItem.badge?.includes('AUDIO') || currentItem.badge?.includes('PRO') ? (
+                  <Music2 className="h-3.5 w-3.5 text-pink-400" />
+                ) : currentItem.badge?.includes('HARDENED') || currentItem.badge?.includes('PRIVACY') ? (
+                  <ShieldCheck className="h-3.5 w-3.5 text-[#00ff87]" />
+                ) : (
+                  <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                )}
+                <span className="font-semibold text-white/90">{currentItem.badge || 'Verified Flagship'}</span>
               </div>
-              <div className="absolute -right-6 bottom-1/4 z-30 hidden rounded-full border border-emerald-500/30 bg-[#040a18]/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
+              <div className="absolute right-1 sm:-right-3 bottom-1/4 z-30 hidden rounded-full border border-emerald-500/35 bg-[#040a18]/95 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
                 <ShieldCheck className="h-3.5 w-3.5 text-[#00ff87]" />
-                <span className="font-medium">100% Real Device</span>
+                <span className="font-semibold text-white/90">100% Real Device</span>
               </div>
             </div>
 
