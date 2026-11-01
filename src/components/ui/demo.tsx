@@ -1,7 +1,11 @@
 "use client";
 
 import React from "react";
-import PictureRailGallery from "@/components/ui/picture-rail-gallery";
+import MetroHero from "@/components/ui/scroll-locked-video-hero";
+
+export function DemoOne() {
+  return <MetroHero />;
+}
 import type { PictureRailItem } from "@/components/ui/picture-rail-gallery";
 
 export const PICTURE_RAIL_PRINTS: PictureRailItem[] = [

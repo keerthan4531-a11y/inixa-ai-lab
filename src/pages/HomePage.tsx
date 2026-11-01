@@ -1,4 +1,5 @@
 import React from 'react'
+import MetroHero from '../components/ui/scroll-locked-video-hero'
 import { HeroSection } from '../sections/home/HeroSection'
 import { ProductMarquee } from '../sections/home/ProductMarquee'
 import { LabsGridSection } from '../sections/home/LabsGridSection'
@@ -152,6 +153,15 @@ const TECH_LOGOS: LogoItem[] = [
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
     <div className="relative min-h-screen bg-transparent text-white selection:bg-pink-600 selection:text-white">
+      {/* 0. Scroll-Locked Cinematic Train & Wolf Reveal Hero */}
+      <MetroHero
+        videoSrc="/media/train-metro.mp4"
+        wolfVideoSrc="/media/hero-showcase.mp4"
+        title="WELCOME TO INIXA LABS"
+        scrollHint="SCROLL TO ENTER"
+        tagline="Frontiers of Tactile Mobile Software & Autonomous AI"
+      />
+
       {/* 1. Glass 3D Hero */}
       <HeroSection onOpenSearch={onOpenSearch} />
 
