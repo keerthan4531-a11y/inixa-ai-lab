@@ -94,7 +94,7 @@ interface RulerLinesProps {
 
 const RulerLines: React.FC<RulerLinesProps> = ({
   top = true,
-  totalLines = 81,
+  totalLines = 161,
   accentColor = "#00ff87",
   compact = false,
 }) => {
@@ -342,15 +342,15 @@ export const RulerCarousel: React.FC<RulerCarouselProps> = ({
         </div>
       )}
 
-      {/* Main Ruler Carousel Container */}
+      {/* Main Ruler Carousel Container — Full Edge-to-Edge Width */}
       <div
-        className={`w-full max-w-5xl flex flex-col justify-center relative ${
+        className={`w-full flex flex-col justify-center relative overflow-hidden ${
           compact ? "my-2" : "my-6"
         }`}
       >
-        {/* Top Ruler Indicator */}
-        <div className="flex items-center justify-center relative">
-          <RulerLines top totalLines={81} accentColor={accentColor} compact={compact} />
+        {/* Top Ruler Indicator — Full Width Span */}
+        <div className="flex items-center justify-center relative w-full overflow-hidden">
+          <RulerLines top totalLines={161} accentColor={accentColor} compact={compact} />
           {/* Center tick neon marker */}
           <div
             className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-1 rounded-full pointer-events-none"
@@ -361,15 +361,15 @@ export const RulerCarousel: React.FC<RulerCarouselProps> = ({
           />
         </div>
 
-        {/* Center Sliding Text Track with Motion Physics */}
+        {/* Center Sliding Text Track with Motion Physics — Full Width */}
         <div
           className={`flex items-center justify-center w-full relative overflow-hidden ${
             compact ? "h-[110px] sm:h-[130px]" : "h-[180px] sm:h-[220px]"
           }`}
         >
           {/* Subtle edge fades for infinite depth */}
-          <div className="pointer-events-none absolute inset-y-0 left-0 w-16 sm:w-36 bg-gradient-to-r from-[#020612] via-[#020612]/80 to-transparent z-10" />
-          <div className="pointer-events-none absolute inset-y-0 right-0 w-16 sm:w-36 bg-gradient-to-l from-[#020612] via-[#020612]/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 left-0 w-20 sm:w-56 bg-gradient-to-r from-[#020612] via-[#020612]/80 to-transparent z-10" />
+          <div className="pointer-events-none absolute inset-y-0 right-0 w-20 sm:w-56 bg-gradient-to-l from-[#020612] via-[#020612]/80 to-transparent z-10" />
 
           {/* Center Precision Target Guidelines */}
           <div
@@ -472,9 +472,9 @@ export const RulerCarousel: React.FC<RulerCarouselProps> = ({
           </motion.div>
         </div>
 
-        {/* Bottom Ruler Indicator */}
-        <div className="flex items-center justify-center relative">
-          <RulerLines top={false} totalLines={81} accentColor={accentColor} compact={compact} />
+        {/* Bottom Ruler Indicator — Full Width Span */}
+        <div className="flex items-center justify-center relative w-full overflow-hidden">
+          <RulerLines top={false} totalLines={161} accentColor={accentColor} compact={compact} />
           {/* Bottom tick neon marker */}
           <div
             className="absolute bottom-0 left-1/2 -translate-x-1/2 w-3 h-1 rounded-full pointer-events-none"

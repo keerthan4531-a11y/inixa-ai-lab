@@ -114,14 +114,14 @@ export const ProductMarquee: React.FC = () => {
         />
       </div>
 
-      {/* Interactive Precision Ruler Carousel — Auto-scrolling 10 Native Engineering Pillars */}
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 mt-4">
+      {/* Interactive Precision Ruler Carousel — Full-Width Auto-scrolling 10 Native Engineering Pillars */}
+      <div className="w-full mt-3 overflow-hidden px-0">
         <RulerCarousel
           compact
           autoScroll
           autoScrollInterval={2600}
           showHeader={false}
-          className="!py-1"
+          className="!py-1 w-full"
         />
       </div>
     </section>
