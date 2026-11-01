@@ -352,8 +352,8 @@ export const ParticleText: React.FC<ParticleTextProps> = ({
 
       const square = shape === 'square';
       for (const particle of group) {
-        const size = square ? base : Math.max(0.6, base * (0.75 + particle.weight * 0.45));
-        if (square || size <= 2.1) {
+        const size = square ? base : Math.max(1.2, base * (0.85 + particle.weight * 0.4));
+        if (square || size <= 2.2) {
           target.rect(particle.x - size / 2, particle.y - size / 2, size, size);
         } else {
           target.moveTo(particle.x + size / 2, particle.y);
@@ -652,12 +652,12 @@ export const ParticleText: React.FC<ParticleTextProps> = ({
 
       const imageData = offCtx.getImageData(0, 0, offscreen.width, offscreen.height);
       const targets = [];
-      const sampleStep = Math.max(2, Math.floor(s.density));
+      const sampleStep = Math.max(1, Math.floor(s.density));
 
       for (let y = 0; y < offscreen.height; y += sampleStep) {
         for (let x = 0; x < offscreen.width; x += sampleStep) {
           const alpha = imageData.data[(y * offscreen.width + x) * 4 + 3];
-          if (alpha > 40) {
+          if (alpha > 30) {
             targets.push({
               x: nextWidth / 2 - offscreen.width / 2 + x,
               y: nextHeight / 2 - offscreen.height / 2 + y,
@@ -667,7 +667,7 @@ export const ParticleText: React.FC<ParticleTextProps> = ({
         }
       }
 
-      const maxParticles = Math.max(1200, Math.min(6000, Math.floor((nextWidth * nextHeight) / 75)));
+      const maxParticles = Math.max(3000, Math.min(14000, Math.floor((nextWidth * nextHeight) / 36)));
       const stride = Math.max(1, Math.ceil(targets.length / maxParticles));
       const selected = targets.filter((_, index) => index % stride === 0);
       const intro = introPending && !reducedMotion;

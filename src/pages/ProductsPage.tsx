@@ -54,16 +54,16 @@ export const ProductsPage: React.FC = () => {
 
       <div className="relative z-10 max-w-7xl mx-auto">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-16 space-y-4">
+        <div className="text-center max-w-6xl mx-auto mb-14 space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300">
             <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
             <span>Complete INIXA Software Catalog</span>
           </div>
-          <div className="w-full h-[180px] sm:h-[220px] max-w-4xl mx-auto flex items-center justify-center -my-2">
+          <div className="w-full h-[240px] sm:h-[300px] lg:h-[340px] mx-auto flex items-center justify-center my-2">
             <ParticleText
               text={"Flagship Applications &\nLaboratory Experiments"}
-              particleSize={2.5}
-              density={2.5}
+              particleSize={3}
+              density={2}
               color="#ffffff"
               highlightColor="#00ff87"
               highlightMode="motion"
@@ -74,12 +74,13 @@ export const ProductsPage: React.FC = () => {
               stagger={360}
               clickBurst={true}
               burstStrength={1.2}
-              pointerRepel={50}
-              repelRadius={140}
-              idleDrift={0.6}
-              trigger="hover"
-              fontSize="clamp(2.4rem, 5.5vw, 4.4rem)"
+              pointerRepel={55}
+              repelRadius={150}
+              idleDrift={0.5}
+              trigger="mount"
+              fontSize="clamp(3.2rem, 7.5vw, 6.2rem)"
               fontWeight={900}
+              fontFamily="'Inter', -apple-system, sans-serif"
               glow={true}
             />
           </div>
