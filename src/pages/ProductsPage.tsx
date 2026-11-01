@@ -1,22 +1,30 @@
 import React, { useState, useMemo } from 'react'
 import { ALL_PRODUCTS, Product } from '../data/products'
-import { GlassCard } from '../components/common/GlassCard'
-import { GlassButton } from '../components/common/GlassButton'
 import { ParticleText } from '../components/react-bits/ParticleText'
+import { CosmicBackground } from '../components/products/CosmicBackground'
+import { ProductIcon } from '../components/products/ProductIcons'
 import { navigate } from '../router'
 import {
   Sparkles,
-  Layers,
   Download,
   ArrowRight,
-  Filter,
   CheckCircle2,
-  HardDrive,
-  Cpu,
-  Smartphone,
 } from 'lucide-react'
 
 const CATEGORIES = ['All Products', 'Audio Systems', 'Video & Streaming', 'System & AI Utilities']
+
+// Precision neon brand colors matching the screenshot mockup
+const BRAND_COLORS: Record<string, string> = {
+  'beatbox-pro': '#FF7A1A', // Warm glowing amber/orange
+  'beatbox-lite': '#00D2FF', // Electric sky cyan
+  'beatbox-ultra': '#00FF87', // Neon mint emerald
+  'mytube': '#FF2A55', // Crimson / Coral pink
+  'lumina': '#00B4D8', // Electric cyber cyan-blue
+  'liquid-stream': '#A855F7', // Royal purple / violet
+  'clipster': '#10B981', // Emerald green
+  'wikipedia-app': '#3B82F6', // Azure blue
+  'inixa-ai': '#D946EF', // Cyber magenta
+}
 
 export const ProductsPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>('All Products')
@@ -46,19 +54,18 @@ export const ProductsPage: React.FC = () => {
   }, [selectedCategory, searchQuery])
 
   return (
-    <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white">
-      {/* Background ambient lighting */}
-      <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center opacity-30">
-        <div className="w-[800px] h-[500px] bg-gradient-to-tr from-emerald-600/20 via-pink-600/15 to-transparent blur-[120px] rounded-full" />
-      </div>
+    <div className="relative min-h-screen pt-28 pb-28 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white overflow-hidden">
+      {/* Immersive Cosmic Space & Glowing Star Particles Background */}
+      <CosmicBackground />
 
       <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Header Section */}
         <div className="text-center max-w-6xl mx-auto mb-14 space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300">
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300 backdrop-blur-md">
             <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
             <span>Complete INIXA Software Catalog</span>
           </div>
+
           <div className="w-full h-[240px] sm:h-[300px] lg:h-[340px] mx-auto flex items-center justify-center my-2">
             <ParticleText
               text={"Flagship Applications &\nLaboratory Experiments"}
@@ -84,7 +91,8 @@ export const ProductsPage: React.FC = () => {
               glow={true}
             />
           </div>
-          <p className="text-base sm:text-lg text-neutral-400 leading-relaxed">
+
+          <p className="text-base sm:text-lg text-neutral-400 leading-relaxed max-w-3xl mx-auto">
             Every product engineered at INIXA Labs is built with custom graphics pipelines, real-time hardware audio rendering, and zero-telemetry architectures.
           </p>
         </div>
@@ -92,7 +100,7 @@ export const ProductsPage: React.FC = () => {
         {/* Filters & Search Bar */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-12">
           {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 w-full sm:w-auto">
+          <div className="flex items-center gap-2 overflow-x-auto p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md w-full sm:w-auto">
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
@@ -100,7 +108,7 @@ export const ProductsPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat)}
                 className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black font-extrabold shadow-[0_0_15px_rgba(0,255,135,0.35)]'
+                    ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black font-extrabold shadow-[0_0_15px_rgba(0,255,135,0.4)]'
                     : 'bg-white/[0.03] border border-white/5 text-neutral-300 hover:text-white hover:bg-white/10'
                 }`}
               >
@@ -116,98 +124,137 @@ export const ProductsPage: React.FC = () => {
               placeholder="Search products or features..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50 transition-colors"
+              className="w-full bg-white/[0.05] border border-white/10 rounded-2xl px-4 py-2.5 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50 backdrop-blur-md transition-colors"
             />
           </div>
         </div>
 
-        {/* Product Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Product Cards Grid with Glowing Borders, Glassmorphism, and Modern 3D Icons */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
           {filteredProducts.map((product) => {
             const latestApk =
               product.apks && product.apks.length > 0 ? product.apks[product.apks.length - 1] : null
+            const brandColor = BRAND_COLORS[product.id] || product.accentColor || '#00ff87'
 
             return (
-              <GlassCard
+              <div
                 key={product.id}
-                glassLevel="card"
-                enableTilt={true}
-                className="flex flex-col justify-between p-6 sm:p-7 relative overflow-hidden group hover:border-emerald-400/40 transition-all duration-300"
+                className="group relative rounded-[26px] p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 backdrop-blur-2xl overflow-hidden hover:-translate-y-1.5"
+                style={{
+                  background:
+                    'linear-gradient(135deg, rgba(13, 20, 36, 0.72) 0%, rgba(7, 11, 22, 0.88) 100%)',
+                  border: `1.5px solid ${brandColor}80`,
+                  boxShadow: `0 0 24px -4px ${brandColor}38, inset 0 1px 0 rgba(255, 255, 255, 0.12)`,
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.boxShadow = `0 0 38px 2px ${brandColor}65, 0 20px 40px rgba(0, 0, 0, 0.7)`
+                  e.currentTarget.style.borderColor = `${brandColor}`
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.boxShadow = `0 0 24px -4px ${brandColor}38, inset 0 1px 0 rgba(255, 255, 255, 0.12)`
+                  e.currentTarget.style.borderColor = `${brandColor}80`
+                }}
               >
-                {/* Glow accent */}
+                {/* Soft Radial Gradient Highlight at Top-Right Corner */}
                 <div
-                  className="pointer-events-none absolute -right-16 -top-16 w-36 h-36 rounded-full blur-2xl opacity-20 group-hover:opacity-40 transition-opacity"
-                  style={{ backgroundColor: product.accentColor }}
+                  className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"
+                  style={{ backgroundColor: brandColor }}
                 />
 
-                <div>
-                  {/* Top Meta */}
+                <div className="relative z-10">
+                  {/* Top Meta: Pill Badge on Left, Version on Right */}
                   <div className="flex items-center justify-between mb-4">
-                    <span
-                      className="px-3 py-1 rounded-full text-[11px] font-bold tracking-wider uppercase border"
+                    <div
+                      className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wider uppercase border backdrop-blur-md"
                       style={{
-                        backgroundColor: `${product.accentColor}18`,
-                        borderColor: `${product.accentColor}40`,
-                        color: product.accentColor,
+                        backgroundColor: `${brandColor}18`,
+                        borderColor: `${brandColor}40`,
+                        color: brandColor,
                       }}
                     >
-                      {product.badge}
+                      <span>{product.badge}</span>
+                      <span
+                        className="w-1.5 h-1.5 rounded-full animate-pulse"
+                        style={{
+                          backgroundColor: brandColor,
+                          boxShadow: `0 0 8px ${brandColor}`,
+                        }}
+                      />
+                    </div>
+                    <span className="text-xs font-mono font-medium text-slate-400/90">
+                      {product.version}
                     </span>
-                    <span className="text-xs font-mono text-neutral-400">{product.version}</span>
                   </div>
 
-                  {/* Title & Tagline */}
-                  <h3 className="text-2xl font-bold text-white mb-1.5 group-hover:text-emerald-300 transition-colors">
-                    {product.name}
-                  </h3>
-                  <p className="text-xs font-medium text-emerald-400/90 mb-3">{product.tagline}</p>
-                  <p className="text-xs text-neutral-400 leading-relaxed mb-6 line-clamp-3">
+                  {/* Title & Modern 3D Neon Icon Row */}
+                  <div className="flex items-center justify-between gap-3 mb-1.5">
+                    <h3 className="text-2xl sm:text-[26px] font-black text-white tracking-tight leading-none group-hover:text-white transition-colors">
+                      {product.name}
+                    </h3>
+                    <ProductIcon productId={product.id} color={brandColor} />
+                  </div>
+
+                  {/* Subtitle / Tagline */}
+                  <p
+                    className="text-xs font-semibold mb-3 tracking-wide"
+                    style={{ color: brandColor }}
+                  >
+                    {product.tagline}
+                  </p>
+
+                  {/* Paragraph Description */}
+                  <p className="text-xs text-slate-300/80 leading-relaxed mb-5 line-clamp-3 font-normal">
                     {product.description}
                   </p>
 
                   {/* Highlights Bullet List */}
-                  <div className="space-y-2 mb-6 border-t border-white/5 pt-4">
+                  <div className="space-y-2 mb-6 border-t border-white/[0.08] pt-4">
                     {product.highlights.slice(0, 3).map((hl, i) => (
-                      <div key={i} className="flex items-start gap-2 text-xs text-neutral-300">
-                        <CheckCircle2 className="w-3.5 h-3.5 text-[#00ff87] shrink-0 mt-0.5" />
+                      <div key={i} className="flex items-start gap-2.5 text-xs text-slate-200/90">
+                        <CheckCircle2
+                          className="w-3.5 h-3.5 shrink-0 mt-0.5"
+                          style={{ color: brandColor }}
+                        />
                         <span className="line-clamp-1">{hl}</span>
                       </div>
                     ))}
                   </div>
                 </div>
 
-                {/* Footer Actions */}
-                <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
+                {/* Footer CTA Actions */}
+                <div className="relative z-10 border-t border-white/[0.08] pt-4 flex items-center justify-between gap-3">
                   <button
                     type="button"
                     onClick={() => navigate(`/product/${product.id}`)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-semibold text-white/80 hover:text-[#00ff87] hover:border-emerald-400/40 hover:bg-emerald-500/10 transition-all cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 hover:text-white group/btn transition-colors cursor-pointer"
                   >
                     <span>Inspect Specs</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1 text-white/80" />
                   </button>
 
                   {latestApk ? (
-                    <GlassButton
+                    <a
                       href={latestApk.downloadPath}
                       download
-                      variant="primary"
-                      className="!py-2 !px-3.5 !text-xs font-mono font-bold"
-                      icon={<Download className="w-3.5 h-3.5" />}
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_20px_rgba(0,255,135,0.45)] hover:shadow-[0_0_28px_rgba(0,255,135,0.65)]"
+                      style={{
+                        background: 'linear-gradient(135deg, #00ff87 0%, #00e5ff 100%)',
+                      }}
                     >
-                      APK ({latestApk.sizeFormatted || latestApk.fileSize || 'Verified'})
-                    </GlassButton>
+                      <Download className="w-3.5 h-3.5 stroke-[2.5]" />
+                      <span>APK ({latestApk.sizeFormatted || latestApk.fileSize || 'Verified'})</span>
+                    </a>
                   ) : (
-                    <GlassButton
+                    <button
+                      type="button"
                       onClick={() => navigate(`/product/${product.id}`)}
-                      variant="secondary"
-                      className="!py-2 !px-3.5 !text-xs font-medium"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
                     >
-                      Web Service
-                    </GlassButton>
+                      <span>Web Service</span>
+                    </button>
                   )}
                 </div>
-              </GlassCard>
+              </div>
             )
           })}
         </div>
