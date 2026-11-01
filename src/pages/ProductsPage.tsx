@@ -76,11 +76,12 @@ export const ProductsPage: React.FC = () => {
             {CATEGORIES.map((cat) => (
               <button
                 key={cat}
+                type="button"
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
+                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-gradient-to-r from-emerald-400 to-green-500 text-black font-bold shadow-md shadow-emerald-500/25'
-                    : 'text-neutral-400 hover:text-white hover:bg-white/5'
+                    ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black font-extrabold shadow-[0_0_15px_rgba(0,255,135,0.35)]'
+                    : 'bg-white/[0.03] border border-white/5 text-neutral-300 hover:text-white hover:bg-white/10'
                 }`}
               >
                 {cat}
@@ -158,8 +159,9 @@ export const ProductsPage: React.FC = () => {
                 {/* Footer Actions */}
                 <div className="border-t border-white/10 pt-4 flex items-center justify-between gap-3">
                   <button
+                    type="button"
                     onClick={() => navigate(`/product/${product.id}`)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/80 hover:text-emerald-300 transition-colors"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white/[0.05] border border-white/10 text-xs font-semibold text-white/80 hover:text-[#00ff87] hover:border-emerald-400/40 hover:bg-emerald-500/10 transition-all cursor-pointer"
                   >
                     <span>Inspect Specs</span>
                     <ArrowRight className="w-3.5 h-3.5" />
@@ -168,17 +170,18 @@ export const ProductsPage: React.FC = () => {
                   {latestApk ? (
                     <GlassButton
                       href={latestApk.downloadPath}
+                      download
                       variant="primary"
-                      className="!py-2 !px-3.5 !text-xs"
+                      className="!py-2 !px-3.5 !text-xs font-mono font-bold"
                       icon={<Download className="w-3.5 h-3.5" />}
                     >
-                      APK ({latestApk.fileSize})
+                      APK ({latestApk.sizeFormatted || latestApk.fileSize || 'Verified'})
                     </GlassButton>
                   ) : (
                     <GlassButton
                       onClick={() => navigate(`/product/${product.id}`)}
                       variant="secondary"
-                      className="!py-2 !px-3.5 !text-xs"
+                      className="!py-2 !px-3.5 !text-xs font-medium"
                     >
                       Web Service
                     </GlassButton>

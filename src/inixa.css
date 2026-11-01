@@ -21,6 +21,28 @@
   --inixa-card-hover: rgba(0, 255, 135, 0.16);
 }
 
+/* =========================================================================
+   Universal Button & Form Reset (Prevents Browser Default White Boxes)
+   ========================================================================= */
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  background-color: transparent;
+  background-image: none;
+  border: 0 solid transparent;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--inixa-light-green, #00ff87);
+  outline-offset: 2px;
+}
+
 /* ------------------------------------------------------------- Section Headings */
 .inixa-kicker {
   display: inline-flex;
