@@ -6,26 +6,30 @@
 
 export const TOKENS = {
   colors: {
-    // Deep Base Backgrounds
-    bgVoid: '#020408',
-    bgDark: '#060a12',
-    bgSurface: '#0b1220',
-    bgSurfaceElevated: '#101a2e',
+    // Deep Base Backgrounds (Rich OLED Dark Blue Void)
+    bgVoid: '#020612',
+    bgDark: '#040a18',
+    bgSurface: '#081226',
+    bgSurfaceElevated: '#0d1b38',
     
-    // INIXA Brand Gradients & Accents
-    cyan: '#00f2fe',
+    // INIXA Brand Gradients & Accents (Light Green + Dark Pink + Dark Blue)
+    lightGreen: '#00ff87',
+    emerald: '#10b981',
+    darkPink: '#be185d',
+    neonPink: '#ec4899',
+    deepRose: '#9f1239',
+    darkBlue: '#0a1630',
+    cyan: '#00ff87', // backwards-compat alias mapped to light green
     blue: '#3b82f6',
     indigo: '#6366f1',
-    purple: '#8b5cf6',
-    violet: '#a855f7',
+    purple: '#a855f7',
     amber: '#f59e0b',
-    emerald: '#10b981',
-    rose: '#f43f5e',
+    rose: '#be185d',
 
     // Glass Translucency Levels
-    glassBase: 'rgba(10, 16, 28, 0.65)',
-    glassElevated: 'rgba(14, 22, 38, 0.78)',
-    glassUltra: 'rgba(20, 32, 54, 0.88)',
+    glassBase: 'rgba(6, 13, 28, 0.72)',
+    glassElevated: 'rgba(9, 18, 38, 0.82)',
+    glassUltra: 'rgba(13, 25, 52, 0.90)',
     glassSubtle: 'rgba(255, 255, 255, 0.04)',
     glassHighlight: 'rgba(255, 255, 255, 0.12)',
     glassGleam: 'rgba(255, 255, 255, 0.28)',
@@ -34,7 +38,8 @@ export const TOKENS = {
     borderSubtle: 'rgba(255, 255, 255, 0.08)',
     borderMedium: 'rgba(255, 255, 255, 0.15)',
     borderStrong: 'rgba(255, 255, 255, 0.25)',
-    borderGlow: 'rgba(0, 242, 254, 0.35)',
+    borderGlow: 'rgba(0, 255, 135, 0.35)',
+    borderPinkGlow: 'rgba(190, 24, 93, 0.40)',
 
     // Text & Foregrounds
     textPrimary: '#ffffff',
@@ -63,8 +68,10 @@ export const TOKENS = {
     glassSm: '0 4px 16px 0 rgba(0, 0, 0, 0.35), inset 0 1px 1px 0 rgba(255, 255, 255, 0.15)',
     glassMd: '0 12px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.20)',
     glassLg: '0 24px 64px 0 rgba(0, 0, 0, 0.55), inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.28)',
-    neonCyan: '0 0 32px -4px rgba(0, 242, 254, 0.35)',
-    neonBlue: '0 0 32px -4px rgba(59, 130, 246, 0.35)',
+    neonLightGreen: '0 0 32px -4px rgba(0, 255, 135, 0.40)',
+    neonDarkPink: '0 0 32px -4px rgba(190, 24, 93, 0.45)',
+    neonCyan: '0 0 32px -4px rgba(0, 255, 135, 0.35)',
+    neonBlue: '0 0 32px -4px rgba(10, 22, 48, 0.45)',
     neonPurple: '0 0 32px -4px rgba(139, 92, 246, 0.35)',
     neonAmber: '0 0 32px -4px rgba(245, 158, 11, 0.35)',
   },

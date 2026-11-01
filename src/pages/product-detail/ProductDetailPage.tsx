@@ -84,7 +84,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
             <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight mb-4 leading-tight">
               {product.name}
             </h1>
-            <p className="text-lg font-medium text-cyan-300 mb-6">
+            <p className="text-lg font-medium text-emerald-300 mb-6">
               {product.tagline}
             </p>
             <p className="text-base text-white/70 leading-relaxed mb-8">
@@ -167,7 +167,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                 {/* Text Side */}
                 <div className="flex-1 space-y-4">
                   {feat.badge && (
-                    <span className="inline-block rounded-full bg-cyan-400/20 px-3 py-1 text-[10px] font-bold tracking-wider text-cyan-300 border border-cyan-400/30">
+                    <span className="inline-block rounded-full bg-pink-500/20 px-3 py-1 text-[10px] font-bold tracking-wider text-pink-300 border border-pink-500/30">
                       {feat.badge}
                     </span>
                   )}
@@ -197,7 +197,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
         <div className="mb-24">
           <GlassCard className="p-8">
             <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-              <Cpu className="h-5 w-5 text-cyan-400" />
+              <Cpu className="h-5 w-5 text-pink-400" />
               <span>Technical Specifications &amp; Architecture</span>
             </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -228,7 +228,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                 <GlassCard
                   key={index}
                   className={`p-6 flex flex-col md:flex-row md:items-center justify-between gap-6 border ${
-                    apk.isLatest ? 'border-cyan-400/40 bg-cyan-950/15' : 'border-white/10'
+                    apk.isLatest ? 'border-emerald-400/40 bg-emerald-950/20' : 'border-white/10'
                   }`}
                 >
                   <div className="space-y-2">
@@ -243,14 +243,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
                     </div>
 
                     <div className="text-xs font-mono text-white/60">
-                      {apk.fileName} • <span className="text-cyan-300 font-semibold">{apk.sizeFormatted}</span> • {apk.abi}
+                      {apk.fileName} • <span className="text-emerald-300 font-semibold">{apk.sizeFormatted}</span> • {apk.abi}
                     </div>
 
                     {/* Changelog Bullets */}
                     <div className="space-y-1 pt-1">
                       {apk.changelog.map((change, cIdx) => (
                         <div key={cIdx} className="flex items-center gap-2 text-xs text-white/70">
-                          <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shrink-0" />
+                          <div className="h-1.5 w-1.5 rounded-full bg-[#00ff87] shrink-0" />
                           <span>{change}</span>
                         </div>
                       ))}

@@ -22,21 +22,21 @@ export const ContactPage: React.FC = () => {
   }
 
   return (
-    <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-black text-white selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white">
       {/* Ambient background */}
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center opacity-25">
-        <div className="w-[800px] h-[500px] bg-gradient-to-r from-blue-600/20 via-cyan-600/15 to-transparent blur-[130px] rounded-full" />
+        <div className="w-[800px] h-[500px] bg-gradient-to-r from-emerald-600/20 via-pink-600/15 to-transparent blur-[130px] rounded-full" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto space-y-12">
         <div className="text-center space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300">
-            <Mail className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300">
+            <Mail className="w-3.5 h-3.5 text-[#00ff87]" />
             <span>Developer Dispatch & Laboratory Support</span>
           </div>
           <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
             Connect With <br />
-            <span className="bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
               INIXA Engineers
             </span>
           </h1>
@@ -49,14 +49,14 @@ export const ContactPage: React.FC = () => {
           {/* Contact Details & Channels */}
           <div className="md:col-span-5 space-y-4">
             <GlassCard glassLevel="card" className="p-6 space-y-3">
-              <div className="flex items-center gap-3 text-cyan-400">
+              <div className="flex items-center gap-3 text-[#00ff87]">
                 <Bug className="w-5 h-5" />
                 <h3 className="font-bold text-white text-sm">Issue Tracker & Bug Reports</h3>
               </div>
               <p className="text-xs text-neutral-400 leading-relaxed">
                 Found a crash or audio glitch on a specific Android build? Include device model, SoC (Snapdragon/Dimensity/Tensor), and logcat snippet.
               </p>
-              <div className="pt-2 text-xs font-mono text-cyan-300">
+              <div className="pt-2 text-xs font-mono text-emerald-300">
                 inixa.labs@gmail.com
               </div>
             </GlassCard>
@@ -121,7 +121,7 @@ export const ContactPage: React.FC = () => {
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                       placeholder="e.g. Alex Vance"
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-400/50"
+                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50"
                     />
                   </div>
 
@@ -135,7 +135,7 @@ export const ContactPage: React.FC = () => {
                       value={formData.email}
                       onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                       placeholder="alex@domain.com"
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-400/50"
+                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50"
                     />
                   </div>
 
@@ -146,7 +146,7 @@ export const ContactPage: React.FC = () => {
                     <select
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                      className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-400/50"
+                      className="w-full bg-neutral-900 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-400/50"
                     >
                       <option value="Bug Report">Hardware Bug / Crash Report</option>
                       <option value="Feature Request">Architecture / Feature Request</option>
@@ -165,14 +165,14 @@ export const ContactPage: React.FC = () => {
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                       placeholder="Describe the issue, device model, or inquiry in detail..."
-                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-cyan-400/50"
+                      className="w-full bg-white/[0.04] border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50"
                     />
                   </div>
 
                   <GlassButton
                     type="submit"
                     variant="primary"
-                    className="w-full !py-3.5 justify-center shadow-lg shadow-cyan-500/20"
+                    className="w-full !py-3.5 justify-center shadow-lg shadow-emerald-500/25"
                     icon={<Send className="w-4 h-4" />}
                   >
                     Dispatch Transmission

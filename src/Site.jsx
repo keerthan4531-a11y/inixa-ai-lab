@@ -142,21 +142,21 @@ export default function Site() {
   const isCustomChromePage = isRelease || isSupport
 
   return (
-    <div className="min-h-screen bg-black text-white flex flex-col selection:bg-cyan-500 selection:text-black relative">
-                  {/* React Bits CursorGrid — Interactive WebGL2 Cybernetic Grid Background */}
+    <div className="min-h-screen bg-[#020612] text-white flex flex-col selection:bg-pink-600 selection:text-white relative">
+      {/* React Bits CursorGrid — Interactive WebGL2 Cybernetic Grid Background in Dark Blue + Light Green */}
       <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
         <CursorGrid
           cellSize={60}
-          color="#00f2fe"
-          gridColor="#1e293b"
+          color="#00ff87"
+          gridColor="#0f1f38"
           highlight="area"
           gridStyle="lines"
           radius={140}
           holdTime={400}
           fadeDuration={800}
-          fillOpacity={0.03}
-          gridOpacity={0.06}
-          spotlight={0.3}
+          fillOpacity={0.04}
+          gridOpacity={0.09}
+          spotlight={0.35}
           clickPulse={false}
           edgeFade={0.25}
           intro={false}

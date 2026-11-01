@@ -61,11 +61,11 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
       >
         {/* Brand Mark */}
         <Link to="/" className="group flex shrink-0 items-center gap-2.5 no-underline">
-          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#060a12] border border-cyan-400/40 p-0.5 shadow-md shadow-cyan-500/25 overflow-hidden group-hover:border-cyan-300 transition-colors">
+          <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-[#040a18] border border-emerald-400/40 p-0.5 shadow-md shadow-emerald-500/25 overflow-hidden group-hover:border-pink-500/60 transition-colors">
             <ElectricLogo
               src="/inixa-brand-electric.svg"
-              color="#38bdf8"
-              glowColor="#0284c7"
+              color="#00ff87"
+              glowColor="#be185d"
               scale={0.82}
               strands={3}
               bend={0.5}
@@ -76,11 +76,11 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
             />
           </div>
           <span className="flex items-center gap-1.5 text-sm font-extrabold tracking-tight text-white">
-            INIXA <span className="text-xs font-semibold tracking-wider text-cyan-400">LABS</span>
+            INIXA <span className="text-xs font-semibold tracking-wider text-[#00ff87]">LABS</span>
           </span>
         </Link>
 
-        {/* Desktop Nav Links with Gooey Physics */}
+        {/* Desktop Nav Links with Gooey Physics in Light Green + Dark Pink Droplets */}
         <div className="hidden items-center md:flex">
           <GooeyNav
             items={MAIN_NAV_ITEMS}
@@ -91,9 +91,9 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
             size="sm"
             frame={false}
             theme="dark"
-            color="#00f2fe"
-            activeTextColor="#020408"
-            colors={['#00f2fe', '#38bdf8', '#818cf8', '#c084fc']}
+            color="#00ff87"
+            activeTextColor="#020612"
+            colors={['#00ff87', '#10b981', '#ec4899', '#be185d']}
           />
         </div>
 
@@ -102,7 +102,7 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
           <button
             type="button"
             onClick={onOpenSearch}
-            className="flex min-h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/60 transition-colors hover:border-cyan-400/40 hover:text-white"
+            className="flex min-h-10 items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1.5 text-xs text-white/60 transition-colors hover:border-emerald-400/50 hover:text-white"
             title="Search (Ctrl+K)"
             aria-label="Search"
           >
@@ -142,7 +142,7 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
         {menuOpen && (
           <div
             id="inixa-mobile-menu"
-            className="absolute inset-x-0 top-[calc(100%+10px)] rounded-[24px] border border-white/12 bg-[#060a12]/97 p-2 shadow-2xl backdrop-blur-xl md:hidden"
+            className="absolute inset-x-0 top-[calc(100%+10px)] rounded-[24px] border border-white/12 bg-[#040a18]/97 p-2 shadow-2xl backdrop-blur-xl md:hidden"
           >
             {MAIN_NAV_ITEMS.map((item) => {
               const isActive = currentPath === item.href
@@ -153,12 +153,12 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
                   onNavigate={() => setMenuOpen(false)}
                   aria-current={isActive ? 'page' : undefined}
                   className={`flex min-h-11 items-center justify-between rounded-2xl px-4 py-2.5 text-sm font-semibold no-underline ${
-                    isActive ? 'bg-white/10 text-cyan-300' : 'text-white/75 hover:bg-white/5 hover:text-white'
+                    isActive ? 'bg-white/10 text-emerald-300' : 'text-white/75 hover:bg-white/5 hover:text-white'
                   }`}
                 >
                   <span>{item.label}</span>
                   {item.badge && (
-                    <span className="rounded-full border border-cyan-400/30 bg-cyan-400/15 px-2 py-0.5 text-[10px] font-bold text-cyan-300">
+                    <span className="rounded-full border border-pink-500/30 bg-pink-500/15 px-2 py-0.5 text-[10px] font-bold text-pink-300">
                       {item.badge}
                     </span>
                   )}
@@ -168,7 +168,7 @@ export const InixaNav: React.FC<InixaNavProps> = ({ onOpenSearch }) => {
             <Link
               to="/downloads"
               onNavigate={() => setMenuOpen(false)}
-              className="mt-1 flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-cyan-400 px-4 py-2.5 text-sm font-bold text-black no-underline"
+              className="mt-1 flex min-h-11 items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-emerald-400 to-green-500 px-4 py-2.5 text-sm font-bold text-black no-underline shadow-lg shadow-emerald-500/25"
             >
               <Download className="h-4 w-4" aria-hidden="true" /> Get APKs
             </Link>

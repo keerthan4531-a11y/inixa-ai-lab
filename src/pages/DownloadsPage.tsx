@@ -39,10 +39,10 @@ export const DownloadsPage: React.FC = () => {
   })
 
   return (
-    <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-black text-white selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white">
       {/* Background ambient lighting */}
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center opacity-25">
-        <div className="w-[900px] h-[550px] bg-gradient-to-br from-emerald-600/20 via-cyan-600/15 to-transparent blur-[140px] rounded-full" />
+        <div className="w-[900px] h-[550px] bg-gradient-to-br from-emerald-600/20 via-pink-600/15 to-transparent blur-[140px] rounded-full" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto">
@@ -54,7 +54,7 @@ export const DownloadsPage: React.FC = () => {
           </div>
           <h1 className="text-4xl sm:text-6xl font-black text-white tracking-tight">
             INIXA Release Vault & <br />
-            <span className="bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
               Binary Distribution Hub
             </span>
           </h1>
@@ -77,7 +77,7 @@ export const DownloadsPage: React.FC = () => {
 
           <GlassCard glassLevel="card" className="p-6">
             <div className="flex items-center gap-3 mb-2">
-              <Cpu className="w-5 h-5 text-cyan-400" />
+              <Cpu className="w-5 h-5 text-pink-400" />
               <h3 className="text-sm font-bold text-white">Universal & ARM64-v8a</h3>
             </div>
             <p className="text-xs text-neutral-400 leading-relaxed">

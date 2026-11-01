@@ -207,11 +207,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
         {/* Brand band: ElectricLogo + interactive TechText wordmark */}
         <div className="mb-2 sm:mb-4 text-center">
           <div className="mx-auto mb-3 flex items-center justify-center">
-            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#060a12]/90 border border-cyan-400/40 p-1 shadow-[0_0_30px_rgba(34,211,238,0.25)] overflow-hidden">
+            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#040a18]/90 border border-emerald-400/40 p-1 shadow-[0_0_30px_rgba(0,255,135,0.25)] overflow-hidden">
               <ElectricLogo
                 src="/inixa-brand-electric.svg"
-                color="#38bdf8"
-                glowColor="#0284c7"
+                color="#00ff87"
+                glowColor="#be185d"
                 scale={0.82}
                 strands={4}
                 bend={0.6}
@@ -223,15 +223,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-cyan-400/30 bg-cyan-950/60 px-4 py-1.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl mb-3">
-            <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+          <div className="inline-flex items-center gap-2.5 rounded-full border border-emerald-400/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300 shadow-lg backdrop-blur-xl mb-3">
+            <span className="h-2 w-2 rounded-full bg-[#00ff87] shadow-[0_0_8px_#00ff87]" />
             <DecryptedText
               text="INIXA AI LABS • 2026 SHOWCASE"
               animateOn="view"
               speed={40}
               maxIterations={10}
               revealDirection="start"
-              className="tracking-widest uppercase font-mono text-cyan-300"
+              className="tracking-widest uppercase font-mono text-emerald-300"
             />
           </div>
           <div className="relative mx-auto w-full max-w-4xl h-[120px] sm:h-[160px] md:h-[200px] text-white">
@@ -250,7 +250,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               guides={false}
               fontFamily=""
               letterSpacing={-0.03}
-              accentColor="#22d3ee"
+              accentColor="#00ff87"
               reach={200}
               softness={0.7}
               lineStyle="dashed"
@@ -287,7 +287,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               hoverRadius={0}
               motionBlur={false}
               respectReducedMotion={true}
-              accentColor="#22d3ee"
+              accentColor="#00ff87"
             />
 
             {/* React Bits TextType — 5 Cyclical Flagship Paragraphs */}
@@ -304,7 +304,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 cursorGlide
                 showCursor
                 loop
-                cursorColor="#22d3ee"
+                cursorColor="#00ff87"
                 className="text-base leading-relaxed text-white/80 sm:text-lg"
               />
             </div>
@@ -315,7 +315,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 <GlassButton
                   href="/products"
                   variant="primary"
-                  className="!px-6 !py-3 shadow-lg shadow-cyan-500/20 cursor-pointer"
+                  className="!px-6 !py-3 shadow-lg shadow-emerald-500/25 cursor-pointer"
                   icon={<ArrowRight className="h-4 w-4" />}
                 >
                   Explore 9 Products
@@ -326,7 +326,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 <GlassButton
                   href="/downloads"
                   variant="secondary"
-                  className="!px-6 !py-3 cursor-pointer"
+                  className="!px-6 !py-3 cursor-pointer hover:border-pink-500/40"
                   icon={<Download className="h-4 w-4" />}
                 >
                   Download APKs
@@ -338,7 +338,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                   onClick={onOpenSearch}
                   variant="ghost"
                   className="!px-5 !py-3 text-white/70 hover:text-white cursor-pointer"
-                  icon={<Search className="h-4 w-4 text-cyan-400" />}
+                  icon={<Search className="h-4 w-4 text-[#00ff87]" />}
                 >
                   Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
                 </GlassButton>
@@ -353,14 +353,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                     setIsMuted(v.muted)
                   }
                 }}
-                className="inline-flex items-center gap-2 rounded-full border border-cyan-400/30 bg-black/70 px-4 py-2.5 text-xs font-semibold text-cyan-300 shadow-lg backdrop-blur-xl transition hover:border-cyan-300 hover:text-white cursor-pointer"
+                className="inline-flex items-center gap-2 rounded-full border border-pink-500/35 bg-[#040a18]/85 px-4 py-2.5 text-xs font-semibold text-pink-300 shadow-lg backdrop-blur-xl transition hover:border-pink-400 hover:text-white cursor-pointer"
                 title={isMuted ? 'Unmute HD Cinematic Audio' : 'Mute Audio'}
                 aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
               >
                 {isMuted ? (
                   <VolumeX className="h-3.5 w-3.5 text-white/60" />
                 ) : (
-                  <Volume2 className="h-3.5 w-3.5 text-cyan-400 animate-pulse" />
+                  <Volume2 className="h-3.5 w-3.5 text-pink-400 animate-pulse" />
                 )}
                 <span>{isMuted ? 'Unmute Audio (11s Loop)' : 'HD Audio Active'}</span>
               </button>
@@ -380,8 +380,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           {/* Right Column: Physical Device 3D DepthCarousel — Zoomed and prominent */}
           <div className="flex flex-col items-center justify-center lg:col-span-5">
             <div className="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[480px] h-[640px] sm:h-[700px] flex items-center justify-center">
-              {/* Soft ambient back-glow aura */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-cyan-500/15 blur-3xl opacity-50" />
+              {/* Soft ambient back-glow aura — Light Green + Dark Pink glow on Dark Blue */}
+              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-gradient-to-tr from-emerald-500/20 via-pink-600/20 to-emerald-400/15 blur-3xl opacity-60" />
 
               <DepthCarousel
                 items={HERO_SHOWCASE_ITEMS}
@@ -407,23 +407,23 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               />
 
               {/* Floating feature pills - dynamic and crisp */}
-              <div className="absolute -left-6 top-1/4 z-30 hidden rounded-full border border-white/15 bg-black/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
-                <Music2 className="h-3.5 w-3.5 text-amber-400" />
+              <div className="absolute -left-6 top-1/4 z-30 hidden rounded-full border border-pink-500/30 bg-[#040a18]/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
+                <Music2 className="h-3.5 w-3.5 text-pink-400" />
                 <span className="font-medium">{currentItem.badge || 'Verified Flagship'}</span>
               </div>
-              <div className="absolute -right-6 bottom-1/4 z-30 hidden rounded-full border border-white/15 bg-black/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
-                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+              <div className="absolute -right-6 bottom-1/4 z-30 hidden rounded-full border border-emerald-500/30 bg-[#040a18]/90 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
+                <ShieldCheck className="h-3.5 w-3.5 text-[#00ff87]" />
                 <span className="font-medium">100% Real Device</span>
               </div>
             </div>
 
             {/* Dynamic Active Screenshot Pill */}
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs backdrop-blur-xl shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#040a18]/80 px-4 py-1.5 text-xs backdrop-blur-xl shadow-lg">
+              <span className="h-2 w-2 rounded-full bg-[#00ff87] shadow-[0_0_8px_#00ff87]" />
               <span className="font-bold text-white">{currentItem.title}</span>
               <span className="text-white/40">•</span>
               <span className="text-white/70 truncate max-w-[190px]">{currentItem.subtitle}</span>
-              <span className="ml-1 text-[10px] font-mono text-cyan-300 bg-cyan-950/80 border border-cyan-800/40 px-2 py-0.5 rounded-full">
+              <span className="ml-1 text-[10px] font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/40 px-2 py-0.5 rounded-full">
                 {activeSlide + 1}/12
               </span>
             </div>

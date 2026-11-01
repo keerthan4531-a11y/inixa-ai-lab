@@ -76,10 +76,10 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
       />
 
       {/* Floating Command Box */}
-      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/20 bg-[#080d1a]/90 shadow-2xl backdrop-blur-2xl">
+      <div className="relative w-full max-w-2xl overflow-hidden rounded-3xl border border-white/20 bg-[#040a18]/95 shadow-2xl backdrop-blur-2xl">
         {/* Search Input Bar */}
         <div className="flex items-center border-b border-white/10 px-5 py-4">
-          <Search className="h-5 w-5 text-cyan-400" />
+          <Search className="h-5 w-5 text-[#00ff87]" />
           <input
             type="text"
             value={query}
@@ -99,7 +99,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
         <div className="max-h-[60vh] overflow-y-auto p-4 space-y-5">
           {/* Products Group */}
           <div>
-            <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-cyan-400">
+            <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-emerald-400">
               INIXA Products & Flagships
             </div>
             <div className="space-y-1">
@@ -118,13 +118,13 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                       style={{ backgroundColor: p.accentColor }}
                     />
                     <div>
-                      <div className="text-sm font-semibold text-white group-hover:text-cyan-300">
+                      <div className="text-sm font-semibold text-white group-hover:text-emerald-300">
                         {p.name}
                       </div>
                       <div className="text-xs text-white/50">{p.tagline}</div>
                     </div>
                   </div>
-                  <span className="text-xs text-white/30 group-hover:text-cyan-400 flex items-center gap-1">
+                  <span className="text-xs text-white/30 group-hover:text-[#00ff87] flex items-center gap-1">
                     View <ArrowRight className="h-3 w-3" />
                   </span>
                 </div>
@@ -164,7 +164,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
           {/* Screenshots Group */}
           {filteredScreenshots.length > 0 && (
             <div>
-              <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-purple-400">
+              <div className="px-3 pb-2 text-[11px] font-bold uppercase tracking-wider text-pink-400">
                 Live Device Screenshots
               </div>
               <div className="grid grid-cols-2 gap-2">
@@ -175,7 +175,7 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
                       navigate(`/product/${shot.product}`)
                       onClose()
                     }}
-                    className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-2 hover:border-cyan-400/40"
+                    className="flex cursor-pointer items-center gap-2.5 rounded-xl border border-white/10 bg-white/5 p-2 hover:border-pink-500/40"
                   >
                     <SafeImage
                       src={shot.assetPath}

@@ -87,14 +87,14 @@ export const GallerySection: React.FC = () => {
   }, [activeShot, filteredScreenshots.length])
 
   const productName = (id: string) => PRODUCTS_BY_ID[id]?.name || id
-  const accent = (id: string) => PRODUCTS_BY_ID[id]?.accentColor || '#00f2fe'
+  const accent = (id: string) => PRODUCTS_BY_ID[id]?.accentColor || '#00ff87'
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6" id="gallery">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-cyan-400 inline-flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <p className="mb-3 text-xs font-bold uppercase tracking-widest text-emerald-400 inline-flex items-center gap-1.5">
+            <Sparkles className="w-3.5 h-3.5 text-[#00ff87]" />
             <span>WebGL Liquid Glass Refraction Stream</span>
           </p>
           <h2 className="mb-3 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
@@ -118,7 +118,7 @@ export const GallerySection: React.FC = () => {
           aria-pressed={selectedProduct === 'all'}
           className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
             selectedProduct === 'all'
-              ? 'bg-cyan-400 font-bold text-black'
+              ? 'bg-[#00ff87] font-bold text-black shadow-lg shadow-emerald-500/25'
               : 'border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
           }`}
         >
@@ -161,7 +161,7 @@ export const GallerySection: React.FC = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Filter by feature — lyrics, equalizer, 4K…"
-          className="min-h-11 w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-11 pr-10 text-sm text-white outline-none backdrop-blur-xl placeholder:text-white/40 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+          className="min-h-11 w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-11 pr-10 text-sm text-white outline-none backdrop-blur-xl placeholder:text-white/40 focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20"
         />
         {searchQuery && (
           <button
@@ -177,7 +177,7 @@ export const GallerySection: React.FC = () => {
 
       {/* React Bits FlexCarousel — WebGL Liquid Glass Optical Refraction Carousel */}
       {carouselItems.length > 0 ? (
-        <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.04] to-black/80 backdrop-blur-2xl shadow-2xl p-3 sm:p-5">
+        <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.04] to-[#020612]/90 backdrop-blur-2xl shadow-2xl p-3 sm:p-5">
           {/* Preset Controls */}
           <div className="flex flex-wrap items-center justify-between gap-3 px-2 pb-3 mb-2 border-b border-white/10">
             <div className="flex items-center gap-2">
@@ -189,7 +189,7 @@ export const GallerySection: React.FC = () => {
                   onClick={() => setCurrentPreset(preset)}
                   className={`px-3 py-1 text-xs rounded-full capitalize font-medium transition-all ${
                     currentPreset === preset
-                      ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-400/50 shadow-[0_0_15px_rgba(6,182,212,0.3)]'
+                      ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-400/50 shadow-[0_0_15px_rgba(0,255,135,0.3)]'
                       : 'text-white/60 hover:text-white border border-transparent'
                   }`}
                 >
@@ -197,7 +197,7 @@ export const GallerySection: React.FC = () => {
                 </button>
               ))}
             </div>
-            <div className="hidden sm:flex items-center gap-2 text-xs text-cyan-400/80">
+            <div className="hidden sm:flex items-center gap-2 text-xs text-emerald-400/80">
               <span>Scroll or drag horizontally • Click card to open</span>
             </div>
           </div>
@@ -232,7 +232,7 @@ export const GallerySection: React.FC = () => {
           </p>
           <GlassButton
             variant="secondary"
-            className="!px-5 !py-2.5 !text-xs"
+            className="!px-5 !py-2.5 !text-xs hover:border-pink-500/40"
             onClick={() => {
               setSearchQuery('')
               setSelectedProduct('all')
@@ -246,11 +246,11 @@ export const GallerySection: React.FC = () => {
       {/* Inspect dialog */}
       {activeShot && activeIndex !== null && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={`${productName(activeShot.product)} — ${activeShot.whatItShows}`}>
-          <div className="fixed inset-0 bg-black/85 backdrop-blur-md" onClick={() => setActiveIndex(null)} aria-hidden="true" />
-          <div className="liquid-glass-panel relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto p-4 sm:p-6 text-white border border-cyan-500/30">
+          <div className="fixed inset-0 bg-[#020612]/90 backdrop-blur-md" onClick={() => setActiveIndex(null)} aria-hidden="true" />
+          <div className="liquid-glass-panel relative z-10 max-h-[92vh] w-full max-w-xl overflow-y-auto p-4 sm:p-6 text-white border border-pink-500/30">
             <div className="mb-4 flex items-center justify-between">
               <div>
-                <span className="text-xs font-bold uppercase tracking-wider text-cyan-400">
+                <span className="text-xs font-bold uppercase tracking-wider text-emerald-400">
                   {productName(activeShot.product)}
                 </span>
                 <h3 className="text-lg font-bold text-white sm:text-xl">{activeShot.whatItShows}</h3>

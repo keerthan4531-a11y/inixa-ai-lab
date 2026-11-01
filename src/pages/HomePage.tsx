@@ -60,12 +60,12 @@ const TECH_LOGOS: LogoItem[] = [
   {
     node: (
       <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 fill-[#00F2FE]" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#00F2FE" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <svg className="w-5 h-5 fill-[#00ff87]" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#00ff87" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
         <span className="text-xs font-semibold text-white/90">WebGL2 Shaders</span>
       </span>
     ),
     title: 'WebGL2 Engine',
-    hoverColor: '#00F2FE',
+    hoverColor: '#00ff87',
   },
   {
     node: (
@@ -151,7 +151,7 @@ const TECH_LOGOS: LogoItem[] = [
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
-    <div className="relative min-h-screen bg-transparent text-white selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen bg-transparent text-white selection:bg-pink-600 selection:text-white">
       {/* 1. Glass 3D Hero */}
       <HeroSection onOpenSearch={onOpenSearch} />
 
@@ -172,21 +172,21 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
         <div className="max-w-6xl mx-auto">
           <GlassCard
             glassLevel="specular"
-            className="p-8 sm:p-14 relative overflow-hidden text-center sm:text-left border-cyan-500/30"
+            className="p-8 sm:p-14 relative overflow-hidden text-center sm:text-left border-emerald-500/30"
           >
-            {/* Background glow orb */}
-            <div className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-cyan-500/20 blur-3xl" />
-            <div className="pointer-events-none absolute -left-20 -top-20 w-96 h-96 rounded-full bg-purple-500/20 blur-3xl" />
+            {/* Background glow orbs — Light Green + Dark Pink */}
+            <div className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl" />
+            <div className="pointer-events-none absolute -left-20 -top-20 w-96 h-96 rounded-full bg-pink-600/20 blur-3xl" />
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-4">
-                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300">
-                  <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300">
+                  <Sparkles className="w-3.5 h-3.5 text-[#00ff87]" />
                   <span>Direct Build Pipeline • Zero Tracking • Pure Performance</span>
                 </div>
                 <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
                   Ready to experience <br />
-                  <span className="bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+                  <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
                     next-generation Android craft?
                   </span>
                 </h2>
@@ -195,15 +195,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
                 </p>
                 <div className="flex flex-wrap items-center gap-4 pt-2">
                   <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Shield className="w-4 h-4 text-emerald-400" />
+                    <Shield className="w-4 h-4 text-[#00ff87]" />
                     <span>Malware Free Verified</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Smartphone className="w-4 h-4 text-cyan-400" />
+                    <Smartphone className="w-4 h-4 text-pink-400" />
                     <span>Android 10 - 15</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Layers className="w-4 h-4 text-purple-400" />
+                    <Layers className="w-4 h-4 text-emerald-400" />
                     <span>All 9 Labs Products</span>
                   </div>
                 </div>
@@ -213,7 +213,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
                 <GlassButton
                   onClick={() => navigate('/downloads')}
                   variant="primary"
-                  className="!py-4 !px-8 text-base shadow-lg shadow-cyan-500/20 w-full justify-center"
+                  className="!py-4 !px-8 text-base shadow-lg shadow-emerald-500/25 w-full justify-center"
                   icon={<Download className="w-5 h-5" />}
                 >
                   Download Hub
@@ -221,7 +221,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
                 <GlassButton
                   onClick={() => navigate('/products')}
                   variant="secondary"
-                  className="!py-4 !px-8 text-base w-full justify-center"
+                  className="!py-4 !px-8 text-base w-full justify-center hover:border-pink-500/40"
                   icon={<ArrowRight className="w-4 h-4" />}
                 >
                   Explore Catalog
@@ -233,10 +233,10 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       </section>
 
       {/* 7. React Bits 3D DriftWall Showcase — Living Ecosystem Horizon */}
-      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-black via-neutral-950 to-[#060010]">
+      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#020612]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-4 py-1.5 text-xs font-semibold text-cyan-300 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-pink-500/40 bg-pink-950/60 px-4 py-1.5 text-xs font-semibold text-pink-300 mb-3">
+            <Sparkles className="w-3.5 h-3.5 text-pink-400" />
             <span>3D SPATIAL DRIFT WALL • INTERACTIVE PERSPECTIVE VIEW</span>
           </div>
           <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
@@ -265,16 +265,16 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
             lift={56}
             fade={0.35}
             dim={0.88}
-            overlayColor="#060010"
+            overlayColor="#020612"
           />
         </div>
       </section>
 
       {/* 8. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
-      <section className="relative py-14 border-t border-white/10 bg-black/90 backdrop-blur-md overflow-hidden" aria-label="Technology Stack">
+      <section className="relative py-14 border-t border-white/10 bg-[#020612]/95 backdrop-blur-md overflow-hidden" aria-label="Technology Stack">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-7 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-[11px] font-mono uppercase tracking-widest text-cyan-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-3.5 py-1 text-[11px] font-mono uppercase tracking-widest text-emerald-300">
+            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff87] animate-pulse" />
             <span>High-Performance Native Engineering Stack</span>
           </div>
         </div>

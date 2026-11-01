@@ -6,7 +6,7 @@ import { AlertTriangle, Home, ArrowLeft } from 'lucide-react'
 
 export const NotFoundPage: React.FC = () => {
   return (
-    <div className="relative min-h-screen flex items-center justify-center px-4 bg-black text-white selection:bg-cyan-500 selection:text-black">
+    <div className="relative min-h-screen flex items-center justify-center px-4 bg-[#020612] text-white selection:bg-pink-600 selection:text-white">
       {/* Background ambient light */}
       <div className="pointer-events-none fixed inset-0 z-0 flex items-center justify-center opacity-30">
         <div className="w-[600px] h-[400px] bg-gradient-to-r from-red-600/20 via-pink-600/10 to-transparent blur-[120px] rounded-full" />

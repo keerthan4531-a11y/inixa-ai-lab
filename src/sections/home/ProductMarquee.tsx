@@ -14,9 +14,9 @@ interface ProductItem {
 const ROW_1_PRODUCTS: ProductItem[] = [
   { name: 'BeatBox Pro', version: 'v2.4.2', category: 'audio', accentColor: '#a855f7' },
   { name: 'BeatBox Ultra', version: 'v1.0.405', category: 'audio', accentColor: '#f59e0b' },
-  { name: 'Lumina Browser', version: 'v5.295.3', category: 'browser', accentColor: '#00f2fe' },
-  { name: 'Clipster', version: 'v2.0.0-stable', category: 'utility', accentColor: '#f43f5e' },
-  { name: 'INIXA AI', version: 'v1.0.0', category: 'ai', accentColor: '#38bdf8' },
+  { name: 'Lumina Browser', version: 'v5.295.3', category: 'browser', accentColor: '#00ff87' },
+  { name: 'Clipster', version: 'v2.0.0-stable', category: 'utility', accentColor: '#be185d' },
+  { name: 'INIXA AI', version: 'v1.0.0', category: 'ai', accentColor: '#ec4899' },
 ];
 
 const ROW_2_PRODUCTS: ProductItem[] = [
@@ -46,7 +46,7 @@ function renderProductRow(products: ProductItem[]) {
       {products.map((p, idx) => (
         <div
           key={`${p.name}-${idx}`}
-          className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-neutral-900/80 border border-white/10 hover:border-cyan-400/50 transition-all shadow-lg backdrop-blur-xl hover:scale-105 select-none"
+          className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#040a18]/90 border border-white/10 hover:border-emerald-400/50 transition-all shadow-lg backdrop-blur-xl hover:scale-105 select-none"
         >
           <span
             className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse"
@@ -76,14 +76,14 @@ function renderProductRow(products: ProductItem[]) {
 
 export const ProductMarquee: React.FC = () => {
   return (
-    <section className="relative py-8 overflow-hidden border-y border-white/10 bg-black/60 backdrop-blur-xl">
-      {/* Background glow sheen */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-cyan-500/5 via-transparent to-blue-500/5" />
+    <section className="relative py-8 overflow-hidden border-y border-white/10 bg-[#020612]/80 backdrop-blur-xl">
+      {/* Background glow sheen — Light Green & Dark Pink */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-pink-600/10" />
 
       {/* Header Eyebrow */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-4 flex items-center justify-between">
-        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-cyan-400">
-          <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_#22d3ee]" />
+        <div className="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-emerald-400">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#00ff87] shadow-[0_0_8px_#00ff87]" />
           <span>Verified Software Ecosystem • Real-Time Velocity Stream</span>
         </div>
         <div className="hidden sm:inline-flex items-center gap-2 text-xs font-mono text-white/40">
@@ -119,9 +119,9 @@ export const ProductMarquee: React.FC = () => {
           {TECH_STACK_TAGS.map((tech) => (
             <div
               key={tech}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-950/20 border border-cyan-500/20 text-[11px] font-mono text-cyan-200/90"
+              className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#040a18]/80 border border-emerald-500/25 text-[11px] font-mono text-emerald-300"
             >
-              <Sparkles className="w-3 h-3 text-cyan-400" />
+              <Sparkles className="w-3 h-3 text-pink-400" />
               <span>{tech}</span>
             </div>
           ))}

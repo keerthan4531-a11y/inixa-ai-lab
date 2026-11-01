@@ -54,7 +54,7 @@ export const Hardware3DSection: React.FC = () => {
       />
 
       <div className="text-center mb-12">
-        <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-cyan-400 uppercase mb-3">
+        <div className="inline-flex items-center gap-1.5 text-xs font-bold tracking-widest text-emerald-400 uppercase mb-3">
           <Smartphone className="h-3.5 w-3.5" />
           <span>REAL HARDWARE VERIFICATION</span>
         </div>
@@ -108,7 +108,7 @@ export const Hardware3DSection: React.FC = () => {
                       className={cn(
                         'px-3 py-1 rounded-full text-[11px] font-medium transition-all border cursor-pointer',
                         activeKey === key
-                          ? 'bg-cyan-400 text-black border-cyan-400 font-bold shadow-md shadow-cyan-400/20'
+                          ? 'bg-[#00ff87] text-black border-[#00ff87] font-bold shadow-md shadow-emerald-500/25'
                           : 'bg-white/5 text-white/60 border-white/10 hover:bg-white/10 hover:text-white'
                       )}
                     >
@@ -144,7 +144,7 @@ export const Hardware3DSection: React.FC = () => {
             <h3 className="text-3xl font-extrabold text-white mb-3">
               {selectedProduct.name}
             </h3>
-            <p className="text-sm font-medium text-cyan-300 mb-6">
+            <p className="text-sm font-medium text-emerald-300 mb-6">
               {selectedProduct.tagline}
             </p>
             <p className="text-sm text-white/70 leading-relaxed mb-6">

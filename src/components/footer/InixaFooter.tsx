@@ -9,9 +9,9 @@ export const InixaFooter: React.FC = () => {
   }
 
   return (
-    <footer className="relative border-t border-white/10 bg-black pt-20 pb-12 px-4 sm:px-6 overflow-hidden">
-      {/* Background glow */}
-      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-64 bg-gradient-to-t from-cyan-900/20 via-blue-900/10 to-transparent blur-3xl" />
+    <footer className="relative border-t border-white/10 bg-[#020612] pt-20 pb-12 px-4 sm:px-6 overflow-hidden">
+      {/* Background glow — Light Green & Dark Pink on Dark Blue */}
+      <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-64 bg-gradient-to-t from-emerald-950/25 via-pink-950/20 to-transparent blur-3xl" />
 
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Brand Showcase Section */}
@@ -19,16 +19,16 @@ export const InixaFooter: React.FC = () => {
           {/* Brand Manifesto */}
           <div className="md:col-span-5 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-400 via-blue-600 to-purple-600 p-[1.5px] shadow-lg shadow-cyan-500/30">
-                <div className="w-full h-full bg-neutral-950 rounded-[14px] flex items-center justify-center">
-                  <span className="font-black text-xl bg-gradient-to-r from-cyan-400 to-indigo-300 bg-clip-text text-transparent">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#00ff87] via-pink-600 to-[#be185d] p-[1.5px] shadow-lg shadow-emerald-500/25">
+                <div className="w-full h-full bg-[#040a18] rounded-[14px] flex items-center justify-center">
+                  <span className="font-black text-xl bg-gradient-to-r from-[#00ff87] to-pink-300 bg-clip-text text-transparent">
                     IX
                   </span>
                 </div>
               </div>
               <div>
                 <h3 className="text-2xl font-black tracking-wider text-white">
-                  INIXA <span className="text-cyan-400">LABS</span>
+                  INIXA <span className="text-[#00ff87]">LABS</span>
                 </h3>
                 <p className="text-xs text-neutral-400 font-mono">
                   Frontiers of AI & Flagship Mobile Software
@@ -63,7 +63,7 @@ export const InixaFooter: React.FC = () => {
                 <button
                   key={prod.id}
                   onClick={() => navigate(`/product/${prod.id}`)}
-                  className="text-left text-xs text-neutral-400 hover:text-cyan-300 transition-colors py-1 truncate"
+                  className="text-left text-xs text-neutral-400 hover:text-emerald-300 transition-colors py-1 truncate cursor-pointer"
                 >
                   {prod.name}
                 </button>

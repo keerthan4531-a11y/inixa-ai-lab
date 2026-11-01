@@ -5,14 +5,20 @@
    ========================================================================= */
 
 :root {
-  --inixa-cyan: #06b6d4;
-  --inixa-cyan-glow: rgba(6, 182, 212, 0.35);
-  --inixa-blue: #3b82f6;
+  --inixa-light-green: #00ff87;
+  --inixa-emerald: #10b981;
+  --inixa-dark-pink: #be185d;
+  --inixa-neon-pink: #ec4899;
+  --inixa-dark-blue: #020612;
+  --inixa-cyan: #00ff87;
+  --inixa-cyan-glow: rgba(0, 255, 135, 0.35);
+  --inixa-pink-glow: rgba(190, 24, 93, 0.40);
+  --inixa-blue: #1e3a8a;
   --inixa-purple: #a855f7;
   --inixa-gold: #f59e0b;
-  --inixa-card-bg: rgba(18, 18, 22, 0.75);
+  --inixa-card-bg: rgba(6, 13, 28, 0.78);
   --inixa-card-border: rgba(255, 255, 255, 0.08);
-  --inixa-card-hover: rgba(255, 255, 255, 0.16);
+  --inixa-card-hover: rgba(0, 255, 135, 0.16);
 }
 
 /* ------------------------------------------------------------- Section Headings */
@@ -24,9 +30,9 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--inixa-cyan);
-  background: rgba(6, 182, 212, 0.1);
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  color: var(--inixa-light-green);
+  background: rgba(0, 255, 135, 0.1);
+  border: 1px solid rgba(0, 255, 135, 0.25);
   padding: 6px 14px;
   border-radius: 999px;
   margin-bottom: 16px;
