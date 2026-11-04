@@ -108,7 +108,9 @@ export default function Site() {
     set('meta[name="description"]', 'content', description)
     set('meta[property="og:title"]', 'content', title)
     set('meta[property="og:description"]', 'content', description)
-    set('meta[property="og:url"]', 'content', `https://inixa.ai${path}`)
+    set('meta[property="og:url"]', 'content', `https://inixalab.vercel.app${path}`)
+    set('meta[name="twitter:title"]', 'content', title)
+    set('meta[name="twitter:description"]', 'content', description)
   }, [path, isProductDetail, activeProductId, isProducts, isDownloads, isAbout, isContact, isSupport, isRelease, release])
 
   // Key combination listener for search modal (Ctrl+K or Cmd+K)
