@@ -34,6 +34,11 @@ export default defineConfig({
     host: '0.0.0.0',
     allowedHosts: ['.e2b.app'],
     proxy: {
+      '/api/chat': {
+        target: 'https://chatgpt-proxy-chi-five.vercel.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chat/, '/v1/chat/completions'),
+      },
       '/api/chatgpt': {
         target: 'https://chatgpt-proxy-chi-five.vercel.app',
         changeOrigin: true,
@@ -45,6 +50,11 @@ export default defineConfig({
     host: '0.0.0.0',
     allowedHosts: ['.e2b.app'],
     proxy: {
+      '/api/chat': {
+        target: 'https://chatgpt-proxy-chi-five.vercel.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chat/, '/v1/chat/completions'),
+      },
       '/api/chatgpt': {
         target: 'https://chatgpt-proxy-chi-five.vercel.app',
         changeOrigin: true,

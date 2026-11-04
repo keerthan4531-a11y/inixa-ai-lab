@@ -424,6 +424,7 @@ export const AiCatAssistant: React.FC = () => {
     try {
       // 1. Try local dev proxy or direct proxy with stream: true
       const endpoints = [
+        '/api/chat',
         '/api/chatgpt/v1/chat/completions',
         'https://chatgpt-proxy-chi-five.vercel.app/v1/chat/completions',
       ]
