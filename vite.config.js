@@ -33,10 +33,24 @@ export default defineConfig({
   server: {
     host: '0.0.0.0',
     allowedHosts: ['.e2b.app'],
+    proxy: {
+      '/api/chatgpt': {
+        target: 'https://chatgpt-proxy-chi-five.vercel.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chatgpt/, ''),
+      },
+    },
   },
   preview: {
     host: '0.0.0.0',
     allowedHosts: ['.e2b.app'],
+    proxy: {
+      '/api/chatgpt': {
+        target: 'https://chatgpt-proxy-chi-five.vercel.app',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api\/chatgpt/, ''),
+      },
+    },
   },
   // Served from the root of custom domain inixa.ai
   base: '/',

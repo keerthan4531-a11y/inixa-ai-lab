@@ -1,18 +1,17 @@
-import React from 'react'
-import MetroHero from '../components/ui/scroll-locked-video-hero'
+import React, { useState, useRef } from 'react'
 import { HeroSection } from '../sections/home/HeroSection'
 import { ProductMarquee } from '../sections/home/ProductMarquee'
 import { LabsGridSection } from '../sections/home/LabsGridSection'
 import { Hardware3DSection } from '../sections/home/Hardware3DSection'
 import { GallerySection } from '../sections/home/GallerySection'
-import { GlassCard } from '../components/common/GlassCard'
-import { GlassButton } from '../components/common/GlassButton'
 import DriftWall from '../components/DriftWall'
 import LogoLoop, { LogoItem } from '../components/LogoLoop'
 import { ALL_PRODUCTS } from '../data/products'
 import { ALL_AUDITED_SCREENSHOTS } from '../data/screenshotMap'
 import { navigate } from '../router'
 import { Download, Sparkles, Shield, ArrowRight, Layers, Smartphone } from 'lucide-react'
+import { ART, DoodleIcon, CrewKind } from '../components/footer/DoodleCrewFooter'
+import { DoodleCat } from '../components/doodle/DoodleCat'
 
 const DRIFT_ITEMS = ALL_AUDITED_SCREENSHOTS.map((shot) => {
   const prod = ALL_PRODUCTS.find((p) => p.id === shot.product)
@@ -27,13 +26,97 @@ interface HomePageProps {
   onOpenSearch?: () => void
 }
 
+// Interactive Doodle Mascot Component
+const DoodleMascot: React.FC<{
+  kind: CrewKind
+  size?: number
+  quote?: string
+  color?: string
+  speechAlign?: 'top' | 'left' | 'right'
+}> = ({ kind, size = 76, quote, color = '#00ff87', speechAlign = 'top' }) => {
+  const [talking, setTalking] = useState(false)
+  const [hopping, setHopping] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  const art = ART[kind]
+  if (!art) return null
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setTalking(true)
+    setHopping(true)
+    if (timerRef.current) window.clearTimeout(timerRef.current)
+    timerRef.current = window.setTimeout(() => {
+      setTalking(false)
+      setHopping(false)
+    }, 3200)
+  }
+
+  const pad = 12
+  const vx = art.box.l - pad
+  const vy = art.box.t - pad
+  const vw = art.box.r - art.box.l + pad * 2
+  const vh = art.box.b - art.box.t + pad * 2
+
+  return (
+    <div
+      className="relative inline-block select-none cursor-pointer group"
+      onClick={handleClick}
+      title="Click me to chat!"
+    >
+      {talking && quote && (
+        <div
+          className={`absolute z-30 pointer-events-none whitespace-nowrap bg-[#040a18] text-[#00ff87] border-2 border-[#00ff87] rounded-2xl px-3.5 py-1.5 text-xs font-bold shadow-[3px_3px_0_#be185d] animate-in fade-in zoom-in duration-200 ${
+            speechAlign === 'top'
+              ? 'bottom-full left-1/2 -translate-x-1/2 mb-2'
+              : speechAlign === 'left'
+              ? 'bottom-full right-0 mb-2'
+              : 'bottom-full left-0 mb-2'
+          }`}
+        >
+          <span>{quote}</span>
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#040a18] border-r-2 border-b-2 border-[#00ff87] rotate-45" />
+        </div>
+      )}
+
+      <svg
+        viewBox={`${vx} ${vy} ${vw} ${vh}`}
+        width={size}
+        height={size}
+        className={`transition-transform duration-200 ${
+          hopping ? '-translate-y-2 scale-110' : 'group-hover:-translate-y-1 group-hover:scale-105'
+        }`}
+        style={{
+          filter: `drop-shadow(2px 3px 0px rgba(0,0,0,0.85)) drop-shadow(0 0 10px ${color}35)`,
+        }}
+      >
+        <g className="dcf-art">
+          {art.body('none')}
+          {art.eyes.map((eye, i) => (
+            <g key={i}>
+              {eye.r > 0 && <circle cx={eye.x} cy={eye.y} r={eye.r} />}
+              <circle className="k" cx={eye.x} cy={eye.y} r={eye.pupil} />
+              <circle
+                className="dcf-glint"
+                cx={eye.x + eye.pupil * 0.35}
+                cy={eye.y - eye.pupil * 0.4}
+                r={eye.pupil * 0.32}
+              />
+            </g>
+          ))}
+          {art.front?.()}
+        </g>
+      </svg>
+    </div>
+  )
+}
 
 const TECH_LOGOS: LogoItem[] = [
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#00ff87]">
         <svg className="w-5 h-5 fill-[#3DDC84]" viewBox="0 0 24 24"><path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.551 0 .9996.4482.9996.9993.0001.5511-.4486.9997-.9996.9997m-11.046 0c-.5511 0-.9993-.4486-.9993-.9997s.4482-.9993.9993-.9993c.5511 0 .9997.4482.9997.9993 0 .5511-.4486.9997-.9997.9997m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1521-.5676.416.416 0 00-.5676.1521l-2.0223 3.503C15.5902 8.4128 13.8533 8.0818 12 8.0818c-1.8533 0-3.5902.331-5.1368.868L4.8409 5.4468a.4161.4161 0 00-.5677-.1521.4157.4157 0 00-.1521.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/></svg>
-        <span className="text-xs font-semibold text-white/90">Android 15+ Native</span>
+        <span className="text-xs font-bold text-white">Android 15+ Native</span>
       </span>
     ),
     title: 'Android Native SDK',
@@ -41,9 +124,9 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#7F52FF]">
         <svg className="w-5 h-5 fill-[#7F52FF]" viewBox="0 0 24 24"><path d="M24 24H0V0h24L12 12Z"/></svg>
-        <span className="text-xs font-semibold text-white/90">Kotlin Coroutines</span>
+        <span className="text-xs font-bold text-white">Kotlin Coroutines</span>
       </span>
     ),
     title: 'Kotlin Native',
@@ -51,9 +134,9 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#00ff87]">
         <svg className="w-5 h-5 fill-[#00ff87]" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#00ff87" strokeWidth="1.8" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        <span className="text-xs font-semibold text-white/90">WebGL2 Shaders</span>
+        <span className="text-xs font-bold text-white">WebGL2 Shaders</span>
       </span>
     ),
     title: 'WebGL2 Engine',
@@ -61,9 +144,9 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#be185d]">
         <svg className="w-5 h-5 stroke-white fill-none" viewBox="0 0 24 24"><polygon points="12 2 22 20 2 20" strokeWidth="1.8" strokeLinejoin="round"/></svg>
-        <span className="text-xs font-semibold text-white/90">Three.js 3D</span>
+        <span className="text-xs font-bold text-white">Three.js 3D</span>
       </span>
     ),
     title: 'Three.js Spatial Pipeline',
@@ -71,9 +154,9 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#61DAFB]">
         <svg className="w-5 h-5 fill-[#61DAFB]" viewBox="0 0 24 24"><ellipse cx="12" cy="12" rx="10" ry="4.5" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(60 12 12)" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><ellipse cx="12" cy="12" rx="10" ry="4.5" transform="rotate(120 12 12)" fill="none" stroke="#61DAFB" strokeWidth="1.5"/><circle cx="12" cy="12" r="2" fill="#61DAFB"/></svg>
-        <span className="text-xs font-semibold text-white/90">React 19 Core</span>
+        <span className="text-xs font-bold text-white">React 19 Core</span>
       </span>
     ),
     title: 'React Concurrent UI',
@@ -81,9 +164,9 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#F74C00]">
         <svg className="w-5 h-5 fill-[#F74C00]" viewBox="0 0 24 24"><path d="M12 1a2 2 0 0 1 2 2v.2a8.03 8.03 0 0 1 3.5 1.5l.14-.14a2 2 0 1 1 2.83 2.83l-.14.14a8.03 8.03 0 0 1 1.5 3.5H22a2 2 0 1 1 0 4h-.17a8.03 8.03 0 0 1-1.5 3.5l.14.14a2 2 0 1 1-2.83 2.83l-.14-.14a8.03 8.03 0 0 1-3.5 1.5V23a2 2 0 1 1-4 0v-.2a8.03 8.03 0 0 1-3.5-1.5l-.14.14a2 2 0 1 1-2.83-2.83l.14-.14a8.03 8.03 0 0 1-1.5-3.5H2a2 2 0 1 1 0-4h.17a8.03 8.03 0 0 1 1.5-3.5l-.14-.14a2 2 0 1 1 2.83-2.83l.14.14a8.03 8.03 0 0 1 3.5-1.5V3a2 2 0 0 1 2-2zm0 5a6 6 0 1 0 0 12 6 6 0 0 0 0-12z"/></svg>
-        <span className="text-xs font-semibold text-white/90">Rust Native Engine</span>
+        <span className="text-xs font-bold text-white">Rust Native Engine</span>
       </span>
     ),
     title: 'Rust Core Architecture',
@@ -91,75 +174,100 @@ const TECH_LOGOS: LogoItem[] = [
   },
   {
     node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 fill-[#38BDF8]" viewBox="0 0 24 24"><path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.336 6.182 14.975 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.336 13.382 8.975 12 6.001 12z"/></svg>
-        <span className="text-xs font-semibold text-white/90">Tailwind CSS 4</span>
-      </span>
-    ),
-    title: 'Tailwind Styling',
-    hoverColor: '#38BDF8',
-  },
-  {
-    node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 fill-[#E60012]" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" stroke="#E60012" strokeWidth="1.8" fill="none"/><rect x="8" y="8" width="8" height="8" rx="1.5" fill="#E60012"/><line x1="9" y1="1" x2="9" y2="4" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="15" y1="1" x2="15" y2="4" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="9" y1="20" x2="9" y2="23" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="15" y1="20" x2="15" y2="23" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="1" y1="9" x2="4" y2="9" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="1" y1="15" x2="4" y2="15" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="9" x2="23" y2="9" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/><line x1="20" y1="15" x2="23" y2="15" stroke="#E60012" strokeWidth="1.8" strokeLinecap="round"/></svg>
-        <span className="text-xs font-semibold text-white/90">Snapdragon NPU</span>
-      </span>
-    ),
-    title: 'Snapdragon Hardware Acceleration',
-    hoverColor: '#E60012',
-  },
-  {
-    node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 stroke-[#C084FC] fill-none" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0 1 18 0v6" strokeWidth="2" strokeLinecap="round"/><path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" strokeWidth="2"/></svg>
-        <span className="text-xs font-semibold text-white/90">Bit-Perfect 32-bit DSP</span>
-      </span>
-    ),
-    title: 'ExoPlayer Lossless Audio',
-    hoverColor: '#C084FC',
-  },
-  {
-    node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 fill-[#0AE448]" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-        <span className="text-xs font-semibold text-white/90">GSAP Physics</span>
-      </span>
-    ),
-    title: 'GreenSock Motion Architecture',
-    hoverColor: '#0AE448',
-  },
-  {
-    node: (
-      <span className="flex items-center gap-2.5 px-3 py-1.5 rounded-xl border border-white/10 bg-white/5 backdrop-blur-md">
-        <svg className="w-5 h-5 stroke-[#10B981] fill-none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" strokeWidth="2"/><path d="m9 12 2 2 4-4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
-        <span className="text-xs font-semibold text-white/90">0 Telemetry Verified</span>
+      <span className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-xl border-2 border-white/40 bg-[#040a18] shadow-[2px_2px_0_#00ff87]">
+        <DoodleIcon kind="bolt" size={16} />
+        <span className="text-xs font-bold text-white">Zero Telemetry</span>
       </span>
     ),
     title: 'Air-Gapped Privacy Engine',
-    hoverColor: '#10B981',
+    hoverColor: '#00ff87',
   },
-];
+]
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
-    <div className="relative min-h-screen bg-transparent text-white selection:bg-pink-600 selection:text-white">
-      {/* 0. Scroll-Locked Cinematic Train & Wolf Reveal Hero */}
-      <MetroHero
-        videoSrc="/media/train-metro.mp4"
-        wolfVideoSrc="/media/hero-showcase.mp4"
-        title="WELCOME TO INIXA LABS"
-        scrollHint="SCROLL TO ENTER"
-        tagline="Frontiers of Tactile Mobile Software & Autonomous AI"
-      />
+    <div className="relative min-h-screen bg-[#020612] text-white selection:bg-[#be185d] selection:text-white font-sans">
+      {/* Living Sketchbook Doodle Theme Styles */}
+      <style>{`
+        .doodle-card {
+          position: relative;
+          background: #040a18;
+          border: 2.5px solid #ffffff;
+          box-shadow: 6px 6px 0 #be185d;
+          transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+        }
+        .doodle-card:hover {
+          transform: translateY(-3px) rotate(-0.3deg);
+          box-shadow: 8px 8px 0 #00ff87;
+        }
+        .doodle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          border-radius: 999px;
+          font-weight: 850;
+          letter-spacing: -0.01em;
+          transition: transform 0.18s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.18s cubic-bezier(0.3, 1.4, 0.5, 1);
+          cursor: pointer;
+        }
+        .doodle-btn-green {
+          background: linear-gradient(135deg, #00ff87, #10b981);
+          color: #020612;
+          border: 2px solid #ffffff;
+          box-shadow: 4px 4px 0 #be185d;
+        }
+        .doodle-btn-green:hover {
+          transform: translateY(-2px) rotate(-1.5deg);
+          box-shadow: 6px 6px 0 #ffd23f;
+        }
+        .doodle-btn-green:active {
+          transform: translateY(2px);
+          box-shadow: 1px 1px 0 #be185d;
+        }
+        .doodle-btn-outline {
+          background: #040a18;
+          color: #ffffff;
+          border: 2px solid #ffffff;
+          box-shadow: 3px 3px 0 #00ff87;
+        }
+        .doodle-btn-outline:hover {
+          transform: translateY(-2px) rotate(1.2deg);
+          border-color: #00ff87;
+          box-shadow: 5px 5px 0 #be185d;
+        }
+        .doodle-btn-outline:active {
+          transform: translateY(2px);
+          box-shadow: 1px 1px 0 #00ff87;
+        }
+        .doodle-stamp {
+          border: 2px dashed #00ff87;
+          transform: rotate(-2deg);
+          font-weight: 900;
+          text-transform: uppercase;
+        }
+        .dcf-art {
+          fill: #060d22;
+          stroke: #ffffff;
+          stroke-width: 2.5;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+        }
+        .dcf-art .k { fill: #ffffff; }
+        .dcf-art .dcf-glint { fill: #060d22; stroke: none; }
+        .dcf-art .thin { stroke-width: 1.5; }
+        .dcf-art .thick { stroke-width: 3.4; }
+        .dcf-art .a { fill: #00ff87; }
+        .dcf-art .o { fill: #ff9f1c; }
+        .dcf-art .r { fill: #be185d; }
+      `}</style>
 
-      {/* 1. Glass 3D Hero */}
+      {/* 1. Hero Section (with TechText, Shuffle, DecryptedText, TextType & 3D DepthCarousel) */}
       <HeroSection onOpenSearch={onOpenSearch} />
 
       {/* 2. Interactive Marquee */}
       <ProductMarquee />
 
-      {/* 3. Labs Grid Section (9 Real Products) */}
+      {/* 3. Labs Grid Section (9 Real Products with Genuine Screenshots) */}
       <LabsGridSection />
 
       {/* 4. Real 3D Hardware Showcase */}
@@ -168,82 +276,106 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       {/* 5. Production Screenshot Gallery (56 Screens) */}
       <GallerySection />
 
-      {/* 6. Comprehensive Ecosystem Download Banner */}
+      {/* 6. Comprehensive Ecosystem Download Banner (Doodle Card) */}
       <section className="relative py-24 px-4 sm:px-6 overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <GlassCard
-            glassLevel="specular"
-            className="p-8 sm:p-14 relative overflow-hidden text-center sm:text-left border-emerald-500/30"
-          >
-            {/* Background glow orbs — Light Green + Dark Pink */}
-            <div className="pointer-events-none absolute -right-20 -bottom-20 w-96 h-96 rounded-full bg-emerald-500/15 blur-3xl" />
-            <div className="pointer-events-none absolute -left-20 -top-20 w-96 h-96 rounded-full bg-pink-600/20 blur-3xl" />
+          <div className="doodle-card rounded-[32px] p-8 sm:p-14 relative overflow-hidden text-center sm:text-left">
+            {/* Peeking Mascot: Juno the Kid on top right */}
+            <div className="absolute -top-10 right-8 sm:right-16 z-20 hidden sm:block">
+              <DoodleMascot
+                kind="kid"
+                size={80}
+                quote="All 15 APKs verified! Zero Play Store needed."
+                speechAlign="left"
+              />
+            </div>
+
+            {/* Playful Doodle Cat Sitting on top left of Download Card */}
+            <div className="absolute -top-11 left-6 sm:left-14 z-20 pointer-events-auto">
+              <DoodleCat pose="sitting" size={70} speech="Download all 15 builds! 🐾" speechAlign="top" />
+            </div>
 
             <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
               <div className="lg:col-span-8 space-y-4">
-                <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/40 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300">
-                  <Sparkles className="w-3.5 h-3.5 text-[#00ff87]" />
-                  <span>Direct Build Pipeline • Zero Tracking • Pure Performance</span>
+                <div className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#060e24] px-4 py-1.5 text-xs font-black text-[#00ff87] shadow-[2px_2px_0_#be185d] -rotate-1">
+                  <DoodleIcon kind="bolt" size={14} />
+                  <span>DIRECT APK PIPELINE • ZERO TRACKING • PURE PERFORMANCE</span>
                 </div>
-                <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
+
+                <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                   Ready to experience <br />
-                  <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
+                  <span className="text-[#00ff87]">
                     next-generation Android craft?
                   </span>
                 </h2>
-                <p className="text-neutral-400 text-sm sm:text-base max-w-xl">
+
+                <p className="text-neutral-300 text-sm sm:text-base max-w-xl font-medium leading-relaxed">
                   Download all 15 production APKs directly from INIXA Labs. Guaranteed SHA-256 integrity, no ad trackers, no telemetry wrappers, and immediate offline playback.
                 </p>
+
                 <div className="flex flex-wrap items-center gap-4 pt-2">
-                  <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Shield className="w-4 h-4 text-[#00ff87]" />
+                  <div className="flex items-center gap-2 text-xs font-bold text-white bg-[#060e24] px-3 py-1.5 rounded-xl border border-white/30">
+                    <DoodleIcon kind="star" size={14} />
                     <span>Malware Free Verified</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Smartphone className="w-4 h-4 text-pink-400" />
-                    <span>Android 10 - 15</span>
+                  <div className="flex items-center gap-2 text-xs font-bold text-white bg-[#060e24] px-3 py-1.5 rounded-xl border border-white/30">
+                    <DoodleIcon kind="sparkle" size={14} />
+                    <span>Android 10 - 15+</span>
                   </div>
-                  <div className="flex items-center gap-2 text-xs text-neutral-300">
-                    <Layers className="w-4 h-4 text-emerald-400" />
+                  <div className="flex items-center gap-2 text-xs font-bold text-white bg-[#060e24] px-3 py-1.5 rounded-xl border border-white/30">
+                    <DoodleIcon kind="bolt" size={14} />
                     <span>All 9 Labs Products</span>
                   </div>
                 </div>
               </div>
 
               <div className="lg:col-span-4 flex flex-col sm:flex-row lg:flex-col gap-4 justify-center">
-                <GlassButton
-                  onClick={() => navigate('/downloads')}
-                  variant="primary"
-                  className="!py-4 !px-8 text-base shadow-lg shadow-emerald-500/25 w-full justify-center"
-                  icon={<Download className="w-5 h-5" />}
-                >
-                  Download Hub
-                </GlassButton>
-                <GlassButton
+                <div className="relative w-full">
+                  {/* Cozy Loaf Cat on Download Button */}
+                  <div className="absolute -top-7 -right-2 z-30 pointer-events-auto hidden sm:block">
+                    <DoodleCat pose="loaf" size={46} speech="Cozy loaf says: direct downloads! ⚡" speechAlign="top" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/downloads')}
+                    className="doodle-btn doodle-btn-green !py-4 !px-8 text-base text-[#020612] w-full justify-center"
+                  >
+                    <DoodleIcon kind="bolt" size={18} />
+                    <span>Download APK Vault</span>
+                  </button>
+                </div>
+
+                <button
+                  type="button"
                   onClick={() => navigate('/products')}
-                  variant="secondary"
-                  className="!py-4 !px-8 text-base w-full justify-center hover:border-pink-500/40"
-                  icon={<ArrowRight className="w-4 h-4" />}
+                  className="doodle-btn doodle-btn-outline !py-4 !px-8 text-base text-white w-full justify-center hover:text-[#00ff87]"
                 >
-                  Explore Catalog
-                </GlassButton>
+                  <DoodleIcon kind="sparkle" size={18} />
+                  <span>Explore Catalog</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
             </div>
-          </GlassCard>
+          </div>
         </div>
       </section>
 
       {/* 7. React Bits 3D DriftWall Showcase — Living Ecosystem Horizon */}
-      <section className="relative py-16 overflow-hidden border-t border-white/10 bg-gradient-to-b from-[#020612] via-[#040a18] to-[#020612] w-full">
+      <section className="relative py-16 overflow-hidden border-t-2 border-dashed border-white/20 bg-[#020612] w-full">
+        {/* Peeking Cat on top of 3D DriftWall Header */}
+        <div className="flex justify-center -mb-3 relative z-20 pointer-events-auto">
+          <DoodleCat pose="peeking" size={58} speech="Watching 56 screens drift by! 👀" speechAlign="top" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-pink-500/40 bg-pink-950/60 px-4 py-1.5 text-xs font-semibold text-pink-300 mb-3">
-            <Sparkles className="w-3.5 h-3.5 text-pink-400" />
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#040a18] px-4 py-1.5 text-xs font-black text-[#be185d] shadow-[3px_3px_0_#00ff87] -rotate-1 mb-3">
+            <DoodleIcon kind="sparkle" size={15} />
             <span>3D SPATIAL DRIFT WALL • INTERACTIVE PERSPECTIVE VIEW</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
             Infinite Software Horizon
           </h2>
-          <p className="text-neutral-400 text-sm sm:text-base max-w-xl mx-auto mt-2">
+          <p className="text-neutral-300 text-sm sm:text-base max-w-xl mx-auto mt-2 font-medium">
             A continuous 3D stream of verified production screens from all 9 INIXA Labs flagships, in their real portrait smartphone format. Hover a frame to lift it, click to open the product.
           </p>
         </div>
@@ -273,10 +405,15 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       </section>
 
       {/* 8. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
-      <section className="relative py-14 border-t border-white/10 bg-[#020612]/95 backdrop-blur-md overflow-hidden" aria-label="Technology Stack">
+      <section className="relative py-14 border-t-2 border-dashed border-white/20 bg-[#020612]" aria-label="Technology Stack">
+        {/* Stretching Cat on top of Technology Stack */}
+        <div className="flex justify-center -mb-3 relative z-20 pointer-events-auto">
+          <DoodleCat pose="stretching" size={66} speech="Stretching on native Kotlin & Rust! 🐾" speechAlign="top" />
+        </div>
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-7 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-3.5 py-1 text-[11px] font-mono uppercase tracking-widest text-emerald-300">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#00ff87] animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#040a18] px-4 py-1.5 text-xs font-mono font-black uppercase text-[#00ff87] shadow-[2px_2px_0_#be185d]">
+            <DoodleIcon kind="bolt" size={14} />
             <span>High-Performance Native Engineering Stack</span>
           </div>
         </div>

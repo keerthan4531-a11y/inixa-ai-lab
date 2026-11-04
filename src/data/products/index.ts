@@ -43,6 +43,9 @@ export const PRODUCTS_BY_ID: Record<string, Product> = ALL_PRODUCTS.reduce(
   (acc, p) => {
     acc[p.id] = p
     acc[p.slug] = p
+    if (p.id === 'wikipedia-app') {
+      acc['wikipedia-infopedia'] = p
+    }
     return acc
   },
   {} as Record<string, Product>,

@@ -1,6 +1,9 @@
 import React from 'react'
 import { navigate } from '../../router'
 import { Sparkles, ArrowRight } from 'lucide-react'
+import { DoodleIcon } from '../footer/DoodleCrewFooter'
+import { DoodleCat } from '../doodle/DoodleCat'
+import { DoodleBird } from '../doodle/DoodleCritters'
 
 interface ScreenCard {
   id: string
@@ -141,86 +144,87 @@ export const MobileScreenMarquee: React.FC = () => {
         }
       `}</style>
 
-      {/* Header Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center">
-        <div className="inline-flex items-center gap-2 rounded-full border border-pink-500/30 bg-pink-950/40 px-3.5 py-1 text-xs font-mono uppercase tracking-widest text-pink-300 backdrop-blur-md mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-pink-400" />
-          <span>Verified Hardware Screens • Live Production Snapshots</span>
+      {/* Header Section with Doodle Critters */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 mb-8 text-center relative">
+        <div className="flex justify-center -mb-2">
+          <DoodleBird pose="flying" size={48} speech="56 live device captures! 🐦" speechAlign="top" />
         </div>
+
+        <div className="inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#040a18] px-4 py-1.5 text-xs font-mono font-black uppercase tracking-widest text-[#00ff87] shadow-[3px_3px_0_#be185d] -rotate-1 mb-3">
+          <DoodleIcon kind="sparkle" size={14} />
+          <span>VERIFIED HARDWARE SCREENS • LIVE PRODUCTION</span>
+          <DoodleIcon kind="bolt" size={14} />
+        </div>
+
         <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-          Physical Mobile Software in Action
+          Physical Mobile Software in{' '}
+          <span className="text-[#00ff87] relative inline-block">
+            Action
+            <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 100 8" preserveAspectRatio="none">
+              <path d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4" fill="none" stroke="#be185d" strokeWidth="3" strokeLinecap="round" />
+            </svg>
+          </span>
         </h2>
-        <p className="text-sm sm:text-base text-neutral-400 max-w-2xl mx-auto mt-2">
-          Real production screenshots extracted directly from our 9 physical mobile apps. Hover any card to inspect details.
+        <p className="text-sm sm:text-base text-neutral-300 font-medium max-w-2xl mx-auto mt-2">
+          Real production screenshots extracted directly from our 9 physical mobile apps. Click any card to inspect details.
         </p>
       </div>
 
       {/* Infinite Horizontal Marquee Stream */}
-      <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]">
-        <div className="animate-mobile-marquee gap-6 py-4 px-4">
+      <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+        <div className="animate-mobile-marquee gap-6 py-6 px-4">
           {MARQUEE_ITEMS.map((item, idx) => (
             <div
               key={`${item.id}-${idx}`}
               onClick={() => navigate(`/product/${item.productId}`)}
-              className="group relative w-[290px] sm:w-[320px] h-[480px] sm:h-[510px] rounded-[32px] p-5 flex flex-col justify-between bg-[#080d1a]/85 border border-white/10 hover:border-white/30 backdrop-blur-2xl transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_40px_rgba(0,0,0,0.8)] cursor-pointer overflow-hidden shrink-0"
-              style={{
-                boxShadow: '0 8px 30px rgba(0,0,0,0.5)',
-              }}
+              className="group relative w-[290px] sm:w-[320px] h-[490px] sm:h-[520px] rounded-[28px] p-5 flex flex-col justify-between bg-[#040a18] border-2 border-white shadow-[5px_5px_0_#be185d] hover:shadow-[7px_7px_0_#00ff87] transition-all duration-200 hover:-translate-y-1.5 cursor-pointer overflow-hidden shrink-0"
             >
-              {/* Subtle Ambient Color Glow at Card Top Corner */}
-              <div
-                className="pointer-events-none absolute -top-12 -right-12 w-40 h-40 rounded-full blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"
-                style={{ backgroundColor: item.accentColor }}
-              />
-
               <div className="relative z-10 flex flex-col h-full justify-between">
                 <div>
-                  {/* Top Pill Badges matching Google Labs screenshot */}
+                  {/* Top Pill Badges matching doodle stamp */}
                   <div className="flex items-center gap-2 mb-3">
-                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-semibold bg-white/10 border border-white/15 text-white/90 backdrop-blur-md">
+                    <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[11px] font-black bg-[#060e24] border border-white text-white shadow-[2px_2px_0_#be185d]">
                       <span>{item.badge}</span>
                     </span>
-                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-white/5 border border-white/10 text-neutral-300 backdrop-blur-md">
+                    <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-mono font-bold bg-[#060e24] border border-white/40 text-neutral-300">
                       <span>{item.subBadge}</span>
                     </span>
                   </div>
 
                   {/* Real Smartphone Screen Frame */}
-                  <div className="relative w-full h-[240px] sm:h-[260px] rounded-[22px] overflow-hidden bg-black/60 border border-white/10 shadow-inner group-hover:border-white/25 transition-colors">
+                  <div className="relative w-full h-[240px] sm:h-[260px] rounded-[20px] overflow-hidden bg-black/80 border-2 border-white shadow-inner group-hover:scale-[1.02] transition-transform">
                     <img
                       src={item.image}
                       alt={item.title}
                       loading="eager"
-                      className="w-full h-full object-cover object-top transition-transform duration-500 group-hover:scale-105"
+                      className="w-full h-full object-cover object-top"
                     />
-                    {/* Subtle glass reflection overlay */}
-                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#080d1a] via-transparent to-white/5 opacity-60" />
                   </div>
                 </div>
 
                 {/* Bottom Copy & Action Button */}
-                <div className="mt-4 pt-1">
-                  <h3 className="text-xl sm:text-2xl font-bold text-white tracking-tight group-hover:text-emerald-300 transition-colors">
+                <div className="mt-4 pt-2 border-t border-white/10">
+                  <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight group-hover:text-[#00ff87] transition-colors">
                     {item.title}
                   </h3>
-                  <p className="text-xs text-neutral-400 line-clamp-2 mt-1 mb-4 leading-relaxed">
+                  <p className="text-xs text-neutral-300 font-medium line-clamp-2 mt-1 mb-4 leading-relaxed">
                     {item.description}
                   </p>
 
                   <div className="flex items-center justify-between">
                     <button
                       type="button"
-                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold bg-white/10 group-hover:bg-white/20 border border-white/15 text-white transition-all shadow-md group-hover:border-white/30"
+                      className="doodle-btn doodle-btn-green px-4 py-2 text-xs font-black text-[#020612]"
                     >
-                      <span>Try It Now</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                      <span>Inspect App</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
                     </button>
 
                     <span
-                      className="w-2 h-2 rounded-full animate-pulse shadow-[0_0_8px_currentColor]"
+                      className="w-2.5 h-2.5 rounded-full"
                       style={{
                         backgroundColor: item.accentColor,
-                        color: item.accentColor,
+                        boxShadow: `0 0 8px ${item.accentColor}`,
                       }}
                     />
                   </div>

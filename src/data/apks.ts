@@ -345,7 +345,7 @@ export const ALL_APKS = ALL_VERIFIED_APKS.map((apk) => ({
       ? 'Liquid Stream'
       : apk.productId === 'clipster'
       ? 'Clipster'
-      : apk.productId === 'wikipedia-infopedia'
+      : apk.productId === 'wikipedia-infopedia' || apk.productId === 'wikipedia-app'
       ? 'Infopedia (Wikipedia)'
       : apk.productId === 'inixa-ai'
       ? 'INIXA AI'

@@ -100,3 +100,27 @@
     }
   }
 }
+
+
+/* Doodle Cat Chat Window Custom Scrollbar */
+.doodle-chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: #be185d #060e22;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+}
+.doodle-chat-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.doodle-chat-scroll::-webkit-scrollbar-track {
+  background: #060e22;
+  border-radius: 9999px;
+}
+.doodle-chat-scroll::-webkit-scrollbar-thumb {
+  background: #be185d;
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+.doodle-chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: #e11d48;
+}

@@ -1,5 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react'
-import { GlassButton } from '../../components/common/GlassButton'
+import React, { useState, useRef } from 'react'
 import { Magnet } from '../../components/react-bits/Magnet'
 import DecryptedText from '../../components/react-bits/DecryptedText'
 import TechText from '../../components/TechText'
@@ -8,7 +7,13 @@ import ElectricLogo from '../../components/ElectricLogo'
 import DepthCarousel, { DepthCarouselItem } from '../../components/DepthCarousel'
 import TextType from '../../components/TextType'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
-import { Download, ArrowRight, Search, ShieldCheck, Music2, Volume2, VolumeX, Sparkles } from 'lucide-react'
+import { Download, ArrowRight, Search, ShieldCheck, Music2, Sparkles } from 'lucide-react'
+import { ART, DoodleIcon, CrewKind } from '../../components/footer/DoodleCrewFooter'
+import { DoodleCat } from '../../components/doodle/DoodleCat'
+import { DoodleBird, DoodlePenguin, DoodleSketchArrow } from '../../components/doodle/DoodleCritters'
+import { DoodleHeroBackground } from '../../components/doodle/DoodleHeroBackground'
+import { DoodleCatToggle } from '../../components/doodle/DoodleCatToggle'
+import { navigate } from '../../router'
 
 interface HeroSectionProps {
   onOpenSearch?: () => void
@@ -113,101 +118,120 @@ const HERO_TYPED_PARAGRAPHS = [
   'Fifteen production APK releases compiled with verified SHA-256 signatures — engineered exclusively for physical Snapdragon and modern Android flagships with zero telemetry.'
 ]
 
+// Interactive Doodle Mascot Component
+const DoodleMascot: React.FC<{
+  kind: CrewKind
+  size?: number
+  quote?: string
+  color?: string
+  speechAlign?: 'top' | 'left' | 'right'
+}> = ({ kind, size = 76, quote, color = '#00ff87', speechAlign = 'top' }) => {
+  const [talking, setTalking] = useState(false)
+  const [hopping, setHopping] = useState(false)
+  const timerRef = useRef<number | null>(null)
+
+  const art = ART[kind]
+  if (!art) return null
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setTalking(true)
+    setHopping(true)
+    if (timerRef.current) window.clearTimeout(timerRef.current)
+    timerRef.current = window.setTimeout(() => {
+      setTalking(false)
+      setHopping(false)
+    }, 3200)
+  }
+
+  const pad = 12
+  const vx = art.box.l - pad
+  const vy = art.box.t - pad
+  const vw = art.box.r - art.box.l + pad * 2
+  const vh = art.box.b - art.box.t + pad * 2
+
+  return (
+    <div
+      className="relative inline-block select-none cursor-pointer group"
+      onClick={handleClick}
+      title="Click me to chat!"
+    >
+      {/* Speech Bubble */}
+      {talking && quote && (
+        <div
+          className={`absolute z-30 pointer-events-none whitespace-nowrap bg-[#040a18] text-[#00ff87] border-2 border-[#00ff87] rounded-2xl px-3.5 py-1.5 text-xs font-bold shadow-[3px_3px_0_#be185d] animate-in fade-in zoom-in duration-200 ${
+            speechAlign === 'top'
+              ? 'bottom-full left-1/2 -translate-x-1/2 mb-2'
+              : speechAlign === 'left'
+              ? 'bottom-full right-0 mb-2'
+              : 'bottom-full left-0 mb-2'
+          }`}
+        >
+          <span>{quote}</span>
+          <div className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-[#040a18] border-r-2 border-b-2 border-[#00ff87] rotate-45" />
+        </div>
+      )}
+
+      {/* Mascot SVG */}
+      <svg
+        viewBox={`${vx} ${vy} ${vw} ${vh}`}
+        width={size}
+        height={size}
+        className={`transition-transform duration-200 ${
+          hopping ? '-translate-y-2 scale-110' : 'group-hover:-translate-y-1 group-hover:scale-105'
+        }`}
+        style={{
+          filter: `drop-shadow(2px 3px 0px rgba(0,0,0,0.85)) drop-shadow(0 0 10px ${color}35)`,
+        }}
+      >
+        <g className="dcf-art">
+          {art.body('none')}
+          {art.eyes.map((eye, i) => (
+            <g key={i}>
+              {eye.r > 0 && <circle cx={eye.x} cy={eye.y} r={eye.r} />}
+              <circle className="k" cx={eye.x} cy={eye.y} r={eye.pupil} />
+              <circle
+                className="dcf-glint"
+                cx={eye.x + eye.pupil * 0.35}
+                cy={eye.y - eye.pupil * 0.4}
+                r={eye.pupil * 0.32}
+              />
+            </g>
+          ))}
+          {art.front?.()}
+        </g>
+      </svg>
+    </div>
+  )
+}
+
 /**
- * Clean, ultra-high-end hero showcasing physical flagship Android hardware
+ * Doodle Sketchbook Hero showcasing physical flagship Android hardware
  * with pure dark optics, React Bits 3D DepthCarousel, and interactive typography.
  */
 export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isMuted, setIsMuted] = useState(true)
-
-  useEffect(() => {
-    const video = videoRef.current
-    if (!video) return
-
-    const START_TIME = 11.0
-    const END_TIME = 20.0
-    let isSeeking = false
-
-    video.muted = true
-    video.defaultMuted = true
-
-    const seekToStart = () => {
-      if (isSeeking) return
-      isSeeking = true
-      try {
-        video.currentTime = START_TIME
-        video.play().catch(() => {})
-      } catch (e) {}
-      setTimeout(() => {
-        isSeeking = false
-      }, 350)
-    }
-
-    const handleTimeUpdate = () => {
-      if (isSeeking) return
-      // When reaching 20s (or near end >=19.8s), loop back to 11s
-      if (video.currentTime >= END_TIME - 0.2 || video.ended) {
-        seekToStart()
-      } else if (video.currentTime < START_TIME - 0.5) {
-        // If somehow behind 11s, immediately seek to 11s
-        seekToStart()
-      }
-    }
-
-    const handleInitialLoad = () => {
-      seekToStart()
-    }
-
-    if (video.readyState >= 1) {
-      seekToStart()
-    } else {
-      video.addEventListener('loadedmetadata', handleInitialLoad, { once: true })
-    }
-
-    video.addEventListener('timeupdate', handleTimeUpdate)
-    video.addEventListener('ended', seekToStart)
-
-    return () => {
-      video.removeEventListener('timeupdate', handleTimeUpdate)
-      video.removeEventListener('ended', seekToStart)
-      video.removeEventListener('loadedmetadata', handleInitialLoad)
-    }
-  }, [])
-
   const [activeSlide, setActiveSlide] = useState(0)
+  // Text animation toggle: DEFAULT FALSE (OFF) per user request
+  const [textAnimEnabled, setTextAnimEnabled] = useState(false)
   const currentItem = HERO_SHOWCASE_ITEMS[activeSlide] || HERO_SHOWCASE_ITEMS[0]
 
   const stats = [
-    { value: '9', label: 'Flagship apps' },
-    { value: '15', label: 'Verified APKs' },
-    { value: String(ALL_AUDITED_SCREENSHOTS.length), label: 'Real device screens' },
-    { value: '0', label: 'Telemetry / trackers' },
+    { value: '9', label: 'Flagship apps', shadow: '#00ff87' },
+    { value: '15', label: 'Verified APKs', shadow: '#be185d' },
+    { value: String(ALL_AUDITED_SCREENSHOTS.length), label: 'Device screens', shadow: '#ffd23f' },
+    { value: '0', label: 'Telemetry / trackers', shadow: '#00ff87' },
   ]
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[88vh] lg:flex lg:items-center">
-      {/* High-Definition 11s-Loop Cinematic Video Backdrop */}
-      <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden select-none" aria-hidden="true">
-        <video
-          ref={videoRef}
-          src="/media/hero-showcase.mp4"
-          autoPlay
-          muted={isMuted}
-          playsInline
-          preload="auto"
-          className="h-full w-full object-cover object-[center_25%] opacity-90 transition-opacity duration-700 pointer-events-none"
-        />
-        {/* Cinematic gradient overlays — protect text contrast while keeping moon and wolf in High HD */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-black/45" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/25 to-black/65" />
-      </div>
+    <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[85vh] lg:flex lg:items-center bg-[#020612]">
+      {/* Hand-Drawn Living Sketchbook Background (Graph paper, rockets, planets, doodles, zero lag) */}
+      <DoodleHeroBackground />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
         {/* Brand band: ElectricLogo + interactive TechText wordmark */}
         <div className="mb-2 sm:mb-4 text-center">
           <div className="mx-auto mb-3 flex items-center justify-center">
-            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#040a18]/90 border border-emerald-400/40 p-1 shadow-[0_0_30px_rgba(0,255,135,0.25)] overflow-hidden">
+            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#040a18] border-2 border-white p-1 shadow-[4px_4px_0_#00ff87] overflow-hidden -rotate-2">
               <ElectricLogo
                 src="/inixa-brand-electric.svg"
                 color="#00ff87"
@@ -223,170 +247,257 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-2.5 rounded-full border border-emerald-400/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300 shadow-lg backdrop-blur-xl mb-3">
-            <span className="h-2 w-2 rounded-full bg-[#00ff87] shadow-[0_0_8px_#00ff87]" />
-            <DecryptedText
-              text="INIXA AI LABS • 2026 SHOWCASE"
-              animateOn="view"
-              speed={40}
-              maxIterations={10}
-              revealDirection="start"
-              className="tracking-widest uppercase font-mono text-emerald-300"
+          {/* Interactive Doodle Cat Animation Switch */}
+          <div className="mb-4 flex items-center justify-center">
+            <DoodleCatToggle
+              enabled={textAnimEnabled}
+              onToggle={setTextAnimEnabled}
             />
           </div>
-          <div className="relative mx-auto w-full max-w-4xl h-[120px] sm:h-[160px] md:h-[200px] text-white">
-            <TechText
-              text="INIXA LAB"
-              fontWeight={700}
-              fontSize={150}
-              reveal="letter"
-              dashLength={4}
-              dashGap={2}
-              specks={15}
-              intro="none"
-              introDuration={2}
-              clickKick
-              draggable
-              guides={false}
-              fontFamily=""
-              letterSpacing={-0.03}
-              accentColor="#00ff87"
-              reach={200}
-              softness={0.7}
-              lineStyle="dashed"
-              strokeWidth={1.5}
-              speed={1}
-              bounce={0.4}
-              selection
-              labels
-              color="currentColor"
-              align="center"
-              sweep
-            />
+
+          <div className="inline-flex items-center gap-2.5 rounded-full border-2 border-[#00ff87] bg-[#040a18] px-4 py-1.5 text-xs font-black text-[#00ff87] shadow-[3px_3px_0_#be185d] -rotate-1 mb-3">
+            <DoodleIcon kind="bolt" size={14} />
+            {textAnimEnabled ? (
+              <DecryptedText
+                text="INIXA AI LABS • 2026 LIVING SKETCHBOOK"
+                animateOn="view"
+                speed={40}
+                maxIterations={10}
+                revealDirection="start"
+                className="tracking-widest uppercase font-mono text-[#00ff87]"
+              />
+            ) : (
+              <span className="tracking-widest uppercase font-mono text-[#00ff87]">
+                INIXA AI LABS • 2026 LIVING SKETCHBOOK
+              </span>
+            )}
+            <DoodleIcon kind="sparkle" size={14} />
+          </div>
+
+          <div className="relative mx-auto w-full max-w-4xl h-[90px] sm:h-[140px] md:h-[180px] text-white flex items-center justify-center">
+            {/* Playful Doodle Cat Sitting atop INIXA LAB wordmark */}
+            <div className="absolute -top-10 sm:-top-12 left-4 sm:left-28 z-30 pointer-events-auto">
+              <DoodleCat pose="sitting" size={48} speech="Perched on INIXA! Meow 🐾" speechAlign="top" />
+            </div>
+
+            {/* Flying Bird above the Wordmark */}
+            <div className="absolute -top-9 sm:-top-10 right-4 sm:right-32 z-30 pointer-events-auto hidden sm:block">
+              <DoodleBird pose="flying" size={50} speech="Flying above INIXA LABS! ✈️" speechAlign="top" />
+            </div>
+
+            {textAnimEnabled ? (
+              <TechText
+                text="INIXA LAB"
+                fontWeight={700}
+                fontSize={120}
+                reveal="letter"
+                dashLength={4}
+                dashGap={2}
+                specks={15}
+                intro="none"
+                introDuration={2}
+                clickKick
+                draggable
+                guides={false}
+                fontFamily=""
+                letterSpacing={-0.03}
+                accentColor="#00ff87"
+                reach={200}
+                softness={0.7}
+                lineStyle="dashed"
+                strokeWidth={1.5}
+                speed={1}
+                bounce={0.4}
+                selection
+                labels
+                color="currentColor"
+                align="center"
+                sweep
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center px-2">
+                <h1 className="text-[clamp(2.4rem,9.5vw,7.8rem)] font-black tracking-tight text-white select-none leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)] text-center">
+                  INIX<span className="text-[#00ff87]">A</span> LAB
+                </h1>
+              </div>
+            )}
           </div>
         </div>
 
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-          {/* Left Column: Headlines & Action CTAs */}
-          <div className="text-center lg:col-span-7 lg:text-left">
-            <Shuffle
-              text="Frontiers of AI & Liquid Glass Flagships"
-              tag="h1"
-              className="mb-6 text-4xl font-black leading-[1.08] tracking-tight text-white sm:text-6xl md:text-7xl"
-              textAlign="inherit"
-              effect="slide"
-              shuffleDirection="right"
-              duration={0.35}
-              animationMode="evenodd"
-              shuffleTimes={1}
-              ease="power3.out"
-              stagger={0.03}
-              threshold={0.1}
-              triggerOnce={true}
-              triggerOnHover={true}
-              hoverRadius={0}
-              motionBlur={false}
-              respectReducedMotion={true}
-              accentColor="#00ff87"
-            />
-
-            {/* React Bits TextType — 5 Cyclical Flagship Paragraphs */}
-            <div className="mb-8 max-w-2xl min-h-[5.5rem] sm:min-h-[5rem]">
-              <TextType
-                text={HERO_TYPED_PARAGRAPHS}
-                typingSpeed={32}
-                pauseDuration={3000}
-                deletingSpeed={16}
-                deleteMode="backspace"
-                typeEffect="fade"
-                mistakes={0.01}
-                cursorStyle="bar"
-                cursorGlide
-                showCursor
-                loop
-                cursorColor="#00ff87"
-                className="text-base leading-relaxed text-white/80 sm:text-lg"
+          {/* Left Column: Headlines, Text Animations & Doodle Buttons */}
+          <div className="text-center lg:col-span-7 lg:text-left relative">
+            {/* Peeking Mascot: Bruno the Yeti */}
+            <div className="absolute -top-14 right-2 sm:right-10 z-20 hidden sm:block">
+              <DoodleMascot
+                kind="yeti"
+                size={74}
+                quote="Pure tactile Android craft! Zero Google trackers."
+                speechAlign="left"
               />
             </div>
 
-            {/* Premium Interactive CTA Buttons with Magnet Effect */}
-            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start">
-              <Magnet magnetStrength={0.18}>
-                <GlassButton
-                  href="/products"
-                  variant="primary"
-                  className="!px-6 !py-3 shadow-lg shadow-emerald-500/25 cursor-pointer"
-                  icon={<ArrowRight className="h-4 w-4" />}
-                >
-                  Explore 9 Products
-                </GlassButton>
-              </Magnet>
-
-              <Magnet magnetStrength={0.18}>
-                <GlassButton
-                  href="/downloads"
-                  variant="secondary"
-                  className="!px-6 !py-3 cursor-pointer hover:border-pink-500/40"
-                  icon={<Download className="h-4 w-4" />}
-                >
-                  Download APKs
-                </GlassButton>
-              </Magnet>
-
-              <Magnet magnetStrength={0.18}>
-                <GlassButton
-                  onClick={onOpenSearch}
-                  variant="ghost"
-                  className="!px-5 !py-3 text-white/70 hover:text-white cursor-pointer"
-                  icon={<Search className="h-4 w-4 text-[#00ff87]" />}
-                >
-                  Search <kbd className="ml-1 text-[10px] text-white/40">⌘K</kbd>
-                </GlassButton>
-              </Magnet>
-
-              <button
-                type="button"
-                onClick={() => {
-                  const v = videoRef.current
-                  if (v) {
-                    v.muted = !v.muted
-                    setIsMuted(v.muted)
-                  }
-                }}
-                className="inline-flex items-center gap-2 rounded-full border border-pink-500/35 bg-[#040a18]/85 px-4 py-2.5 text-xs font-semibold text-pink-300 shadow-lg backdrop-blur-xl transition hover:border-pink-400 hover:text-white cursor-pointer"
-                title={isMuted ? 'Unmute HD Cinematic Audio' : 'Mute Audio'}
-                aria-label={isMuted ? 'Unmute video audio' : 'Mute video audio'}
-              >
-                {isMuted ? (
-                  <VolumeX className="h-3.5 w-3.5 text-white/60" />
-                ) : (
-                  <Volume2 className="h-3.5 w-3.5 text-pink-400 animate-pulse" />
-                )}
-                <span>{isMuted ? 'Unmute Audio (11s Loop)' : 'HD Audio Active'}</span>
-              </button>
+            {/* Peeking Doodle Cat on Headline */}
+            <div className="absolute -top-10 left-2 sm:left-4 z-20">
+              <DoodleCat pose="peeking" size={52} speech="Curious cat inspecting 120Hz optics! ✨" speechAlign="top" />
             </div>
 
-            {/* Verified Metrics Strip */}
-            <div className="mt-12 grid grid-cols-2 gap-4 border-t border-white/10 pt-6 sm:grid-cols-4 max-w-2xl mx-auto lg:mx-0">
+            {/* Peeking Penguin on Headline */}
+            <div className="absolute -top-11 left-24 sm:left-32 z-20 hidden sm:block">
+              <DoodlePenguin pose="peeking" size={48} speech="Noot noot! Zero Play Store bloat! 🐧" speechAlign="top" />
+            </div>
+
+            <div className="relative inline-block mb-6">
+              {textAnimEnabled ? (
+                <Shuffle
+                  text="Frontiers of AI & Liquid Glass Flagships"
+                  tag="h1"
+                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-white"
+                  textAlign="inherit"
+                  effect="slide"
+                  shuffleDirection="right"
+                  duration={0.35}
+                  animationMode="evenodd"
+                  shuffleTimes={1}
+                  ease="power3.out"
+                  stagger={0.03}
+                  threshold={0.1}
+                  triggerOnce={true}
+                  triggerOnHover={true}
+                  hoverRadius={0}
+                  motionBlur={false}
+                  respectReducedMotion={true}
+                  accentColor="#00ff87"
+                />
+              ) : (
+                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-white">
+                  Frontiers of AI &amp; Liquid Glass Flagships
+                </h1>
+              )}
+              {/* Hand-drawn squiggly underline */}
+              <div className="w-56 h-3 mt-1 mx-auto lg:mx-0">
+                <svg viewBox="0 0 100 8" preserveAspectRatio="none" className="w-full h-full">
+                  <path
+                    d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4"
+                    fill="none"
+                    stroke="#be185d"
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            {/* Cyclical Flagship Paragraphs (TextType if enabled, clean static paragraph if disabled) */}
+            <div className="mb-8 max-w-2xl min-h-[5.5rem] sm:min-h-[5rem]">
+              {textAnimEnabled ? (
+                <TextType
+                  text={HERO_TYPED_PARAGRAPHS}
+                  typingSpeed={32}
+                  pauseDuration={3000}
+                  deletingSpeed={16}
+                  deleteMode="backspace"
+                  typeEffect="fade"
+                  mistakes={0.01}
+                  cursorStyle="bar"
+                  cursorGlide
+                  showCursor
+                  loop
+                  cursorColor="#00ff87"
+                  className="text-base leading-relaxed text-neutral-200 sm:text-lg font-medium"
+                />
+              ) : (
+                <p className="text-base leading-relaxed text-neutral-200 sm:text-lg font-medium">
+                  {HERO_TYPED_PARAGRAPHS[0]}
+                </p>
+              )}
+            </div>
+
+            {/* Tactile Doodle CTA Buttons with Magnet Effect & Sketch Arrow */}
+            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start relative">
+              <Magnet magnetStrength={0.18}>
+                <div className="relative inline-block">
+                  {/* Sleeping Cat napping on the Explore Button */}
+                  <div className="absolute -top-8 right-2 z-30 pointer-events-auto">
+                    <DoodleCat pose="sleeping" size={50} speechAlign="top" />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/products')}
+                    className="doodle-btn doodle-btn-green px-7 py-3.5 text-sm font-black text-[#020612] cursor-pointer"
+                  >
+                    <DoodleIcon kind="sparkle" size={17} />
+                    <span>Explore 9 Products</span>
+                    <ArrowRight className="h-4 w-4" />
+                  </button>
+                </div>
+              </Magnet>
+
+              <Magnet magnetStrength={0.18}>
+                <button
+                  type="button"
+                  onClick={() => navigate('/downloads')}
+                  className="doodle-btn doodle-btn-outline px-7 py-3.5 text-sm font-black text-white hover:text-[#00ff87] cursor-pointer"
+                >
+                  <DoodleIcon kind="bolt" size={17} />
+                  <span>Download APKs</span>
+                </button>
+              </Magnet>
+
+              <Magnet magnetStrength={0.18}>
+                <button
+                  type="button"
+                  onClick={onOpenSearch}
+                  className="doodle-btn doodle-btn-outline px-5 py-3.5 text-xs font-black text-neutral-300 hover:text-white cursor-pointer"
+                >
+                  <Search className="h-4 w-4 text-[#00ff87]" />
+                  <span>Search <kbd className="ml-1 text-[10px] text-[#00ff87]">⌘K</kbd></span>
+                </button>
+              </Magnet>
+            </div>
+
+            {/* Doodle Metric Blocks with Loaf Cat */}
+            <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-4 max-w-2xl mx-auto lg:mx-0">
               {stats.map((s) => (
-                <div key={s.label} className="text-center lg:text-left">
-                  <div className="font-mono text-2xl sm:text-3xl font-black text-white">{s.value}</div>
-                  <div className="mt-1 text-xs text-white/50">{s.label}</div>
+                <div key={s.label} className="relative">
+                  {s.label.includes('trackers') && (
+                    <div className="absolute -top-8 right-1 z-30 pointer-events-auto">
+                      <DoodleCat pose="loaf" size={44} speech="Purr... 0 trackers! 🛡️" speechAlign="top" />
+                    </div>
+                  )}
+                  <div
+                    className="p-4 rounded-2xl bg-[#040a18] border-2 border-white text-center lg:text-left transition-transform hover:-translate-y-1"
+                    style={{ boxShadow: `4px 4px 0 ${s.shadow}` }}
+                  >
+                    <div className="font-mono text-2xl sm:text-3xl font-black text-white">{s.value}</div>
+                    <div className="mt-0.5 text-xs text-neutral-400 font-medium">{s.label}</div>
+                  </div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Column: Physical Device 3D DepthCarousel — Zoomed and prominent */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5">
-            <div className="relative w-full max-w-[380px] sm:max-w-[440px] md:max-w-[480px] h-[640px] sm:h-[700px] flex items-center justify-center">
-              {/* Soft ambient back-glow aura — Light Green + Dark Pink glow on Dark Blue */}
-              <div className="pointer-events-none absolute -inset-6 rounded-[56px] bg-gradient-to-tr from-emerald-500/20 via-pink-600/20 to-emerald-400/15 blur-3xl opacity-60" />
+          {/* Right Column: Physical Device 3D DepthCarousel with Critters */}
+          <div className="flex flex-col items-center justify-center lg:col-span-5 relative w-full overflow-hidden sm:overflow-visible">
+            <div className="relative w-full max-w-[310px] sm:max-w-[420px] md:max-w-[460px] h-[580px] sm:h-[680px] flex items-center justify-center">
+              {/* Stretching Cat watching the DepthCarousel */}
+              <div className="absolute -bottom-6 -left-4 z-30 hidden sm:block pointer-events-auto">
+                <DoodleCat pose="stretching" size={64} flip speech="Stretching my lossless audio paws! 🐾" speechAlign="top" />
+              </div>
 
+              {/* Audiophile Penguin jamming on top right of the phone */}
+              <div className="absolute -top-10 -right-2 sm:-right-8 z-30 pointer-events-auto">
+                <DoodlePenguin pose="headphones" size={54} speech="Pure FLAC jamming! 🐧🎧" speechAlign="left" />
+              </div>
+
+              {/* Singing bird on top left of phone */}
+              <div className="absolute -top-10 left-4 sm:left-12 z-30 pointer-events-auto hidden sm:block">
+                <DoodleBird pose="singing" size={44} speech="Chirp chirp! ♪♫" speechAlign="top" />
+              </div>
               <DepthCarousel
                 items={HERO_SHOWCASE_ITEMS}
-                cardWidth={310}
-                cardHeight={620}
+                cardWidth={285}
+                cardHeight={570}
                 radius={40}
                 depth={170}
                 spread={60}
@@ -406,30 +517,28 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 className="w-full h-full"
               />
 
-              {/* Floating feature pills - dynamic and crisp */}
-              <div className="absolute left-1 sm:-left-3 top-1/4 z-30 hidden rounded-full border border-pink-500/35 bg-[#040a18]/95 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
+              {/* Floating feature pills */}
+              <div className="absolute left-1 sm:-left-3 top-1/4 z-30 hidden rounded-full border-2 border-white bg-[#040a18] px-3.5 py-1.5 text-xs text-white shadow-[3px_3px_0_#be185d] sm:flex items-center gap-1.5 pointer-events-none -rotate-2">
                 {currentItem.badge?.includes('AUDIO') || currentItem.badge?.includes('PRO') ? (
                   <Music2 className="h-3.5 w-3.5 text-pink-400" />
-                ) : currentItem.badge?.includes('HARDENED') || currentItem.badge?.includes('PRIVACY') ? (
-                  <ShieldCheck className="h-3.5 w-3.5 text-[#00ff87]" />
                 ) : (
-                  <Sparkles className="h-3.5 w-3.5 text-emerald-400" />
+                  <DoodleIcon kind="bolt" size={14} />
                 )}
-                <span className="font-semibold text-white/90">{currentItem.badge || 'Verified Flagship'}</span>
+                <span className="font-black text-white">{currentItem.badge || 'Verified Flagship'}</span>
               </div>
-              <div className="absolute right-1 sm:-right-3 bottom-1/4 z-30 hidden rounded-full border border-emerald-500/35 bg-[#040a18]/95 px-3.5 py-1.5 text-xs text-white/90 shadow-2xl backdrop-blur-xl sm:flex items-center gap-1.5 pointer-events-none">
-                <ShieldCheck className="h-3.5 w-3.5 text-[#00ff87]" />
-                <span className="font-semibold text-white/90">100% Real Device</span>
+              <div className="absolute right-1 sm:-right-3 bottom-1/4 z-30 hidden rounded-full border-2 border-white bg-[#040a18] px-3.5 py-1.5 text-xs text-white shadow-[3px_3px_0_#00ff87] sm:flex items-center gap-1.5 pointer-events-none rotate-2">
+                <DoodleIcon kind="star" size={14} />
+                <span className="font-black text-white">100% Real Device</span>
               </div>
             </div>
 
             {/* Dynamic Active Screenshot Pill */}
-            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#040a18]/80 px-4 py-1.5 text-xs backdrop-blur-xl shadow-lg">
-              <span className="h-2 w-2 rounded-full bg-[#00ff87] shadow-[0_0_8px_#00ff87]" />
-              <span className="font-bold text-white">{currentItem.title}</span>
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#040a18] px-4 py-1.5 text-xs shadow-[3px_3px_0_#be185d]">
+              <span className="h-2 w-2 rounded-full bg-[#00ff87]" />
+              <span className="font-black text-white">{currentItem.title}</span>
               <span className="text-white/40">•</span>
-              <span className="text-white/70 truncate max-w-[190px]">{currentItem.subtitle}</span>
-              <span className="ml-1 text-[10px] font-mono text-emerald-300 bg-emerald-950/80 border border-emerald-800/40 px-2 py-0.5 rounded-full">
+              <span className="text-neutral-300 font-medium truncate max-w-[190px]">{currentItem.subtitle}</span>
+              <span className="ml-1 text-[10px] font-mono font-black text-[#00ff87] bg-black border border-[#00ff87] px-2 py-0.5 rounded-full">
                 {activeSlide + 1}/12
               </span>
             </div>

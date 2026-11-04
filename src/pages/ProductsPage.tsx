@@ -1,310 +1,140 @@
-import React, { useState, useMemo } from 'react'
-import { ALL_PRODUCTS, Product } from '../data/products'
-import { ParticleText } from '../components/react-bits/ParticleText'
-import { CosmicBackground } from '../components/products/CosmicBackground'
-import { ProductIcon } from '../components/products/ProductIcons'
+import React from 'react'
+import { ALL_PRODUCTS } from '../data/products'
+import { DoodleHeroBackground } from '../components/doodle/DoodleHeroBackground'
 import { ArcCarousel } from '../components/products/ArcCarousel'
 import { MobileScreenMarquee } from '../components/products/MobileScreenMarquee'
-import { navigate } from '../router'
-import {
-  Sparkles,
-  Download,
-  ArrowRight,
-  CheckCircle2,
-  LayoutGrid,
-  Layers,
-} from 'lucide-react'
-
-const CATEGORIES = ['All Products', 'Audio Systems', 'Video & Streaming', 'System & AI Utilities']
-
-// Precision neon brand colors matching the screenshot mockup
-const BRAND_COLORS: Record<string, string> = {
-  'beatbox-pro': '#FF7A1A', // Warm glowing amber/orange
-  'beatbox-lite': '#00D2FF', // Electric sky cyan
-  'beatbox-ultra': '#00FF87', // Neon mint emerald
-  'mytube': '#FF2A55', // Crimson / Coral pink
-  'lumina': '#00B4D8', // Electric cyber cyan-blue
-  'liquid-stream': '#A855F7', // Royal purple / violet
-  'clipster': '#10B981', // Emerald green
-  'wikipedia-app': '#3B82F6', // Azure blue
-  'inixa-ai': '#D946EF', // Cyber magenta
-}
+import { ProductsFAQ } from '../components/products/ProductsFAQ'
+import { InixaFooter } from '../components/footer/InixaFooter'
+import { DoodleIcon } from '../components/footer/DoodleCrewFooter'
+import { DoodleCat } from '../components/doodle/DoodleCat'
+import { DoodleBird, DoodlePenguin } from '../components/doodle/DoodleCritters'
+import { Sparkles, ArrowDown } from 'lucide-react'
 
 export const ProductsPage: React.FC = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>('All Products')
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [viewMode, setViewMode] = useState<'arc' | 'grid'>('arc')
-
-  const filteredProducts = useMemo(() => {
-    return ALL_PRODUCTS.filter((p) => {
-      const matchesCat =
-        selectedCategory === 'All Products'
-          ? true
-          : selectedCategory === 'Audio Systems'
-          ? p.category.toLowerCase().includes('audio') || p.category.toLowerCase().includes('music')
-          : selectedCategory === 'Video & Streaming'
-          ? p.category.toLowerCase().includes('video') || p.category.toLowerCase().includes('stream')
-          : p.category.toLowerCase().includes('ai') ||
-            p.category.toLowerCase().includes('browser') ||
-            p.category.toLowerCase().includes('utility') ||
-            p.category.toLowerCase().includes('knowledge')
-
-      const matchesQuery =
-        p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.tagline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        p.description.toLowerCase().includes(searchQuery.toLowerCase())
-
-      return matchesCat && matchesQuery
-    })
-  }, [selectedCategory, searchQuery])
-
   return (
-    <div className="relative min-h-screen pt-28 pb-16 px-4 sm:px-6 bg-[#020612] text-white selection:bg-pink-600 selection:text-white overflow-hidden">
-      {/* Immersive Cosmic Space & Glowing Star Particles Background */}
-      <CosmicBackground />
+    <div className="relative min-h-screen pt-28 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">
+      {/* Living Sketchbook Doodle Canvas Background (Graph paper grid, rockets, paper airplanes, stars) */}
+      <DoodleHeroBackground />
 
-      <div className="relative z-10 max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="text-center max-w-6xl mx-auto mb-10 space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/60 px-4 py-1.5 text-xs font-semibold text-emerald-300 backdrop-blur-md">
-            <Sparkles className="h-3.5 w-3.5 text-[#00ff87]" />
-            <span>Complete INIXA Software Catalog</span>
+      {/* Living Sketchbook Doodle Styles */}
+      <style>{`
+        .doodle-card {
+          position: relative;
+          background: #040a18;
+          border: 2.5px solid #ffffff;
+          box-shadow: 6px 6px 0 #be185d;
+          transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
+        }
+        .doodle-card:hover {
+          transform: translateY(-3px) rotate(-0.3deg);
+          box-shadow: 8px 8px 0 #00ff87;
+        }
+        .doodle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          border-radius: 999px;
+          font-weight: 850;
+          letter-spacing: -0.01em;
+          transition: transform 0.18s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.18s cubic-bezier(0.3, 1.4, 0.5, 1);
+          cursor: pointer;
+        }
+        .doodle-btn-green {
+          background: linear-gradient(135deg, #00ff87, #10b981);
+          color: #020612;
+          border: 2px solid #ffffff;
+          box-shadow: 4px 4px 0 #be185d;
+        }
+        .doodle-btn-green:hover {
+          transform: translateY(-2px) rotate(-1.5deg);
+          box-shadow: 6px 6px 0 #ffd23f;
+        }
+        .doodle-btn-green:active {
+          transform: translateY(2px);
+          box-shadow: 1px 1px 0 #be185d;
+        }
+        .doodle-btn-outline {
+          background: #040a18;
+          color: #ffffff;
+          border: 2px solid #ffffff;
+          box-shadow: 3px 3px 0 #00ff87;
+        }
+        .doodle-btn-outline:hover {
+          transform: translateY(-2px) rotate(1.2deg);
+          border-color: #00ff87;
+          box-shadow: 5px 5px 0 #be185d;
+        }
+        .doodle-stamp {
+          border: 2px dashed #00ff87;
+          transform: rotate(-2deg);
+          font-weight: 900;
+          text-transform: uppercase;
+        }
+      `}</style>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
+        {/* Header Section with Living Sketchbook Doodle Crew */}
+        <div className="text-center max-w-4xl mx-auto mb-8 relative pt-4">
+          {/* Animated Doodle Critters perched atop header */}
+          <div className="flex items-center justify-center gap-6 -mb-2 relative z-20 pointer-events-auto">
+            <DoodleBird pose="singing" size={50} speech="Browse all 9 flagships! ♪" speechAlign="top" />
+            <DoodleCat pose="sitting" size={58} speech="Swipe or click cards to inspect! 🐾" speechAlign="top" />
+            <DoodlePenguin pose="headphones" size={52} speech="Auto-scroll is paused! Jamming FLAC 🐧" speechAlign="top" />
           </div>
 
-          <div className="w-full h-[240px] sm:h-[300px] lg:h-[340px] mx-auto flex items-center justify-center my-2">
-            <ParticleText
-              text={"Flagship Applications &\nLaboratory Experiments"}
-              particleSize={3}
-              density={2}
-              color="#ffffff"
-              highlightColor="#00ff87"
-              highlightMode="motion"
-              shape="circle"
-              intro="gather"
-              scatter={160}
-              gatherDuration={1400}
-              stagger={360}
-              clickBurst={true}
-              burstStrength={1.2}
-              pointerRepel={55}
-              repelRadius={150}
-              idleDrift={0.5}
-              trigger="mount"
-              fontSize="clamp(3.2rem, 7.5vw, 6.2rem)"
-              fontWeight={900}
-              fontFamily="'Inter', -apple-system, sans-serif"
-              glow={true}
-            />
+          {/* Stamped Tagline Badge */}
+          <div className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border-2 border-white bg-[#040a18] shadow-[3px_3px_0_#be185d] -rotate-1 mb-5">
+            <DoodleIcon kind="bolt" size={14} />
+            <span className="text-xs font-mono font-black tracking-widest uppercase text-[#00ff87]">
+              INIXA LABS REPOSITORY • 9 MASTERED FLAGSHIPS
+            </span>
+            <DoodleIcon kind="sparkle" size={14} />
           </div>
 
-          <p className="text-base sm:text-lg text-neutral-400 leading-relaxed max-w-3xl mx-auto">
+          <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black text-white tracking-tight leading-[1.08] mb-4">
+            Flagship Applications & <br />
+            <span className="text-[#00ff87] relative inline-block">
+              Laboratory Experiments
+              {/* Hand-drawn squiggly underline */}
+              <svg
+                className="absolute -bottom-3 left-0 w-full h-4"
+                viewBox="0 0 100 8"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4"
+                  fill="none"
+                  stroke="#be185d"
+                  strokeWidth="3.2"
+                  strokeLinecap="round"
+                />
+              </svg>
+            </span>
+          </h1>
+
+          <p className="text-base sm:text-lg text-neutral-300 leading-relaxed max-w-2xl mx-auto font-medium mt-6">
             Every product engineered at INIXA Labs is built with custom graphics pipelines, real-time hardware audio rendering, and zero-telemetry architectures.
           </p>
-        </div>
 
-        {/* Filters, View Switcher & Search Bar */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-4 mb-6">
-          {/* Category Tabs */}
-          <div className="flex items-center gap-2 overflow-x-auto p-1.5 rounded-2xl bg-white/[0.04] border border-white/10 backdrop-blur-md w-full lg:w-auto">
-            {CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                type="button"
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all whitespace-nowrap cursor-pointer ${
-                  selectedCategory === cat
-                    ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black font-extrabold shadow-[0_0_15px_rgba(0,255,135,0.4)]'
-                    : 'bg-white/[0.03] border border-white/5 text-neutral-300 hover:text-white hover:bg-white/10'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Right Side: View Mode Switcher & Search Input */}
-          <div className="flex items-center gap-3 w-full lg:w-auto justify-between lg:justify-end">
-            {/* View Mode Switcher Pill */}
-            <div className="flex items-center p-1 rounded-xl bg-white/[0.04] border border-white/10 backdrop-blur-md">
-              <button
-                type="button"
-                onClick={() => setViewMode('arc')}
-                aria-label="3D Arc Carousel View"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  viewMode === 'arc'
-                    ? 'bg-white/15 text-[#00ff87] shadow-sm'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                <Layers className="w-3.5 h-3.5" />
-                <span>3D Arc View</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setViewMode('grid')}
-                aria-label="Grid View"
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                  viewMode === 'grid'
-                    ? 'bg-white/15 text-[#00ff87] shadow-sm'
-                    : 'text-neutral-400 hover:text-white'
-                }`}
-              >
-                <LayoutGrid className="w-3.5 h-3.5" />
-                <span>Grid View</span>
-              </button>
-            </div>
-
-            {/* Search Input */}
-            <div className="relative w-48 sm:w-64">
-              <input
-                type="text"
-                placeholder="Search products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white/[0.05] border border-white/10 rounded-xl px-3.5 py-2 text-xs sm:text-sm text-white placeholder-neutral-500 focus:outline-none focus:border-emerald-400/50 backdrop-blur-md transition-colors"
-              />
-            </div>
+          <div className="mt-4 inline-flex items-center gap-2 text-xs font-mono font-bold text-neutral-400 bg-[#040a18] px-3.5 py-1.5 rounded-full border border-white/20">
+            <span>Drag, swipe, or click controls below</span>
+            <ArrowDown className="w-3.5 h-3.5 text-[#00ff87] animate-bounce" />
           </div>
         </div>
 
-        {/* View Mode: 3D Arc Carousel (Google Labs style) vs Grid */}
-        {viewMode === 'arc' ? (
-          <ArcCarousel products={filteredProducts} />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-            {filteredProducts.map((product) => {
-              const latestApk =
-                product.apks && product.apks.length > 0
-                  ? product.apks[product.apks.length - 1]
-                  : null
-              const brandColor = BRAND_COLORS[product.id] || product.accentColor || '#00ff87'
-
-              return (
-                <div
-                  key={product.id}
-                  className="group relative rounded-[26px] p-6 sm:p-7 flex flex-col justify-between transition-all duration-300 backdrop-blur-2xl overflow-hidden hover:-translate-y-1.5"
-                  style={{
-                    background:
-                      'linear-gradient(135deg, rgba(13, 20, 36, 0.72) 0%, rgba(7, 11, 22, 0.88) 100%)',
-                    border: `1.5px solid ${brandColor}80`,
-                    boxShadow: `0 0 24px -4px ${brandColor}38, inset 0 1px 0 rgba(255, 255, 255, 0.12)`,
-                  }}
-                  onMouseEnter={(e) => {
-                    e.currentTarget.style.boxShadow = `0 0 38px 2px ${brandColor}65, 0 20px 40px rgba(0, 0, 0, 0.7)`
-                    e.currentTarget.style.borderColor = `${brandColor}`
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.boxShadow = `0 0 24px -4px ${brandColor}38, inset 0 1px 0 rgba(255, 255, 255, 0.12)`
-                    e.currentTarget.style.borderColor = `${brandColor}80`
-                  }}
-                >
-                  <div
-                    className="pointer-events-none absolute -top-12 -right-12 w-48 h-48 rounded-full blur-3xl opacity-30 group-hover:opacity-50 transition-opacity"
-                    style={{ backgroundColor: brandColor }}
-                  />
-
-                  <div className="relative z-10">
-                    <div className="flex items-center justify-between mb-4">
-                      <div
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[11px] font-extrabold tracking-wider uppercase border backdrop-blur-md"
-                        style={{
-                          backgroundColor: `${brandColor}18`,
-                          borderColor: `${brandColor}40`,
-                          color: brandColor,
-                        }}
-                      >
-                        <span>{product.badge}</span>
-                        <span
-                          className="w-1.5 h-1.5 rounded-full animate-pulse"
-                          style={{
-                            backgroundColor: brandColor,
-                            boxShadow: `0 0 8px ${brandColor}`,
-                          }}
-                        />
-                      </div>
-                      <span className="text-xs font-mono font-medium text-slate-400/90">
-                        {product.version}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center justify-between gap-3 mb-1.5">
-                      <h3 className="text-2xl sm:text-[26px] font-black text-white tracking-tight leading-none">
-                        {product.name}
-                      </h3>
-                      <ProductIcon productId={product.id} color={brandColor} />
-                    </div>
-
-                    <p
-                      className="text-xs font-semibold mb-3 tracking-wide"
-                      style={{ color: brandColor }}
-                    >
-                      {product.tagline}
-                    </p>
-
-                    <p className="text-xs text-slate-300/80 leading-relaxed mb-5 line-clamp-3 font-normal">
-                      {product.description}
-                    </p>
-
-                    <div className="space-y-2 mb-6 border-t border-white/[0.08] pt-4">
-                      {product.highlights.slice(0, 3).map((hl, i) => (
-                        <div key={i} className="flex items-start gap-2.5 text-xs text-slate-200/90">
-                          <CheckCircle2
-                            className="w-3.5 h-3.5 shrink-0 mt-0.5"
-                            style={{ color: brandColor }}
-                          />
-                          <span className="line-clamp-1">{hl}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div className="relative z-10 border-t border-white/[0.08] pt-4 flex items-center justify-between gap-3">
-                    <button
-                      type="button"
-                      onClick={() => navigate(`/product/${product.id}`)}
-                      className="inline-flex items-center gap-1.5 text-xs font-semibold text-white/90 hover:text-white group/btn transition-colors cursor-pointer"
-                    >
-                      <span>Inspect Specs</span>
-                      <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-1 text-white/80" />
-                    </button>
-
-                    {latestApk ? (
-                      <a
-                        href={latestApk.downloadPath}
-                        download
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-black transition-all duration-300 transform hover:scale-105 active:scale-95 cursor-pointer shadow-[0_0_20px_rgba(0,255,135,0.45)] hover:shadow-[0_0_28px_rgba(0,255,135,0.65)]"
-                        style={{
-                          background: 'linear-gradient(135deg, #00ff87 0%, #00e5ff 100%)',
-                        }}
-                      >
-                        <Download className="w-3.5 h-3.5 stroke-[2.5]" />
-                        <span>APK ({latestApk.sizeFormatted || latestApk.fileSize || 'Verified'})</span>
-                      </a>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => navigate(`/product/${product.id}`)}
-                        className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-semibold text-white bg-white/10 hover:bg-white/20 transition-all cursor-pointer"
-                      >
-                        <span>Web Service</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              )
-            })}
-          </div>
-        )}
-
-        {filteredProducts.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-neutral-500 text-base">No products match your search query.</p>
-          </div>
-        )}
+        {/* 3D Arc Curved Carousel with AUTO-SCROLL DISABLED (static & interactive) */}
+        <ArcCarousel products={ALL_PRODUCTS} autoPlay={false} />
       </div>
 
-      {/* Verified Mobile Hardware Screens Infinite Marquee Showcase (Screenshot 3 style) */}
+      {/* Verified Mobile Hardware Screens Infinite Marquee Showcase (Doodle styled) */}
       <MobileScreenMarquee />
+
+      {/* Interactive Laboratory Dispatch & Architecture FAQ Accordion (Doodle styled) */}
+      <ProductsFAQ />
+
+      {/* Official INIXA Living Sketchbook Doodle Crew Footer */}
+      <InixaFooter />
     </div>
   )
 }

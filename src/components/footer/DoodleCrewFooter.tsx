@@ -258,7 +258,7 @@ const DEFAULT_ACTIONS: FooterAction[] = [
 const DEFAULT_DOODLES: DoodleKind[] = ["flame", "sandwich", "star", "flame", "heart", "sandwich", "bolt", "sparkle"]
 
 // Themed accents in harmony with Light Green & Dark Pink
-const ACCENT = {
+export const ACCENT = {
   flame: "#00ff87",
   flameCore: "#6ee7b7",
   gold: "#ffd23f",
@@ -270,8 +270,8 @@ const ACCENT = {
   cap: "#be185d",
 }
 
-type Eye = { x: number; y: number; r: number; pupil: number; max: number }
-type Art = {
+export type Eye = { x: number; y: number; r: number; pupil: number; max: number }
+export type Art = {
   k: number
   box: { l: number; r: number; t: number; b: number }
   eyes: Eye[]
@@ -281,7 +281,7 @@ type Art = {
   idle?: string
 }
 
-const ART: { [k: string]: Art } = {
+export const ART: { [k: string]: Art } = {
   yeti: {
     k: 1,
     box: { l: -72, r: 60, t: -140, b: 6 },
@@ -452,7 +452,7 @@ const ART: { [k: string]: Art } = {
   },
 }
 
-const Doodle = ({ kind }: { kind: DoodleKind }) => {
+export const Doodle = ({ kind }: { kind: DoodleKind }) => {
   switch (kind) {
     case "flame":
       return (
@@ -492,7 +492,7 @@ const Doodle = ({ kind }: { kind: DoodleKind }) => {
   return null
 }
 
-const DoodleIcon = ({ kind, size = 18 }: { kind: DoodleKind; size?: number }) => (
+export const DoodleIcon = ({ kind, size = 18 }: { kind: DoodleKind; size?: number }) => (
   <svg className="dcf-icon" viewBox="-16 -16 32 32" width={size} height={size} aria-hidden="true">
     <Doodle kind={kind} />
   </svg>

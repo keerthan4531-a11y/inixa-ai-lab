@@ -4,6 +4,9 @@ import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { SpotlightCard } from '../../components/react-bits/SpotlightCard'
 import PictureRailGallery, { PictureRailItem } from '../../components/ui/picture-rail-gallery'
 import { navigate, Link } from '../../router'
+import { DoodleIcon } from '../../components/footer/DoodleCrewFooter'
+import { DoodleCat } from '../../components/doodle/DoodleCat'
+import { DoodleBird, DoodlePenguin } from '../../components/doodle/DoodleCritters'
 import {
   Download,
   ArrowRight,
@@ -35,7 +38,7 @@ const PRODUCT_COVERS: Record<string, string> = {
 }
 
 /** 9 Flagship Products formatted for the interactive PictureRailGallery (Hanging Smartphones) */
-export const FLAGSHIP_RAIL_ITEMS: PictureRailItem[] = [
+const FLAGSHIP_RAIL_ITEMS: PictureRailItem[] = [
   {
     id: 'beatbox-pro',
     title: 'BeatBox Pro',
@@ -236,47 +239,62 @@ export const LabsGridSection: React.FC = () => {
       {/* Background atmospheric ambient aura — Light Green + Dark Pink over Dark Blue */}
       <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-5xl h-64 bg-gradient-to-r from-emerald-500/15 via-pink-600/15 to-emerald-400/10 blur-[130px] rounded-full" aria-hidden="true" />
 
-      {/* Header section with ultra-modern typography and animated pill badge */}
+      {/* Header section with doodle sketchbook typography and stamped badge */}
       <div className="mb-10 text-center relative z-10">
-        <div className="mb-3.5 inline-flex items-center gap-2 rounded-full border border-emerald-400/35 bg-emerald-950/70 px-4 py-1.5 text-xs font-mono font-bold tracking-widest text-emerald-300 shadow-[0_0_20px_rgba(0,255,135,0.18)] backdrop-blur-xl">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#00ff87] animate-ping" />
-          <Layers className="h-3.5 w-3.5 text-[#00ff87]" aria-hidden="true" />
-          <span>INIXA LABS REPOSITORY • 9 FLAGSHIPS</span>
+        {/* Playful Cat, Bird, and Penguin crew on top of section */}
+        <div className="flex items-center justify-center gap-6 -mb-2 relative z-20 pointer-events-auto">
+          <DoodleBird pose="singing" size={48} speech="Chirp! 9 mastercrafted apps ♪" speechAlign="top" />
+          <DoodleCat pose="sitting" size={56} speech="All 9 flagships audited! 🐾" speechAlign="top" />
+          <DoodlePenguin pose="waddling" size={50} speech="Waddling through the lab 🐧" speechAlign="top" />
         </div>
 
-        <h2 className="mb-4 text-3xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
+        <div className="mb-3.5 inline-flex items-center gap-2 rounded-full border-2 border-white bg-[#040a18] px-4 py-1.5 text-xs font-mono font-black tracking-widest text-[#00ff87] shadow-[3px_3px_0_#be185d] -rotate-1">
+          <DoodleIcon kind="bolt" size={14} />
+          <span>INIXA LABS REPOSITORY • 9 FLAGSHIPS</span>
+          <DoodleIcon kind="sparkle" size={14} />
+        </div>
+
+        <h2 className="mb-3 text-3xl font-black tracking-tight text-white sm:text-5xl lg:text-6xl">
           Experiments &amp;{' '}
-          <span className="bg-gradient-to-r from-[#00ff87] via-[#ec4899] to-[#be185d] bg-clip-text text-transparent">
+          <span className="text-[#00ff87] relative inline-block">
             Production Flagships
+            <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 100 8" preserveAspectRatio="none">
+              <path d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4" fill="none" stroke="#be185d" strokeWidth="3" strokeLinecap="round" />
+            </svg>
           </span>
         </h2>
 
-        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-white/70 sm:text-base">
+        <p className="mx-auto max-w-2xl text-sm leading-relaxed text-neutral-300 sm:text-base font-medium">
           All 9 physical mobile and desktop software architectures — bit-perfect audio, autonomous air-gapped AI, hardened web privacy, and zero-ad stream pipelines.
         </p>
 
         {/* View Mode Toggle: Interactive Hanging Gallery vs Technical Cards */}
         <div className="mt-8 flex items-center justify-center gap-3">
-          <div className="inline-flex items-center p-1 rounded-full border border-white/12 bg-[#040a18]/90 backdrop-blur-xl shadow-lg">
+          <div className="relative inline-flex items-center p-1.5 rounded-full border-2 border-white bg-[#040a18] shadow-[4px_4px_0_#00ff87]">
+            {/* Sleeping Cat napping on View Toggle */}
+            <div className="absolute -top-7 right-4 z-20 hidden sm:block pointer-events-auto">
+              <DoodleCat pose="sleeping" size={48} speechAlign="top" />
+            </div>
+
             <button
               type="button"
               onClick={() => setViewMode('gallery')}
-              className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
+              className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black transition-all cursor-pointer ${
                 viewMode === 'gallery'
-                  ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black shadow-[0_0_20px_rgba(0,255,135,0.4)] scale-[1.02]'
-                  : 'text-white/60 hover:text-white'
+                  ? 'bg-[#00ff87] text-[#020612] shadow-[2px_2px_0_#be185d]'
+                  : 'text-neutral-300 hover:text-white'
               }`}
             >
               <Frame className="w-3.5 h-3.5" />
-              <span>Hanging Rail Gallery Wall (9 Flagships)</span>
+              <span>Hanging Rail Gallery Wall</span>
             </button>
             <button
               type="button"
               onClick={() => setViewMode('grid')}
-              className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-bold transition-all duration-300 cursor-pointer ${
+              className={`flex items-center gap-2 px-5 py-2 rounded-full text-xs font-black transition-all cursor-pointer ${
                 viewMode === 'grid'
-                  ? 'bg-gradient-to-r from-[#00ff87] to-emerald-400 text-black shadow-[0_0_20px_rgba(0,255,135,0.4)] scale-[1.02]'
-                  : 'text-white/60 hover:text-white'
+                  ? 'bg-[#00ff87] text-[#020612] shadow-[2px_2px_0_#be185d]'
+                  : 'text-neutral-300 hover:text-white'
               }`}
             >
               <LayoutGrid className="w-3.5 h-3.5" />
@@ -301,16 +319,17 @@ export const LabsGridSection: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => navigate('/downloads')}
-                  className="rounded-full bg-gradient-to-r from-[#00ff87] to-emerald-400 px-6 py-2.5 text-xs font-black uppercase tracking-wider text-black shadow-lg shadow-emerald-500/25 transition-all hover:scale-105 active:scale-95 cursor-pointer"
+                  className="doodle-btn doodle-btn-green px-6 py-2.5 text-xs font-black uppercase text-[#020612]"
                 >
-                  Direct APK Vault (15 Builds)
+                  <DoodleIcon kind="bolt" size={15} />
+                  <span>Direct APK Vault (15 Builds)</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setViewMode('grid')}
-                  className="rounded-full border border-white/20 bg-white/5 px-5 py-2.5 text-xs font-bold text-white/80 transition-all hover:border-pink-500/50 hover:text-white cursor-pointer"
+                  className="doodle-btn doodle-btn-outline px-5 py-2.5 text-xs font-black text-white hover:text-[#00ff87]"
                 >
-                  Switch to Technical Cards Grid
+                  <span>Switch to Technical Cards Grid</span>
                 </button>
               </div>
             }
@@ -321,7 +340,7 @@ export const LabsGridSection: React.FC = () => {
       {/* VIEW 2: Technical Cards Grid with Category Filters */}
       {viewMode === 'grid' && (
         <div className="relative z-10 transition-all duration-500">
-          {/* Floating Liquid Category Filter Chips */}
+          {/* Doodle Category Filter Chips */}
           <div className="no-scrollbar -mx-4 mb-10 flex gap-2.5 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:items-center sm:justify-center sm:px-0">
             {categories.map((cat) => {
               const isActive = activeCategory === cat.id
@@ -331,18 +350,18 @@ export const LabsGridSection: React.FC = () => {
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
                   aria-pressed={isActive}
-                  className={`group relative flex min-h-11 shrink-0 items-center gap-2.5 rounded-full px-5 py-2 text-xs font-bold transition-all duration-300 cursor-pointer ${
+                  className={`group relative flex min-h-10 shrink-0 items-center gap-2 rounded-full px-4 py-1.5 text-xs font-black transition-all cursor-pointer ${
                     isActive
-                      ? 'bg-gradient-to-r from-emerald-400 via-green-400 to-[#00ff87] text-black shadow-[0_0_24px_rgba(0,255,135,0.4)] scale-[1.03]'
-                      : 'border border-white/12 bg-[#040a18]/70 text-white/75 hover:border-emerald-400/40 hover:bg-[#060f24] hover:text-white backdrop-blur-md'
+                      ? 'bg-[#00ff87] text-[#020612] border-2 border-white shadow-[3px_3px_0_#be185d] -rotate-1 scale-105'
+                      : 'border-2 border-white/40 bg-[#040a18] text-white hover:border-white hover:text-[#00ff87] shadow-[2px_2px_0_rgba(255,255,255,0.2)]'
                   }`}
                 >
                   <span>{cat.label}</span>
                   <span
                     className={`rounded-full px-2 py-0.5 text-[10px] font-mono ${
                       isActive
-                        ? 'bg-black/25 text-black font-extrabold'
-                        : 'bg-white/10 text-white/60 group-hover:bg-white/20'
+                        ? 'bg-black text-[#00ff87] font-black'
+                        : 'bg-white/10 text-white/70 group-hover:bg-white/20'
                     }`}
                   >
                     {cat.count}
@@ -355,18 +374,20 @@ export const LabsGridSection: React.FC = () => {
           {filteredProducts.length === 0 ? (
             <p className="py-20 text-center text-sm text-white/55">No products in this category yet.</p>
           ) : (
-            /* 9 Products Grid powered by React Bits SpotlightCard with interactive cursor follow */
+            /* 9 Products Grid styled with Living Sketchbook Doodle Cards */
             <div className="grid grid-cols-1 gap-7 md:grid-cols-2 lg:grid-cols-3">
-              {filteredProducts.map((prod) => {
+              {filteredProducts.map((prod, pIdx) => {
                 const latestApk = prod.apks?.[prod.apks.length - 1]
                 const firstFeature = prod.features[0]
                 const coverPath = PRODUCT_COVERS[prod.id] || Object.values(SCREENSHOT_MAP[prod.id] || {})[0]?.assetPath
+                const cardShadow = pIdx % 2 === 0 ? '#be185d' : '#00ff87'
 
                 return (
                   <SpotlightCard
                     key={prod.id}
-                    spotlightColor={`${prod.accentColor || '#00ff87'}38`}
-                    className="group flex flex-col overflow-hidden rounded-[28px] border border-white/12 bg-[#040a18]/95 backdrop-blur-2xl transition-all duration-300 hover:border-emerald-400/50 hover:shadow-[0_24px_65px_rgba(0,255,135,0.18)] hover:-translate-y-2 cursor-pointer"
+                    spotlightColor={`${prod.accentColor || '#00ff87'}25`}
+                    className="group flex flex-col overflow-hidden rounded-[28px] border-2 border-white bg-[#040a18] transition-all duration-300 hover:-translate-y-2 cursor-pointer"
+                    style={{ boxShadow: `6px 6px 0 ${cardShadow}` }}
                     onClick={() => navigate(`/product/${prod.id}`)}
                   >
                     {/* 1. Real Physical Device Mockup Showcase Header */}
@@ -463,32 +484,32 @@ export const LabsGridSection: React.FC = () => {
                       )}
 
                       {/* 3. Card Footer Action Bar */}
-                      <div className="mt-auto flex items-center justify-between border-t border-white/10 pt-4.5">
+                      <div className="mt-auto flex items-center justify-between border-t-2 border-dashed border-white/20 pt-4">
                         {latestApk ? (
                           <a
                             href={encodeURI(latestApk.downloadPath)}
                             download
                             onClick={(e) => e.stopPropagation()}
-                            className="inline-flex min-h-10 items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-1.5 text-xs font-bold text-emerald-300 transition-all hover:bg-emerald-500/20 hover:border-emerald-400"
+                            className="doodle-btn doodle-btn-green px-3.5 py-1.5 text-xs font-black text-[#020612]"
                             aria-label={`Download ${prod.name} ${latestApk.version} APK (${latestApk.sizeFormatted})`}
                           >
-                            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+                            <DoodleIcon kind="bolt" size={14} />
                             <span>Get APK</span>
-                            <span className="text-[10px] font-mono text-emerald-400/70">({latestApk.sizeFormatted})</span>
+                            <span className="text-[10px] font-mono text-black/80 font-bold">({latestApk.sizeFormatted})</span>
                           </a>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 text-xs text-white/45 font-mono">
-                            <Cpu className="h-3.5 w-3.5" /> Desktop Native
+                          <span className="inline-flex items-center gap-1.5 text-xs text-neutral-400 font-mono">
+                            <Cpu className="h-3.5 w-3.5 text-[#00ff87]" /> Desktop Native
                           </span>
                         )}
 
                         <Link
                           to={`/product/${prod.id}`}
-                          className="inline-flex min-h-10 items-center gap-1.5 rounded-xl border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-bold text-white/90 transition-all group-hover:border-emerald-400/50 group-hover:text-emerald-300 group-hover:bg-emerald-500/10"
+                          className="doodle-btn doodle-btn-outline px-3.5 py-1.5 text-xs font-black text-white hover:text-[#00ff87]"
                           aria-label={`View ${prod.name} details`}
                         >
                           <span>Explore</span>
-                          <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                          <ArrowRight className="h-3.5 w-3.5 text-[#00ff87] transition-transform group-hover:translate-x-1" aria-hidden="true" />
                         </Link>
                       </div>
                     </div>

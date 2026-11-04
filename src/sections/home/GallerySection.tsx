@@ -110,16 +110,16 @@ export const GallerySection: React.FC = () => {
         </p>
       </div>
 
-      {/* Filters — one scrollable row on phones */}
+      {/* Filters — Doodle Tabs */}
       <div className="no-scrollbar -mx-4 mb-5 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:px-0">
         <button
           type="button"
           onClick={() => setSelectedProduct('all')}
           aria-pressed={selectedProduct === 'all'}
-          className={`min-h-11 shrink-0 rounded-full px-4 py-2 text-xs font-semibold transition-colors ${
+          className={`min-h-10 shrink-0 rounded-full px-4 py-1.5 text-xs font-black transition-all cursor-pointer ${
             selectedProduct === 'all'
-              ? 'bg-[#00ff87] font-bold text-black shadow-lg shadow-emerald-500/25'
-              : 'border border-white/10 bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
+              ? 'bg-[#00ff87] font-black text-black border-2 border-white shadow-[3px_3px_0_#be185d] -rotate-1'
+              : 'border-2 border-white/40 bg-[#040a18] text-white hover:border-white hover:text-[#00ff87] shadow-[2px_2px_0_rgba(255,255,255,0.2)]'
           }`}
         >
           All screens ({ordered.length})
@@ -132,26 +132,26 @@ export const GallerySection: React.FC = () => {
               key={prod.id}
               onClick={() => setSelectedProduct(prod.id)}
               aria-pressed={selectedProduct === prod.id}
-              className={`flex min-h-11 shrink-0 items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold transition-colors ${
+              className={`flex min-h-10 shrink-0 items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-black transition-all cursor-pointer ${
                 selectedProduct === prod.id
-                  ? 'bg-white font-bold text-black'
-                  : 'border border-white/10 bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                  ? 'bg-[#00ff87] font-black text-black border-2 border-white shadow-[3px_3px_0_#be185d] -rotate-1'
+                  : 'border-2 border-white/40 bg-[#040a18] text-white hover:border-white hover:text-[#00ff87] shadow-[2px_2px_0_rgba(255,255,255,0.2)]'
               }`}
             >
               <span
-                className="h-1.5 w-1.5 rounded-full"
+                className="h-2 w-2 rounded-full"
                 style={{ backgroundColor: prod.accentColor }}
                 aria-hidden="true"
               />
               <span>{prod.name}</span>
-              <span className="opacity-60">({count})</span>
+              <span className="opacity-70 font-mono text-[10px]">({count})</span>
             </button>
           )
         })}
       </div>
 
       <div className="relative mb-8 max-w-md">
-        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-white/40" aria-hidden="true" />
+        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#00ff87]" aria-hidden="true" />
         <label htmlFor="gallery-search" className="sr-only">
           Filter screenshots by feature
         </label>
@@ -161,23 +161,23 @@ export const GallerySection: React.FC = () => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Filter by feature — lyrics, equalizer, 4K…"
-          className="min-h-11 w-full rounded-full border border-white/10 bg-white/5 py-2.5 pl-11 pr-10 text-sm text-white outline-none backdrop-blur-xl placeholder:text-white/40 focus:border-emerald-400/60 focus:ring-2 focus:ring-emerald-400/20"
+          className="min-h-11 w-full rounded-full border-2 border-white bg-[#040a18] py-2.5 pl-11 pr-10 text-sm text-white outline-none shadow-[3px_3px_0_#00ff87] placeholder:text-neutral-400 focus:border-[#00ff87] focus:shadow-[4px_4px_0_#be185d]"
         />
         {searchQuery && (
           <button
             type="button"
             onClick={() => setSearchQuery('')}
             aria-label="Clear search"
-            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white/70 hover:text-white"
+            className="absolute right-3 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-white hover:text-[#00ff87] font-black"
           >
             <X className="h-3.5 w-3.5" aria-hidden="true" />
           </button>
         )}
       </div>
 
-      {/* React Bits FlexCarousel — WebGL Liquid Glass Optical Refraction Carousel */}
+      {/* React Bits FlexCarousel — Framed in Living Sketchbook Doodle Border */}
       {carouselItems.length > 0 ? (
-        <div className="relative w-full rounded-3xl overflow-hidden border border-white/10 bg-gradient-to-b from-white/[0.04] to-[#020612]/90 backdrop-blur-2xl shadow-2xl p-3 sm:p-5">
+        <div className="relative w-full rounded-[30px] overflow-hidden border-2 border-white bg-[#040a18] shadow-[6px_6px_0_#be185d] p-3 sm:p-5">
           {/* Preset Controls */}
           <div className="flex flex-wrap items-center justify-between gap-3 px-2 pb-3 mb-2 border-b border-white/10">
             <div className="flex items-center gap-2">

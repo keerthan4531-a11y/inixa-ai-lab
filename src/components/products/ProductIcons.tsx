@@ -188,6 +188,7 @@ export const ProductIcon: React.FC<ProductIconProps> = ({ productId, color }) =>
         </svg>
       )
 
+    case 'wikipedia-infopedia':
     case 'wikipedia-app':
       // Open AI knowledge encyclopedia book
       return (

@@ -47,7 +47,7 @@ function renderProductRow(products: ProductItem[]) {
       {products.map((p, idx) => (
         <div
           key={`${p.name}-${idx}`}
-          className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#040a18]/90 border border-white/10 hover:border-emerald-400/50 transition-all shadow-lg backdrop-blur-xl hover:scale-105 select-none"
+          className="group inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#040a18] border-2 border-white/60 hover:border-white transition-all shadow-[3px_3px_0_#be185d] hover:shadow-[4px_4px_0_#00ff87] hover:scale-105 select-none"
         >
           <span
             className="w-2.5 h-2.5 rounded-full shrink-0 animate-pulse"

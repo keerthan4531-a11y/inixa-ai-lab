@@ -4,6 +4,7 @@ import { useLenis } from './hooks/useLenis'
 import { InixaNav } from './components/navigation/InixaNav'
 import { CommandMenu } from './components/navigation/CommandMenu'
 import { InixaFooter } from './components/footer/InixaFooter'
+import { AiCatAssistant } from './components/doodle/AiCatAssistant'
 import CursorGrid from './components/CursorGrid'
 
 // New Phase 6 Liquid Glass Pages
@@ -51,7 +52,7 @@ export default function Site() {
   const isProducts = path === '/products' || path === '/catalog'
   const isProductDetail = path.startsWith('/product/') || path.startsWith('/app/')
   const isDownloads = path === '/downloads' || path === '/apks' || path === '/releases-all'
-  const isAbout = path === '/about' || path === '/manifesto' || path === '/philosophy'
+  const isAbout = path === '/about' || path === '/manifesto' || path === '/philosophy' || path === '/engineers' || path === '/team' || path === '/about/engineers'
   const isContact = path === '/contact' || path === '/feedback'
   const isSupport = path === '/support' || path.startsWith('/support/')
   const isRelease = path === '/release' || path.startsWith('/release/')
@@ -138,31 +139,13 @@ export default function Site() {
     return <NotFoundPage />
   }
 
-  // Legacy release and support pages handle their own header/footer chrome
+  // Legacy release and support pages handle their own header/footer chrome,
+  // and all main pages (Products, Downloads, About, Contact) render their dedicated full-width footer inline
   const isCustomChromePage = isRelease || isSupport
+  const hasDedicatedFooter = isRelease || isSupport || isProducts || isDownloads || isAbout || isContact
 
   return (
     <div className="min-h-screen bg-[#020612] text-white flex flex-col selection:bg-pink-600 selection:text-white relative">
-      {/* React Bits CursorGrid — Interactive WebGL2 Cybernetic Grid Background in Dark Blue + Light Green */}
-      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <CursorGrid
-          cellSize={60}
-          color="#00ff87"
-          gridColor="#0f1f38"
-          highlight="area"
-          gridStyle="lines"
-          radius={140}
-          holdTime={400}
-          fadeDuration={800}
-          fillOpacity={0.04}
-          gridOpacity={0.09}
-          spotlight={0.35}
-          clickPulse={false}
-          edgeFade={0.25}
-          intro={false}
-          className="w-full h-full"
-        />
-      </div>
       {/* Floating Liquid Glass Navigation */}
       {!isCustomChromePage && (
         <InixaNav onOpenSearch={() => setSearchOpen(true)} />
@@ -171,13 +154,16 @@ export default function Site() {
       {/* Ctrl+K Global Search & Quick Actions Modal */}
       <CommandMenu isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
 
+      {/* Floating Kutty AI Cat Assistant with Page Cloud Guide & Chat Window */}
+      <AiCatAssistant />
+
       {/* Main Page Content */}
       <main className="flex-1 relative z-10">
         {renderContent()}
       </main>
 
       {/* Liquid Glass Footer */}
-      {!isCustomChromePage && <InixaFooter />}
+      {!hasDedicatedFooter && <InixaFooter />}
     </div>
   )
 }
