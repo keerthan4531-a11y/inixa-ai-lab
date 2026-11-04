@@ -223,15 +223,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
   ]
 
   return (
-    <section className="relative overflow-hidden pt-28 pb-16 sm:pt-36 lg:min-h-[85vh] lg:flex lg:items-center bg-[#020612]">
+    <section className="relative overflow-hidden pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-36 lg:min-h-[85vh] lg:flex lg:items-center bg-[#020612]">
       {/* Hand-Drawn Living Sketchbook Background (Graph paper, rockets, planets, doodles, zero lag) */}
       <DoodleHeroBackground />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-4 sm:px-6">
         {/* Brand band: ElectricLogo + interactive TechText wordmark */}
         <div className="mb-2 sm:mb-4 text-center">
-          <div className="mx-auto mb-3 flex items-center justify-center">
-            <div className="relative h-16 w-16 sm:h-20 sm:w-20 rounded-2xl bg-[#040a18] border-2 border-white p-1 shadow-[4px_4px_0_#00ff87] overflow-hidden -rotate-2">
+          <div className="mx-auto mb-2 sm:mb-3 flex items-center justify-center">
+            <div className="relative h-12 w-12 sm:h-16 sm:w-16 md:h-20 md:w-20 rounded-xl sm:rounded-2xl bg-[#040a18] border-2 border-white p-1 shadow-[3px_3px_0_#00ff87] sm:shadow-[4px_4px_0_#00ff87] overflow-hidden -rotate-2">
               <ElectricLogo
                 src="/inixa-brand-electric.svg"
                 color="#00ff87"
@@ -248,15 +248,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           </div>
 
           {/* Interactive Doodle Cat Animation Switch */}
-          <div className="mb-4 flex items-center justify-center">
+          <div className="mb-2 sm:mb-3 flex items-center justify-center scale-90 sm:scale-100 origin-center">
             <DoodleCatToggle
               enabled={textAnimEnabled}
               onToggle={setTextAnimEnabled}
             />
           </div>
 
-          <div className="inline-flex items-center gap-2.5 rounded-full border-2 border-[#00ff87] bg-[#040a18] px-4 py-1.5 text-xs font-black text-[#00ff87] shadow-[3px_3px_0_#be185d] -rotate-1 mb-3">
-            <DoodleIcon kind="bolt" size={14} />
+          <div className="inline-flex items-center gap-2 rounded-full border-2 border-[#00ff87] bg-[#040a18] px-3 py-1 sm:px-4 sm:py-1.5 text-[10px] sm:text-xs font-black text-[#00ff87] shadow-[2.5px_2.5px_0_#be185d] sm:shadow-[3px_3px_0_#be185d] -rotate-1 mb-2 sm:mb-3">
+            <DoodleIcon kind="bolt" size={13} />
             {textAnimEnabled ? (
               <DecryptedText
                 text="INIXA AI LABS • 2026 LIVING SKETCHBOOK"
@@ -271,25 +271,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 INIXA AI LABS • 2026 LIVING SKETCHBOOK
               </span>
             )}
-            <DoodleIcon kind="sparkle" size={14} />
+            <DoodleIcon kind="sparkle" size={13} />
           </div>
 
-          <div className="relative mx-auto w-full max-w-4xl h-[90px] sm:h-[140px] md:h-[180px] text-white flex items-center justify-center">
+          <div className="relative mx-auto w-full max-w-4xl h-[52px] sm:h-[90px] md:h-[130px] text-white flex items-center justify-center">
             {/* Playful Doodle Cat Sitting atop INIXA LAB wordmark */}
-            <div className="absolute -top-10 sm:-top-12 left-4 sm:left-28 z-30 pointer-events-auto">
-              <DoodleCat pose="sitting" size={48} speech="Perched on INIXA! Meow 🐾" speechAlign="top" />
+            <div className="absolute -top-7 sm:-top-11 left-6 sm:left-28 z-30 pointer-events-auto">
+              <DoodleCat pose="sitting" size={36} speech="Perched on INIXA! Meow 🐾" speechAlign="top" />
             </div>
 
             {/* Flying Bird above the Wordmark */}
-            <div className="absolute -top-9 sm:-top-10 right-4 sm:right-32 z-30 pointer-events-auto hidden sm:block">
-              <DoodleBird pose="flying" size={50} speech="Flying above INIXA LABS! ✈️" speechAlign="top" />
+            <div className="absolute -top-8 sm:-top-10 right-6 sm:right-32 z-30 pointer-events-auto hidden sm:block">
+              <DoodleBird pose="flying" size={44} speech="Flying above INIXA LABS! ✈️" speechAlign="top" />
             </div>
 
             {textAnimEnabled ? (
               <TechText
                 text="INIXA LAB"
                 fontWeight={700}
-                fontSize={120}
+                fontSize={100}
                 reveal="letter"
                 dashLength={4}
                 dashGap={2}
@@ -316,7 +316,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center px-2">
-                <h1 className="text-[clamp(2.4rem,9.5vw,7.8rem)] font-black tracking-tight text-white select-none leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)] text-center">
+                <h1 className="text-[clamp(1.75rem,6.5vw,5.5rem)] font-black tracking-tight text-white select-none leading-none drop-shadow-[0_4px_16px_rgba(0,0,0,0.8)] text-center">
                   INIX<span className="text-[#00ff87]">A</span> LAB
                 </h1>
               </div>
@@ -324,7 +324,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
+        <div className="grid grid-cols-1 items-center gap-8 sm:gap-12 lg:grid-cols-12">
           {/* Left Column: Headlines, Text Animations & Doodle Buttons */}
           <div className="text-center lg:col-span-7 lg:text-left relative">
             {/* Peeking Mascot: Bruno the Yeti */}
@@ -338,8 +338,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
             </div>
 
             {/* Peeking Doodle Cat on Headline */}
-            <div className="absolute -top-10 left-2 sm:left-4 z-20">
-              <DoodleCat pose="peeking" size={52} speech="Curious cat inspecting 120Hz optics! ✨" speechAlign="top" />
+            <div className="absolute -top-7 sm:-top-10 left-3 sm:left-4 z-20">
+              <DoodleCat pose="peeking" size={38} speech="Curious cat inspecting 120Hz optics! ✨" speechAlign="top" />
             </div>
 
             {/* Peeking Penguin on Headline */}
@@ -347,12 +347,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               <DoodlePenguin pose="peeking" size={48} speech="Noot noot! Zero Play Store bloat! 🐧" speechAlign="top" />
             </div>
 
-            <div className="relative inline-block mb-6">
+            <div className="relative inline-block mb-3 sm:mb-6">
               {textAnimEnabled ? (
                 <Shuffle
                   text="Frontiers of AI & Liquid Glass Flagships"
-                  tag="h1"
-                  className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-white"
+                  tag="h2"
+                  className="text-xl xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-white"
                   textAlign="inherit"
                   effect="slide"
                   shuffleDirection="right"
@@ -370,12 +370,12 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                   accentColor="#00ff87"
                 />
               ) : (
-                <h1 className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-[1.1] tracking-tight text-white">
+                <h2 className="text-xl xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black leading-[1.15] tracking-tight text-white">
                   Frontiers of AI &amp; Liquid Glass Flagships
-                </h1>
+                </h2>
               )}
               {/* Hand-drawn squiggly underline */}
-              <div className="w-56 h-3 mt-1 mx-auto lg:mx-0">
+              <div className="w-36 sm:w-56 h-2 sm:h-3 mt-1 mx-auto lg:mx-0">
                 <svg viewBox="0 0 100 8" preserveAspectRatio="none" className="w-full h-full">
                   <path
                     d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4"
@@ -388,8 +388,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
               </div>
             </div>
 
-            {/* Cyclical Flagship Paragraphs (TextType if enabled, clean static paragraph if disabled) */}
-            <div className="mb-8 max-w-2xl min-h-[5.5rem] sm:min-h-[5rem]">
+            {/* Cyclical Flagship Paragraphs */}
+            <div className="mb-5 sm:mb-8 max-w-2xl min-h-[3.5rem] sm:min-h-[5rem]">
               {textAnimEnabled ? (
                 <TextType
                   text={HERO_TYPED_PARAGRAPHS}
@@ -404,31 +404,31 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                   showCursor
                   loop
                   cursorColor="#00ff87"
-                  className="text-base leading-relaxed text-neutral-200 sm:text-lg font-medium"
+                  className="text-xs sm:text-base leading-relaxed text-neutral-300 font-medium"
                 />
               ) : (
-                <p className="text-base leading-relaxed text-neutral-200 sm:text-lg font-medium">
+                <p className="text-xs sm:text-base leading-relaxed text-neutral-300 font-medium">
                   {HERO_TYPED_PARAGRAPHS[0]}
                 </p>
               )}
             </div>
 
             {/* Tactile Doodle CTA Buttons with Magnet Effect & Sketch Arrow */}
-            <div className="flex flex-wrap items-center justify-center gap-4 lg:justify-start relative">
+            <div className="flex flex-wrap items-center justify-center gap-2.5 sm:gap-4 lg:justify-start relative">
               <Magnet magnetStrength={0.18}>
                 <div className="relative inline-block">
                   {/* Sleeping Cat napping on the Explore Button */}
-                  <div className="absolute -top-8 right-2 z-30 pointer-events-auto">
-                    <DoodleCat pose="sleeping" size={50} speechAlign="top" />
+                  <div className="absolute -top-6 sm:-top-8 right-2 z-30 pointer-events-auto">
+                    <DoodleCat pose="sleeping" size={38} speechAlign="top" />
                   </div>
                   <button
                     type="button"
                     onClick={() => navigate('/products')}
-                    className="doodle-btn doodle-btn-green px-7 py-3.5 text-sm font-black text-[#020612] cursor-pointer"
+                    className="doodle-btn doodle-btn-green px-5 py-2.5 sm:px-7 sm:py-3.5 text-xs sm:text-sm font-black text-[#020612] cursor-pointer"
                   >
-                    <DoodleIcon kind="sparkle" size={17} />
+                    <DoodleIcon kind="sparkle" size={15} />
                     <span>Explore 9 Products</span>
-                    <ArrowRight className="h-4 w-4" />
+                    <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                   </button>
                 </div>
               </Magnet>
@@ -437,9 +437,9 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 <button
                   type="button"
                   onClick={() => navigate('/downloads')}
-                  className="doodle-btn doodle-btn-outline px-7 py-3.5 text-sm font-black text-white hover:text-[#00ff87] cursor-pointer"
+                  className="doodle-btn doodle-btn-outline px-4 py-2.5 sm:px-7 sm:py-3.5 text-xs sm:text-sm font-black text-white hover:text-[#00ff87] cursor-pointer"
                 >
-                  <DoodleIcon kind="bolt" size={17} />
+                  <DoodleIcon kind="bolt" size={15} />
                   <span>Download APKs</span>
                 </button>
               </Magnet>
@@ -448,29 +448,29 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
                 <button
                   type="button"
                   onClick={onOpenSearch}
-                  className="doodle-btn doodle-btn-outline px-5 py-3.5 text-xs font-black text-neutral-300 hover:text-white cursor-pointer"
+                  className="doodle-btn doodle-btn-outline px-3.5 py-2.5 sm:px-5 sm:py-3.5 text-xs font-black text-neutral-300 hover:text-white cursor-pointer"
                 >
-                  <Search className="h-4 w-4 text-[#00ff87]" />
-                  <span>Search <kbd className="ml-1 text-[10px] text-[#00ff87]">⌘K</kbd></span>
+                  <Search className="h-3.5 w-3.5 text-[#00ff87]" />
+                  <span>Search <kbd className="ml-1 text-[9px] text-[#00ff87]">⌘K</kbd></span>
                 </button>
               </Magnet>
             </div>
 
             {/* Doodle Metric Blocks with Loaf Cat */}
-            <div className="mt-12 grid grid-cols-2 gap-3.5 sm:grid-cols-4 max-w-2xl mx-auto lg:mx-0">
+            <div className="mt-8 sm:mt-12 grid grid-cols-2 gap-2.5 sm:gap-3.5 sm:grid-cols-4 max-w-2xl mx-auto lg:mx-0">
               {stats.map((s) => (
                 <div key={s.label} className="relative">
                   {s.label.includes('trackers') && (
-                    <div className="absolute -top-8 right-1 z-30 pointer-events-auto">
-                      <DoodleCat pose="loaf" size={44} speech="Purr... 0 trackers! 🛡️" speechAlign="top" />
+                    <div className="absolute -top-7 right-1 z-30 pointer-events-auto">
+                      <DoodleCat pose="loaf" size={36} speech="Purr... 0 trackers! 🛡️" speechAlign="top" />
                     </div>
                   )}
                   <div
-                    className="p-4 rounded-2xl bg-[#040a18] border-2 border-white text-center lg:text-left transition-transform hover:-translate-y-1"
-                    style={{ boxShadow: `4px 4px 0 ${s.shadow}` }}
+                    className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-[#040a18] border-2 border-white text-center lg:text-left transition-transform hover:-translate-y-1"
+                    style={{ boxShadow: `3px 3px 0 ${s.shadow}` }}
                   >
-                    <div className="font-mono text-2xl sm:text-3xl font-black text-white">{s.value}</div>
-                    <div className="mt-0.5 text-xs text-neutral-400 font-medium">{s.label}</div>
+                    <div className="font-mono text-xl sm:text-3xl font-black text-white">{s.value}</div>
+                    <div className="mt-0.5 text-[11px] sm:text-xs text-neutral-400 font-medium">{s.label}</div>
                   </div>
                 </div>
               ))}
@@ -478,8 +478,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           </div>
 
           {/* Right Column: Physical Device 3D DepthCarousel with Critters */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5 relative w-full overflow-hidden sm:overflow-visible">
-            <div className="relative w-full max-w-[310px] sm:max-w-[420px] md:max-w-[460px] h-[580px] sm:h-[680px] flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center lg:col-span-5 relative w-full overflow-hidden sm:overflow-visible mt-4 lg:mt-0">
+            <div className="relative w-full max-w-[290px] sm:max-w-[420px] md:max-w-[460px] h-[500px] sm:h-[680px] flex items-center justify-center">
               {/* Stretching Cat watching the DepthCarousel */}
               <div className="absolute -bottom-6 -left-4 z-30 hidden sm:block pointer-events-auto">
                 <DoodleCat pose="stretching" size={64} flip speech="Stretching my lossless audio paws! 🐾" speechAlign="top" />
