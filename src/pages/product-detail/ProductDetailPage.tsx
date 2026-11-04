@@ -186,7 +186,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
   }
 
   const handleCopyLink = async (downloadPath: string, index: number) => {
-    const fullUrl = `${window.location.origin}${downloadPath}`
+    const fullUrl = downloadPath.startsWith('http') ? downloadPath : `${window.location.origin}${downloadPath}`
     const ok = await copyToClipboard(fullUrl)
     if (ok) {
       setCopiedApkIndex(index)

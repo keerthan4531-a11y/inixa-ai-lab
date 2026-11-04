@@ -738,7 +738,9 @@ export const DownloadsPage: React.FC = () => {
                         type="button"
                         onClick={() =>
                           handleCopy(
-                            `${window.location.origin}${apk.downloadPath}`,
+                            apk.downloadPath.startsWith('http')
+                              ? apk.downloadPath
+                              : `${window.location.origin}${apk.downloadPath}`,
                             `url-${apk.productId}-${idx}`
                           )
                         }
@@ -810,7 +812,9 @@ export const DownloadsPage: React.FC = () => {
             <div className="p-4 rounded-2xl bg-[#020612] border-2 border-white flex items-center justify-center shadow-[4px_4px_0_#00ff87]">
               <img
                 src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&margin=8&color=00ff87&bgcolor=020612&data=${encodeURIComponent(
-                  `${window.location.origin}${qrModalApk.downloadPath}`
+                  qrModalApk.downloadPath.startsWith('http')
+                    ? qrModalApk.downloadPath
+                    : `${window.location.origin}${qrModalApk.downloadPath}`
                 )}`}
                 alt={`QR code for ${qrModalApk.productName}`}
                 className="w-44 h-44 rounded-xl object-contain"
@@ -826,7 +830,9 @@ export const DownloadsPage: React.FC = () => {
                 type="button"
                 onClick={() =>
                   handleCopy(
-                    `${window.location.origin}${qrModalApk.downloadPath}`,
+                    qrModalApk.downloadPath.startsWith('http')
+                      ? qrModalApk.downloadPath
+                      : `${window.location.origin}${qrModalApk.downloadPath}`,
                     'modal-copy'
                   )
                 }

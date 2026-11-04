@@ -123,7 +123,7 @@ export const APK_CATALOG: Record<string, ProductApk[]> = {
       abi: 'arm64-v8a',
       minSdk: 33,
       targetSdk: 35,
-      downloadPath: '/downloads/beatbox-ultra/beatbox-ultra-v1.0.405-arm64.apk',
+      downloadPath: 'https://github.com/keerthan4531-a11y/inixa-ai-lab/releases/download/v1.0.405/beatbox-ultra-v1.0.405-arm64.apk',
       isLatest: true,
       changelog: [
         "Brina Glass UI: dynamic backdrop refraction shaders using Haze",
