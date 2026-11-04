@@ -44,7 +44,7 @@ export const Hardware3DSection: React.FC = () => {
   }
 
   return (
-    <section className="relative py-24 px-4 sm:px-6 max-w-7xl mx-auto" id="showcase">
+    <section className="relative py-24 px-4 sm:px-6 max-w-7xl mx-auto overflow-hidden" id="showcase">
       {/* Background Caustic Glow */}
       <div
         className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[600px] w-[600px] rounded-full blur-[140px] opacity-25"

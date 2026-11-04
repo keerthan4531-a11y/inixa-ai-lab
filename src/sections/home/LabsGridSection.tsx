@@ -235,7 +235,7 @@ export const LabsGridSection: React.FC = () => {
   }, [activeCategory])
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6" id="experiments">
+    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 overflow-hidden" id="experiments">
       {/* Background atmospheric ambient aura — Light Green + Dark Pink over Dark Blue */}
       <div className="pointer-events-none absolute -top-20 left-1/2 -translate-x-1/2 w-full max-w-5xl h-64 bg-gradient-to-r from-emerald-500/15 via-pink-600/15 to-emerald-400/10 blur-[130px] rounded-full" aria-hidden="true" />
 

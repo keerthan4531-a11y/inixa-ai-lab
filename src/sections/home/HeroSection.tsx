@@ -223,7 +223,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
   ]
 
   return (
-    <section className="relative overflow-hidden pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-36 lg:min-h-[85vh] lg:flex lg:items-center bg-[#020612]">
+    <section className="relative overflow-hidden pt-20 pb-10 sm:pt-28 sm:pb-16 lg:pt-36 lg:min-h-[85vh] lg:flex lg:items-center bg-[#020612] w-full max-w-[100vw]">
       {/* Hand-Drawn Living Sketchbook Background (Graph paper, rockets, planets, doodles, zero lag) */}
       <DoodleHeroBackground />
 
@@ -478,15 +478,15 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ onOpenSearch }) => {
           </div>
 
           {/* Right Column: Physical Device 3D DepthCarousel with Critters */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5 relative w-full overflow-hidden sm:overflow-visible mt-4 lg:mt-0">
-            <div className="relative w-full max-w-[290px] sm:max-w-[420px] md:max-w-[460px] h-[500px] sm:h-[680px] flex items-center justify-center">
+          <div className="flex flex-col items-center justify-center lg:col-span-5 relative w-full overflow-hidden mt-4 lg:mt-0">
+            <div className="relative w-full max-w-[280px] sm:max-w-[420px] md:max-w-[460px] h-[500px] sm:h-[680px] flex items-center justify-center">
               {/* Stretching Cat watching the DepthCarousel */}
               <div className="absolute -bottom-6 -left-4 z-30 hidden sm:block pointer-events-auto">
                 <DoodleCat pose="stretching" size={64} flip speech="Stretching my lossless audio paws! 🐾" speechAlign="top" />
               </div>
 
               {/* Audiophile Penguin jamming on top right of the phone */}
-              <div className="absolute -top-10 -right-2 sm:-right-8 z-30 pointer-events-auto">
+              <div className="absolute -top-10 right-0 sm:-right-8 z-30 pointer-events-auto">
                 <DoodlePenguin pose="headphones" size={54} speech="Pure FLAC jamming! 🐧🎧" speechAlign="left" />
               </div>
 

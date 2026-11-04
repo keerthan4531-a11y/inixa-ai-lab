@@ -90,7 +90,7 @@ export const GallerySection: React.FC = () => {
   const accent = (id: string) => PRODUCTS_BY_ID[id]?.accentColor || '#00ff87'
 
   return (
-    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6" id="gallery">
+    <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 overflow-hidden" id="gallery">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div className="max-w-2xl">
           <p className="mb-3 text-xs font-bold uppercase tracking-widest text-emerald-400 inline-flex items-center gap-1.5">

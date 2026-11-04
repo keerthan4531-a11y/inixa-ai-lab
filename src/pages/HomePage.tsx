@@ -186,7 +186,7 @@ const TECH_LOGOS: LogoItem[] = [
 
 export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
   return (
-    <div className="relative min-h-screen bg-[#020612] text-white selection:bg-[#be185d] selection:text-white font-sans">
+    <div className="relative min-h-screen bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans w-full max-w-full">
       {/* Living Sketchbook Doodle Theme Styles */}
       <style>{`
         .doodle-card {
@@ -277,7 +277,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       <GallerySection />
 
       {/* 6. Comprehensive Ecosystem Download Banner (Doodle Card) */}
-      <section className="relative py-24 px-4 sm:px-6 overflow-hidden">
+      <section className="relative py-24 px-4 sm:px-6 overflow-hidden w-full max-w-[100vw]">
         <div className="max-w-6xl mx-auto">
           <div className="doodle-card rounded-[32px] p-8 sm:p-14 relative overflow-hidden text-center sm:text-left">
             {/* Peeking Mascot: Juno the Kid on top right */}
@@ -361,7 +361,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       </section>
 
       {/* 7. React Bits 3D DriftWall Showcase — Living Ecosystem Horizon */}
-      <section className="relative py-16 overflow-hidden border-t-2 border-dashed border-white/20 bg-[#020612] w-full">
+      <section className="relative py-16 overflow-hidden border-t-2 border-dashed border-white/20 bg-[#020612] w-full max-w-[100vw]">
         {/* Peeking Cat on top of 3D DriftWall Header */}
         <div className="flex justify-center -mb-3 relative z-20 pointer-events-auto">
           <DoodleCat pose="peeking" size={58} speech="Watching 56 screens drift by! 👀" speechAlign="top" />
@@ -405,7 +405,7 @@ export const HomePage: React.FC<HomePageProps> = ({ onOpenSearch }) => {
       </section>
 
       {/* 8. React Bits LogoLoop — Technology Ecosystem & Native Engineering Strip */}
-      <section className="relative py-14 border-t-2 border-dashed border-white/20 bg-[#020612]" aria-label="Technology Stack">
+      <section className="relative py-14 border-t-2 border-dashed border-white/20 bg-[#020612] overflow-hidden w-full max-w-[100vw]" aria-label="Technology Stack">
         {/* Stretching Cat on top of Technology Stack */}
         <div className="flex justify-center -mb-3 relative z-20 pointer-events-auto">
           <DoodleCat pose="stretching" size={66} speech="Stretching on native Kotlin & Rust! 🐾" speechAlign="top" />

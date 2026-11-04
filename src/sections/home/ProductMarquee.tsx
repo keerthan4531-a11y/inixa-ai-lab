@@ -77,7 +77,7 @@ function renderProductRow(products: ProductItem[]) {
 
 export const ProductMarquee: React.FC = () => {
   return (
-    <section className="relative py-8 overflow-hidden border-y border-white/10 bg-[#020612]/80 backdrop-blur-xl">
+    <section className="relative py-8 overflow-hidden border-y border-white/10 bg-[#020612]/80 backdrop-blur-xl w-full max-w-[100vw]">
       {/* Background glow sheen — Light Green & Dark Pink */}
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-emerald-500/10 via-transparent to-pink-600/10" />
 
