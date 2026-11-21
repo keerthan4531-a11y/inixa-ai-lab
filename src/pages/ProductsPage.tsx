@@ -19,62 +19,6 @@ export const ProductsPage: React.FC = () => {
       {/* Living Sketchbook Doodle Canvas Background (Graph paper grid, rockets, paper airplanes, stars) */}
       <DoodleHeroBackground />
 
-      {/* Living Sketchbook Doodle Styles */}
-      <style>{`
-        .doodle-card {
-          position: relative;
-          background: #040a18;
-          border: 2.5px solid #ffffff;
-          box-shadow: 6px 6px 0 #be185d;
-          transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
-        }
-        .doodle-card:hover {
-          transform: translateY(-3px) rotate(-0.3deg);
-          box-shadow: 8px 8px 0 #00ff87;
-        }
-        .doodle-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          border-radius: 999px;
-          font-weight: 850;
-          letter-spacing: -0.01em;
-          transition: transform 0.18s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.18s cubic-bezier(0.3, 1.4, 0.5, 1);
-          cursor: pointer;
-        }
-        .doodle-btn-green {
-          background: linear-gradient(135deg, #00ff87, #10b981);
-          color: #020612;
-          border: 2px solid #ffffff;
-          box-shadow: 4px 4px 0 #be185d;
-        }
-        .doodle-btn-green:hover {
-          transform: translateY(-2px) rotate(-1.5deg);
-          box-shadow: 6px 6px 0 #ffd23f;
-        }
-        .doodle-btn-green:active {
-          transform: translateY(2px);
-          box-shadow: 1px 1px 0 #be185d;
-        }
-        .doodle-btn-outline {
-          background: #040a18;
-          color: #ffffff;
-          border: 2px solid #ffffff;
-          box-shadow: 3px 3px 0 #00ff87;
-        }
-        .doodle-btn-outline:hover {
-          transform: translateY(-2px) rotate(1.2deg);
-          border-color: #00ff87;
-          box-shadow: 5px 5px 0 #be185d;
-        }
-        .doodle-stamp {
-          border: 2px dashed #00ff87;
-          transform: rotate(-2deg);
-          font-weight: 900;
-          text-transform: uppercase;
-        }
-      `}</style>
-
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header Section with Living Sketchbook Doodle Crew */}
         <div className="text-center max-w-4xl mx-auto mb-8 relative pt-4">

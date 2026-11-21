@@ -349,3 +349,202 @@
     transform: none !important;
   }
 }
+
+/* =========================================================================
+   DOODLE + LIQUID GLASS MASTER HYBRID DESIGN SYSTEM
+   Uniting Apple-style liquid glass optical refraction & specular rim lights
+   with Living Sketchbook hand-drawn comic borders and bold offset shadows.
+   ========================================================================= */
+
+/* 1. Master Doodle Liquid Glass Cards */
+.doodle-card,
+.doodle-glass-card {
+  position: relative;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 50%) var(--mouse-y, 30%),
+    rgba(255, 255, 255, 0.08) 0%,
+    rgba(255, 255, 255, 0.02) 40%,
+    rgba(6, 13, 28, 0.82) 85%
+  );
+  backdrop-filter: blur(28px) saturate(200%);
+  -webkit-backdrop-filter: blur(28px) saturate(200%);
+  border: 2.5px solid #ffffff;
+  border-radius: 28px;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45),
+    inset 0 -1.5px 1.5px 0 rgba(0, 0, 0, 0.4),
+    6px 6px 0 #be185d,
+    0 20px 48px -8px rgba(0, 0, 0, 0.65);
+  transition: transform 0.22s cubic-bezier(0.3, 1.4, 0.5, 1),
+              box-shadow 0.22s cubic-bezier(0.3, 1.4, 0.5, 1),
+              border-color 0.2s ease;
+  overflow: hidden;
+}
+
+.doodle-card:hover,
+.doodle-glass-card:hover {
+  transform: translateY(-3px) rotate(-0.35deg);
+  border-color: #ffffff;
+  box-shadow: 
+    inset 0 2px 3px 0 rgba(255, 255, 255, 0.75),
+    inset 0 -1.5px 1.5px 0 rgba(0, 0, 0, 0.5),
+    9px 9px 0 #00ff87,
+    0 24px 60px -10px rgba(0, 255, 135, 0.35);
+}
+
+/* Ambient Specular Glass Sheen on Top Rim */
+.doodle-card::before,
+.doodle-glass-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.14) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 2. Master Doodle Liquid Glass Buttons */
+.doodle-btn,
+.doodle-glass-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border-radius: 9999px;
+  font-weight: 850;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  border: 2px solid #ffffff;
+  text-decoration: none;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: transform 0.18s cubic-bezier(0.3, 1.4, 0.5, 1),
+              box-shadow 0.18s cubic-bezier(0.3, 1.4, 0.5, 1),
+              filter 0.2s ease;
+  overflow: hidden;
+}
+
+.doodle-btn-green {
+  background: linear-gradient(135deg, rgba(0, 255, 135, 0.95) 0%, rgba(16, 185, 129, 0.95) 60%, rgba(5, 150, 105, 0.95) 100%);
+  color: #020612;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1.5px 1.5px 0 rgba(0, 0, 0, 0.3),
+    4px 4px 0 #be185d,
+    0 8px 24px -4px rgba(0, 255, 135, 0.45);
+}
+
+.doodle-btn-green:hover {
+  transform: translateY(-2px) rotate(-1deg);
+  box-shadow: 
+    inset 0 2px 2px 0 #ffffff,
+    6px 6px 0 #ffd23f,
+    0 14px 32px -2px rgba(0, 255, 135, 0.65);
+}
+
+.doodle-btn-green:active {
+  transform: translateY(2px) scale(0.98);
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.6),
+    2px 2px 0 #be185d;
+}
+
+.doodle-btn-pink {
+  background: linear-gradient(135deg, rgba(236, 72, 153, 0.95) 0%, rgba(190, 24, 93, 0.95) 100%);
+  color: #ffffff;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.75),
+    4px 4px 0 #00ff87,
+    0 8px 24px -4px rgba(190, 24, 93, 0.45);
+}
+
+.doodle-btn-pink:hover {
+  transform: translateY(-2px) rotate(1deg);
+  box-shadow: 
+    inset 0 2px 2px 0 #ffffff,
+    6px 6px 0 #38d3d6,
+    0 14px 32px -2px rgba(236, 72, 153, 0.65);
+}
+
+.doodle-btn-outline {
+  background: rgba(6, 13, 28, 0.75);
+  color: #ffffff;
+  box-shadow: 
+    inset 0 1.5px 1.5px 0 rgba(255, 255, 255, 0.35),
+    3px 3px 0 #00ff87;
+}
+
+.doodle-btn-outline:hover {
+  transform: translateY(-2px) rotate(1deg);
+  border-color: #00ff87;
+  box-shadow: 
+    inset 0 2px 2px 0 rgba(255, 255, 255, 0.55),
+    5px 5px 0 #be185d;
+}
+
+/* 3. Master Doodle Liquid Glass Inputs */
+.doodle-input,
+.doodle-glass-input {
+  background: rgba(6, 14, 34, 0.75) !important;
+  backdrop-filter: blur(20px) saturate(190%);
+  -webkit-backdrop-filter: blur(20px) saturate(190%);
+  border: 2px solid #ffffff;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.28),
+    inset 0 -1px 1px 0 rgba(0, 0, 0, 0.4),
+    4px 4px 0 rgba(0, 255, 135, 0.45);
+  color: #ffffff;
+  border-radius: 14px;
+  padding: 11px 16px;
+  outline: none;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.doodle-input:focus,
+.doodle-glass-input:focus {
+  border-color: #00ff87;
+  box-shadow: 
+    inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.5),
+    5px 5px 0 #be185d,
+    0 0 22px -2px rgba(0, 255, 135, 0.4);
+  transform: translateY(-1px);
+}
+
+/* 4. Master Doodle Liquid Stamps & Tags */
+.doodle-stamp,
+.doodle-liquid-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  background: rgba(0, 255, 135, 0.12);
+  border: 2px dashed #00ff87;
+  color: #00ff87;
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  font-family: var(--font-mono, monospace);
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  box-shadow: 
+    inset 0 1px 1px 0 rgba(255, 255, 255, 0.35),
+    2px 2px 0 #be185d;
+  transform: rotate(-1.5deg);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.doodle-stamp:hover,
+.doodle-liquid-stamp:hover {
+  transform: rotate(0deg) scale(1.04);
+  box-shadow: 
+    inset 0 1px 1.5px 0 rgba(255, 255, 255, 0.55),
+    4px 4px 0 #ffd23f;
+}

@@ -249,68 +249,12 @@ export const DownloadsPage: React.FC = () => {
     <div className="relative min-h-screen pt-28 pb-12 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">
       {/* Doodle Sketch Hatch Background & Living Ink Styles */}
       <style>{`
-        .doodle-card {
-          position: relative;
-          background: #040a18;
-          border: 2.5px solid #ffffff;
-          box-shadow: 6px 6px 0 #be185d;
-          transition: transform 0.2s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.2s cubic-bezier(0.3, 1.4, 0.5, 1);
-        }
-        .doodle-card:hover {
-          transform: translateY(-3px) rotate(-0.3deg);
-          box-shadow: 8px 8px 0 #00ff87;
-        }
         .doodle-card.latest {
           border-color: #00ff87;
-          box-shadow: 6px 6px 0 #00ff87;
+          box-shadow: inset 0 1.5px 2px 0 rgba(255, 255, 255, 0.45), 6px 6px 0 #00ff87;
         }
         .doodle-card.latest:hover {
-          box-shadow: 9px 9px 0 #be185d;
-        }
-        .doodle-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          border-radius: 999px;
-          font-weight: 850;
-          letter-spacing: -0.01em;
-          transition: transform 0.18s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.18s cubic-bezier(0.3, 1.4, 0.5, 1);
-          cursor: pointer;
-        }
-        .doodle-btn-green {
-          background: linear-gradient(135deg, #00ff87, #10b981);
-          color: #020612;
-          border: 2px solid #ffffff;
-          box-shadow: 4px 4px 0 #be185d;
-        }
-        .doodle-btn-green:hover {
-          transform: translateY(-2px) rotate(-1.5deg);
-          box-shadow: 6px 6px 0 #ffd23f;
-        }
-        .doodle-btn-green:active {
-          transform: translateY(2px);
-          box-shadow: 1px 1px 0 #be185d;
-        }
-        .doodle-btn-outline {
-          background: #040a18;
-          color: #ffffff;
-          border: 2px solid #ffffff;
-          box-shadow: 3px 3px 0 #00ff87;
-        }
-        .doodle-btn-outline:hover {
-          transform: translateY(-2px) rotate(1.2deg);
-          border-color: #00ff87;
-          box-shadow: 5px 5px 0 #be185d;
-        }
-        .doodle-btn-outline:active {
-          transform: translateY(2px);
-          box-shadow: 1px 1px 0 #00ff87;
-        }
-        .doodle-stamp {
-          border: 2px dashed #00ff87;
-          transform: rotate(-2deg);
-          font-weight: 900;
-          text-transform: uppercase;
+          box-shadow: inset 0 2px 3px 0 rgba(255, 255, 255, 0.75), 9px 9px 0 #be185d;
         }
         .dcf-art {
           fill: #060d22;
