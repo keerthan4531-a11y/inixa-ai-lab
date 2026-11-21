@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { ALL_PRODUCTS, PRODUCTS_BY_ID } from '../../data/products'
+import { useAllProductsMap } from '../../data/developerApps'
 import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { ProductIcon } from '../../components/products/ProductIcons'
@@ -177,7 +178,8 @@ const DoodleMascot: React.FC<{
 export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId }) => {
   const [copiedApkIndex, setCopiedApkIndex] = useState<number | null>(null)
 
-  const product = PRODUCTS_BY_ID[productId] || ALL_PRODUCTS[0]
+  const allMap = useAllProductsMap()
+  const product = allMap[productId] || PRODUCTS_BY_ID[productId] || ALL_PRODUCTS[0]
   const prodScreenshots = SCREENSHOT_MAP[product.id] || {}
   const mascotInfo = PRODUCT_MASCOTS[product.id] || {
     kind: 'yeti' as CrewKind,
@@ -194,8 +196,14 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
     }
   }
 
+  // Handle both official screenshot map and custom developer uploaded screenshots
+  const customShots = (product as any).screenshots || (product.features || []).filter((f) => f.screenshotKey)
+  const customHero = customShots.length > 0
+    ? { assetPath: customShots[0].src || customShots[0].screenshotKey, altText: customShots[0].title || product.name }
+    : null
+
   const screenshotKeys = Object.keys(prodScreenshots)
-  const heroShot = prodScreenshots[screenshotKeys[0]]
+  const heroShot = prodScreenshots[screenshotKeys[0]] || customHero
 
   return (
     <div className="relative min-h-screen pt-28 pb-24 px-4 sm:px-6 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">

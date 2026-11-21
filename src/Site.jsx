@@ -15,6 +15,7 @@ import { DownloadsPage } from './pages/DownloadsPage'
 import { AboutPage } from './pages/AboutPage'
 import { ContactPage } from './pages/ContactPage'
 import { NotFoundPage } from './pages/NotFoundPage'
+import { DeveloperPortalPage } from './pages/DeveloperPortalPage'
 
 // Legacy release & support pages
 import Release from './pages/Release.jsx'
@@ -22,6 +23,7 @@ import ReleaseColorOS from './pages/ReleaseColorOS.jsx'
 import Support from './pages/Support.jsx'
 import { releaseByVersion, LATEST_RELEASE } from './releases.js'
 import { PRODUCTS_BY_ID } from './data/products'
+import { useAllProductsMap } from './data/developerApps'
 
 /**
  * Normalizes app ID aliases to ensure every URL lands on the correct product
@@ -43,6 +45,7 @@ function normalizeProductId(rawId) {
 export default function Site() {
   const path = useRoute()
   const [searchOpen, setSearchOpen] = useState(false)
+  const allProductsMap = useAllProductsMap()
 
   // Initialize smooth scrolling
   useLenis()
@@ -56,6 +59,7 @@ export default function Site() {
   const isContact = path === '/contact' || path === '/feedback'
   const isSupport = path === '/support' || path.startsWith('/support/')
   const isRelease = path === '/release' || path.startsWith('/release/')
+  const isDeveloper = path === '/developer' || path === '/admin' || path === '/collaborators'
 
   // Extract ID for product detail
   let activeProductId = ''
@@ -74,13 +78,13 @@ export default function Site() {
     let description =
       'Showcase of the INIXA mobile software ecosystem: Beat Box Ultra, INIXA AI, Lumina Browser, Liquid Stream, Clipster, and My Tube. Liquid Glass design language and zero tracking.'
 
-    if (isProductDetail && PRODUCTS_BY_ID[activeProductId]) {
-      const prod = PRODUCTS_BY_ID[activeProductId]
+    if (isProductDetail && allProductsMap[activeProductId]) {
+      const prod = allProductsMap[activeProductId]
       title = `${prod.name} — ${prod.tagline} | INIXA LABS`
-      description = prod.description
+      description = prod.description || prod.longDescription
     } else if (isProducts) {
       title = 'Software Ecosystem & Catalog — INIXA LABS'
-      description = 'Complete directory of 9 flagship mobile applications engineered by INIXA AI Labs.'
+      description = 'Complete directory of flagship mobile applications engineered by INIXA AI Labs.'
     } else if (isDownloads) {
       title = 'Direct APK Release Vault (15 Verified Builds) — INIXA LABS'
       description =
@@ -88,6 +92,9 @@ export default function Site() {
     } else if (isAbout) {
       title = 'Manifesto & Liquid Glass Philosophy — INIXA LABS'
       description = 'Our engineering creed: physical tactile instruments, zero telemetry, and 120Hz liquid glass optics.'
+    } else if (isDeveloper) {
+      title = 'Developer Portal & Collaborator Studio — INIXA LABS'
+      description = 'Core developer gate for binary distribution and ecosystem application launches.'
     } else if (isContact) {
       title = 'Contact & Engineering Dispatch — INIXA LABS'
       description = 'Bug reports, crash telemetry, and direct laboratory inquiries.'
@@ -111,11 +118,21 @@ export default function Site() {
     set('meta[property="og:url"]', 'content', `https://inixalab.vercel.app${path}`)
     set('meta[name="twitter:title"]', 'content', title)
     set('meta[name="twitter:description"]', 'content', description)
-  }, [path, isProductDetail, activeProductId, isProducts, isDownloads, isAbout, isContact, isSupport, isRelease, release])
+  }, [path, isProductDetail, activeProductId, isProducts, isDownloads, isAbout, isContact, isSupport, isRelease, isDeveloper, release, allProductsMap])
 
-  // Key combination listener for search modal (Ctrl+K or Cmd+K)
+  // Key combination listener:
+  // 1. Ctrl + Alt + Shift + A -> Hidden Admin & Collaborator Developer Portal
+  // 2. Ctrl + K or Cmd + K -> Search Modal
   useEffect(() => {
     const handleKeyDown = (e) => {
+      // Secret Admin / Collaborator Page: Ctrl + Alt + Shift + A
+      if (e.ctrlKey && e.altKey && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
+        e.preventDefault()
+        navigate('/developer')
+        return
+      }
+
+      // Quick Search Modal: Ctrl + K / Cmd + K
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault()
         setSearchOpen((prev) => !prev)
@@ -127,6 +144,7 @@ export default function Site() {
 
   // Render Page Content
   const renderContent = () => {
+    if (isDeveloper) return <DeveloperPortalPage />
     if (isHome) return <HomePage onOpenSearch={() => setSearchOpen(true)} />
     if (isProducts) return <ProductsPage />
     if (isProductDetail) return <ProductDetailPage productId={activeProductId} />
@@ -142,9 +160,9 @@ export default function Site() {
   }
 
   // Legacy release and support pages handle their own header/footer chrome,
-  // and all main pages (Products, Downloads, About, Contact) render their dedicated full-width footer inline
-  const isCustomChromePage = isRelease || isSupport
-  const hasDedicatedFooter = isRelease || isSupport || isProducts || isDownloads || isAbout || isContact
+  // and all main pages (Products, Downloads, About, Contact, Developer) render their dedicated full-width footer inline
+  const isCustomChromePage = isRelease || isSupport || isDeveloper
+  const hasDedicatedFooter = isRelease || isSupport || isProducts || isDownloads || isAbout || isContact || isDeveloper
 
   return (
     <div className="min-h-screen bg-[#020612] text-white flex flex-col selection:bg-pink-600 selection:text-white relative w-full max-w-[100vw] overflow-x-clip">

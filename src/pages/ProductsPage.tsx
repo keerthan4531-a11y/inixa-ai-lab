@@ -1,5 +1,6 @@
 import React from 'react'
 import { ALL_PRODUCTS } from '../data/products'
+import { useAllProducts } from '../data/developerApps'
 import { DoodleHeroBackground } from '../components/doodle/DoodleHeroBackground'
 import { ArcCarousel } from '../components/products/ArcCarousel'
 import { MobileScreenMarquee } from '../components/products/MobileScreenMarquee'
@@ -11,6 +12,8 @@ import { DoodleBird, DoodlePenguin } from '../components/doodle/DoodleCritters'
 import { Sparkles, ArrowDown } from 'lucide-react'
 
 export const ProductsPage: React.FC = () => {
+  const products = useAllProducts()
+
   return (
     <div className="relative min-h-screen pt-28 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">
       {/* Living Sketchbook Doodle Canvas Background (Graph paper grid, rockets, paper airplanes, stars) */}
@@ -124,7 +127,7 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* 3D Arc Curved Carousel with AUTO-SCROLL DISABLED (static & interactive) */}
-        <ArcCarousel products={ALL_PRODUCTS} autoPlay={false} />
+        <ArcCarousel products={products} autoPlay={false} />
       </div>
 
       {/* Verified Mobile Hardware Screens Infinite Marquee Showcase (Doodle styled) */}

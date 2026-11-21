@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import { ALL_PRODUCTS } from '../../data/products'
+import { useAllProducts } from '../../data/developerApps'
 import { ALL_VERIFIED_APKS } from '../../data/apks'
 import { ALL_AUDITED_SCREENSHOTS } from '../../data/screenshotMap'
 import { X, Download, ArrowRight, Sparkles, Smartphone, Terminal, Layers } from 'lucide-react'
@@ -32,16 +33,18 @@ export const CommandMenu: React.FC<CommandMenuProps> = ({ isOpen, onClose }) => 
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isOpen, onClose])
 
+  const allProducts = useAllProducts()
+
   const filteredProducts = useMemo(() => {
-    if (!query) return ALL_PRODUCTS
+    if (!query) return allProducts
     const q = query.toLowerCase()
-    return ALL_PRODUCTS.filter(
+    return allProducts.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
         p.tagline.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q)
     )
-  }, [query])
+  }, [query, allProducts])
 
   const filteredApks = useMemo(() => {
     if (!query) return ALL_VERIFIED_APKS.slice(0, 4)

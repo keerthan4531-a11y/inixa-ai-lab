@@ -5,6 +5,7 @@ import { InixaFooter } from '../components/footer/InixaFooter'
 import { DoodleIcon, ART, CrewKind } from '../components/footer/DoodleCrewFooter'
 import { DoodleCat } from '../components/doodle/DoodleCat'
 import { DoodleBird, DoodlePenguin, DoodleSketchArrow } from '../components/doodle/DoodleCritters'
+import { AboutLaunchVideoModal } from '../components/AboutLaunchVideoModal'
 import { useRoute, navigate } from '../router'
 import {
   Sparkles,
@@ -26,6 +27,7 @@ import {
   Smartphone,
   HardDrive,
   Lock,
+  Play,
 } from 'lucide-react'
 
 const GithubIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
@@ -199,6 +201,8 @@ export const AboutPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'manifesto' | 'engineers'>(
     isEngineersRoute ? 'engineers' : 'manifesto'
   )
+  // 40s Launch Video auto-plays on About page entry as requested, with a clear Skip button
+  const [showFilm, setShowFilm] = useState(true)
 
   useEffect(() => {
     if (isEngineersRoute) {
@@ -208,6 +212,9 @@ export const AboutPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen pt-28 pb-24 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">
+      {/* 40-Second Launch Film Overlay Modal (Auto-plays on entry, with Skip button) */}
+      <AboutLaunchVideoModal isOpen={showFilm} onClose={() => setShowFilm(false)} />
+
       {/* Living Sketchbook Doodle Canvas Background (Graph paper, rockets, paper airplanes, stars) */}
       <DoodleHeroBackground />
 
@@ -307,9 +314,21 @@ export const AboutPage: React.FC = () => {
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-medium mt-4 sm:mt-6 px-2">
+          <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-2xl mx-auto font-medium mt-4 sm:mt-6 px-2 mb-6">
             INIXA AI Labs was founded on a simple conviction: modern mobile software has become bloated, predatory, and visually stagnant. We build software that feels alive, respects privacy, and honors hardware.
           </p>
+
+          {/* Watch 40s Launch Film Doodle Trigger Button */}
+          <div className="flex justify-center mb-2">
+            <button
+              type="button"
+              onClick={() => setShowFilm(true)}
+              className="doodle-btn doodle-btn-green px-5 py-2.5 text-xs sm:text-sm font-black shadow-[4px_4px_0_#be185d]"
+            >
+              <Play className="w-4 h-4 fill-current" />
+              <span>Watch 40s Launch Film</span>
+            </button>
+          </div>
         </div>
 
         {/* TACTILE DOODLE TAB SWITCHER: Manifesto vs Core Engineers (Responsive Mobile & Desktop) */}

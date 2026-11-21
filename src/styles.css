@@ -457,11 +457,11 @@ svg {
 
 /* =============================================================== blocks */
 
-.block {
+.section-block {
   padding-block: clamp(80px, 11vw, 150px);
 }
 
-.block-tight {
+.section-block-tight {
   padding-block: clamp(48px, 7vw, 92px);
 }
 
