@@ -622,7 +622,7 @@ export const ProductDetailPage: React.FC<ProductDetailPageProps> = ({ productId 
 
                       {/* Changelog Items */}
                       <div className="space-y-1.5 pt-1">
-                        {apk.changelog.map((change, cIdx) => (
+                        {(apk.changelog || ['Initial production binary build']).map((change, cIdx) => (
                           <div key={cIdx} className="flex items-start gap-2 text-xs text-neutral-200 font-medium">
                             <span className="text-[#00ff87] font-black shrink-0 mt-0.5">✦</span>
                             <span>{change}</span>

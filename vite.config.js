@@ -22,8 +22,50 @@ const pagesFallback = () => ({
   },
 })
 
+let devAppsMemory = []
+
+const devApiPlugin = () => ({
+  name: 'inixa-dev-api',
+  configureServer(server) {
+    server.middlewares.use((req, res, next) => {
+      if (req.url?.startsWith('/api/developer-apps')) {
+        res.setHeader('Content-Type', 'application/json')
+        if (req.method === 'GET') {
+          res.end(JSON.stringify(devAppsMemory))
+          return
+        }
+        if (req.method === 'POST') {
+          let body = ''
+          req.on('data', (chunk) => (body += chunk))
+          req.on('end', () => {
+            try {
+              const app = JSON.parse(body)
+              devAppsMemory = [app, ...devAppsMemory.filter((a) => a.id !== app.id && a.slug !== app.slug)]
+              res.end(JSON.stringify({ success: true, count: devAppsMemory.length }))
+            } catch (err) {
+              res.statusCode = 400
+              res.end(JSON.stringify({ error: err.message }))
+            }
+          })
+          return
+        }
+        if (req.method === 'DELETE') {
+          const url = new URL(req.url, 'http://localhost')
+          const id = url.searchParams.get('id')
+          if (id) {
+            devAppsMemory = devAppsMemory.filter((a) => a.id !== id && a.slug !== id)
+          }
+          res.end(JSON.stringify({ success: true, count: devAppsMemory.length }))
+          return
+        }
+      }
+      next()
+    })
+  },
+})
+
 export default defineConfig({
-  plugins: [react(), tailwindcss(), pagesFallback()],
+  plugins: [react(), tailwindcss(), pagesFallback(), devApiPlugin()],
   resolve: {
     alias: {
       '@': resolve(import.meta.dirname, 'src'),

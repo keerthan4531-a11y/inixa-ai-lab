@@ -145,7 +145,7 @@ export const DeveloperPortalPage: React.FC = () => {
     setHighlights(highlights.filter((_, i) => i !== idx))
   }
 
-  // Handle Screenshot Upload (Base64 file reader or URL)
+  // Handle Screenshot Upload (Base64 file reader with canvas optimization)
   const handleScreenshotFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files
     if (!files || files.length === 0) return
@@ -153,13 +153,36 @@ export const DeveloperPortalPage: React.FC = () => {
     const file = files[0]
     const reader = new FileReader()
     reader.onload = (event) => {
-      const result = event.target?.result as string
-      if (result) {
+      const rawUrl = event.target?.result as string
+      if (!rawUrl) return
+
+      // Downscale image via canvas to keep footprint lightweight & snappy
+      const img = new Image()
+      img.onload = () => {
+        const maxDim = 1000
+        let w = img.width
+        let h = img.height
+        if (w > maxDim || h > maxDim) {
+          if (w > h) {
+            h = Math.round((h * maxDim) / w)
+            w = maxDim
+          } else {
+            w = Math.round((w * maxDim) / h)
+            h = maxDim
+          }
+        }
+        const canvas = document.createElement('canvas')
+        canvas.width = w
+        canvas.height = h
+        const ctx = canvas.getContext('2d')
+        ctx?.drawImage(img, 0, 0, w, h)
+        const optimizedUrl = canvas.toDataURL('image/jpeg', 0.85)
+
         setScreenshots((prev) => [
           ...prev,
           {
             id: `shot-${Date.now()}`,
-            src: result,
+            src: optimizedUrl,
             title: screenshotTitle.trim() || file.name.replace(/\.[^/.]+$/, ''),
             caption: screenshotCaption.trim() || 'High-fidelity mobile screenshot of the application interface.',
           },
@@ -167,6 +190,7 @@ export const DeveloperPortalPage: React.FC = () => {
         setScreenshotTitle('')
         setScreenshotCaption('')
       }
+      img.src = rawUrl
     }
     reader.readAsDataURL(file)
   }
@@ -210,15 +234,17 @@ export const DeveloperPortalPage: React.FC = () => {
     ).join('')
     setApkSha256(fakeHash)
 
-    const reader = new FileReader()
-    reader.onload = (event) => {
-      setApkDataUrl(event.target?.result as string)
+    // Create immediate zero-overhead Blob URL for downloading without base64 size limits
+    try {
+      const blobUrl = URL.createObjectURL(file)
+      setApkDataUrl(blobUrl)
+    } catch {
+      setApkDataUrl(`/apks/${file.name}`)
     }
-    reader.readAsDataURL(file)
   }
 
   // Launch App to Live Website!
-  const handleLaunchApp = (e: React.FormEvent) => {
+  const handleLaunchApp = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!appName.trim()) {
@@ -285,11 +311,13 @@ export const DeveloperPortalPage: React.FC = () => {
       version: apkVersion || 'v1.0.0',
       highlights: highlights,
     }
-    // Attach custom screenshots array
+    // Attach custom screenshots array & developer badge
     ;(newProduct as any).screenshots = screenshots
+    ;(newProduct as any).isDeveloper = true
 
-    // Save into localStorage and notify all components
-    saveDeveloperApp(newProduct)
+    // Save into IndexedDB & localStorage and notify all components
+    await saveDeveloperApp(newProduct)
+    setPublishedApps(getStoredDeveloperApps())
     setLaunchSuccess(newProduct)
     fireDoodleConfetti()
 

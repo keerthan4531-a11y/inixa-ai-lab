@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react'
 import { ALL_PRODUCTS } from '../../data/products'
+import { useAllProducts } from '../../data/developerApps'
 import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { SpotlightCard } from '../../components/react-bits/SpotlightCard'
 import PictureRailGallery, { PictureRailItem } from '../../components/ui/picture-rail-gallery'
@@ -215,24 +216,50 @@ const FLAGSHIP_RAIL_ITEMS: PictureRailItem[] = [
 export const LabsGridSection: React.FC = () => {
   const [viewMode, setViewMode] = useState<'gallery' | 'grid'>('gallery')
   const [activeCategory, setActiveCategory] = useState<string>('all')
+  const allProducts = useAllProducts()
 
-  const categories = [
-    { id: 'all', label: 'All Experiments', count: ALL_PRODUCTS.length },
-    { id: 'audio', label: 'Audiophile Engines', count: 3 },
-    { id: 'streaming', label: 'Cinema & Video', count: 2 },
-    { id: 'ai', label: 'AI & Intelligence', count: 1 },
-    { id: 'browser', label: 'Privacy Browsers', count: 1 },
-    { id: 'utility', label: 'Extractors & Tools', count: 1 },
-    { id: 'knowledge', label: 'AI Encyclopedia', count: 1 },
-  ]
+  const categories = useMemo(() => [
+    { id: 'all', label: 'All Experiments', count: allProducts.length },
+    { id: 'audio', label: 'Audiophile Engines', count: allProducts.filter((p) => p.category === 'audio').length },
+    { id: 'streaming', label: 'Cinema & Video', count: allProducts.filter((p) => p.category === 'streaming' || p.category === 'video').length },
+    { id: 'ai', label: 'AI & Intelligence', count: allProducts.filter((p) => p.category === 'ai').length },
+    { id: 'browser', label: 'Privacy Browsers', count: allProducts.filter((p) => p.category === 'browser').length },
+    { id: 'utility', label: 'Extractors & Tools', count: allProducts.filter((p) => p.category === 'utility').length },
+    { id: 'knowledge', label: 'AI Encyclopedia', count: allProducts.filter((p) => p.category === 'knowledge').length },
+  ], [allProducts])
 
   const filteredProducts = useMemo(() => {
-    if (activeCategory === 'all') return ALL_PRODUCTS
+    if (activeCategory === 'all') return allProducts
     if (activeCategory === 'streaming') {
-      return ALL_PRODUCTS.filter((p) => p.category === 'streaming' || p.category === 'video')
+      return allProducts.filter((p) => p.category === 'streaming' || p.category === 'video')
     }
-    return ALL_PRODUCTS.filter((p) => p.category === activeCategory)
-  }, [activeCategory])
+    return allProducts.filter((p) => p.category === activeCategory)
+  }, [activeCategory, allProducts])
+
+  // Combine hanging rail items with newly launched developer apps
+  const dynamicRailItems = useMemo(() => {
+    const devRailItems: PictureRailItem[] = allProducts
+      .filter((p) => !FLAGSHIP_RAIL_ITEMS.some((r) => r.id === p.id))
+      .map((p) => ({
+        id: p.id,
+        title: p.name,
+        artist: p.tagline,
+        year: p.version || 'v1.0.0',
+        image: (p as any).screenshots?.[0]?.src || PRODUCT_COVERS[p.id] || '/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg',
+        aspect: 0.48,
+        frame: 'black',
+        mat: false,
+        drop: 0,
+        tag: `${p.version || 'v1.0.0'} • ${p.apks?.[0]?.sizeFormatted || '15 MB'}`,
+        apkUrl: p.apks?.[0]?.downloadPath || `/apks/${p.slug}.apk`,
+        details: [
+          p.packageId || `com.inixa.${p.slug}`,
+          p.detailedSummary || p.tagline,
+          ...(p.techHighlights || []).slice(0, 2),
+        ],
+      }))
+    return [...devRailItems, ...FLAGSHIP_RAIL_ITEMS]
+  }, [allProducts])
 
   return (
     <section className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 overflow-hidden" id="experiments">
@@ -308,8 +335,8 @@ export const LabsGridSection: React.FC = () => {
       {viewMode === 'gallery' && (
         <div className="relative z-10 w-screen left-1/2 -translate-x-1/2 overflow-hidden my-4 py-4 transition-all duration-500">
           <PictureRailGallery
-            items={FLAGSHIP_RAIL_ITEMS}
-            eyebrow="Physical Software Gallery • 9 Hanging Flagships"
+            items={dynamicRailItems}
+            eyebrow="Physical Software Gallery • Direct Flagships"
             heading="Handcrafted Physical Software Framed &amp; Verified"
             caption="Slide or brush the rail to swing the phones. Click or lift any phone to flip its 3D architecture specs."
             autoplay={true}
@@ -379,7 +406,7 @@ export const LabsGridSection: React.FC = () => {
               {filteredProducts.map((prod, pIdx) => {
                 const latestApk = prod.apks?.[prod.apks.length - 1]
                 const firstFeature = prod.features[0]
-                const coverPath = PRODUCT_COVERS[prod.id] || Object.values(SCREENSHOT_MAP[prod.id] || {})[0]?.assetPath
+                const coverPath = PRODUCT_COVERS[prod.id] || (prod as any).screenshots?.[0]?.src || Object.values(SCREENSHOT_MAP[prod.id] || {})[0]?.assetPath || '/shots/beat-pro/31031e0e-1853-409b-ae3b-e8017f365d7b.jpg'
                 const cardShadow = pIdx % 2 === 0 ? '#be185d' : '#00ff87'
 
                 return (

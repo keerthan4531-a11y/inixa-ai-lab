@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { ALL_PRODUCTS } from '../../data/products'
+import { useAllProducts } from '../../data/developerApps'
 import { SCREENSHOT_MAP } from '../../data/screenshotMap'
 import { DeviceMockup } from '../../components/common/DeviceMockup'
 import { Download, ArrowRight, Smartphone, Check, Sparkles } from 'lucide-react'
@@ -26,10 +27,11 @@ const BEST_SHOWCASE_SHOT: Record<string, string> = {
 }
 
 export const Hardware3DSection: React.FC = () => {
+  const allProducts = useAllProducts()
   const [selectedProductId, setSelectedProductId] = useState<string>('beatbox-ultra')
   const [selectedShotKey, setSelectedShotKey] = useState<string | null>(null)
 
-  const selectedProduct = ALL_PRODUCTS.find((p) => p.id === selectedProductId) || ALL_PRODUCTS[0]
+  const selectedProduct = allProducts.find((p) => p.id === selectedProductId) || allProducts[0]
   const prodScreenshots = SCREENSHOT_MAP[selectedProduct.id] || {}
 
   const defaultKey = BEST_SHOWCASE_SHOT[selectedProduct.id] || Object.keys(prodScreenshots)[0] || 'shot-1'
@@ -79,7 +81,7 @@ export const Hardware3DSection: React.FC = () => {
 
         {/* Product Selector Pills */}
         <div className="no-scrollbar -mx-4 mt-8 flex gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex-wrap sm:items-center sm:justify-center sm:px-0">
-          {ALL_PRODUCTS.map((prod) => (
+          {allProducts.map((prod) => (
             <button
               type="button"
               key={prod.id}

@@ -1,5 +1,6 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { ALL_APKS } from '../data/apks'
+import { useAllApks, useAllProductsMap } from '../data/developerApps'
 import { PRODUCTS_BY_ID } from '../data/products'
 import { ProductIcon } from '../components/products/ProductIcons'
 import { InixaFooter } from '../components/footer/InixaFooter'
@@ -187,6 +188,8 @@ const DoodleMascot: React.FC<{
 }
 
 export const DownloadsPage: React.FC = () => {
+  const allApks = useAllApks()
+  const allProductsMap = useAllProductsMap()
   const [copiedId, setCopiedId] = useState<string | null>(null)
   const [search, setSearch] = useState('')
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -215,31 +218,32 @@ export const DownloadsPage: React.FC = () => {
 
   // Filter APKs
   const filteredApks = useMemo(() => {
-    return ALL_APKS.filter((apk) => {
+    return allApks.filter((apk) => {
       let matchesCategory = true
+      const prod = allProductsMap[apk.productId]
+      const prodCat = prod?.category || ''
+
       if (selectedCategory === 'audio') {
-        matchesCategory = ['beatbox-pro', 'beatbox-lite', 'beatbox-ultra'].includes(apk.productId)
+        matchesCategory = ['beatbox-pro', 'beatbox-lite', 'beatbox-ultra'].includes(apk.productId) || prodCat === 'audio'
       } else if (selectedCategory === 'video') {
-        matchesCategory = ['mytube', 'liquid-stream'].includes(apk.productId)
+        matchesCategory = ['mytube', 'liquid-stream'].includes(apk.productId) || prodCat === 'streaming' || prodCat === 'video'
       } else if (selectedCategory === 'ai') {
-        matchesCategory = ['inixa-ai', 'wikipedia-infopedia', 'wikipedia-app'].includes(
-          apk.productId
-        )
+        matchesCategory = ['inixa-ai', 'wikipedia-infopedia', 'wikipedia-app'].includes(apk.productId) || prodCat === 'ai' || prodCat === 'knowledge'
       } else if (selectedCategory === 'privacy') {
-        matchesCategory = ['lumina', 'clipster'].includes(apk.productId)
+        matchesCategory = ['lumina', 'clipster'].includes(apk.productId) || prodCat === 'browser' || prodCat === 'utility'
       }
 
       const q = search.toLowerCase()
       const matchesSearch =
-        apk.productName.toLowerCase().includes(q) ||
-        apk.version.toLowerCase().includes(q) ||
-        apk.fileName.toLowerCase().includes(q) ||
-        apk.abi.toLowerCase().includes(q) ||
+        (apk.productName || '').toLowerCase().includes(q) ||
+        (apk.version || '').toLowerCase().includes(q) ||
+        (apk.fileName || '').toLowerCase().includes(q) ||
+        (apk.abi || '').toLowerCase().includes(q) ||
         (apk.sha256 && apk.sha256.toLowerCase().includes(q))
 
       return matchesCategory && matchesSearch
     })
-  }, [selectedCategory, search])
+  }, [allApks, allProductsMap, selectedCategory, search])
 
   return (
     <div className="relative min-h-screen pt-28 pb-12 bg-[#020612] text-white selection:bg-[#be185d] selection:text-white overflow-hidden font-sans">
